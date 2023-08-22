@@ -16,6 +16,9 @@ pip_freeze:
 run:
 	uvicorn src.main:app --reload
 
+test:
+	pytest -q
+
 build_docker_image:
 	docker build -t recognition-service .
 

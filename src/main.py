@@ -7,6 +7,7 @@ from .transport import api_metadata
 
 app = FastAPI(openapi_tags=api_metadata.tags_metadata)
 
+
 @app.get("/healthz", tags=[api_metadata.GENERAL_TAG])
 async def health() -> str:
     """

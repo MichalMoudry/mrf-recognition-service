@@ -5,7 +5,7 @@ Module containing constructs for recognition service API metadata.
 GENERAL_TAG = "General"
 DOCUMENT_PROCESSING = "Document processing"
 
-tags_metadata = [
+tags = [
     {
         "name": GENERAL_TAG,
         "description": "A general operation with the recognition service.",

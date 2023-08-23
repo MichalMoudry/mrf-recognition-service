@@ -10,26 +10,17 @@ class Result(Generic[T]):
     """
     Class representing a result object that encapsulates a value and an operation result.
     """
-    def __init__(self):
-        self._value: T = None
-        self._is_success = False
+    def __init__(self, result: bool, value: T = None):
+        self._result = result
+        self._value = value
 
     @property
-    def value(self) -> T:
-        """
-        Encapsulated value.
-        """
+    def value(self) -> T | None:
         return self._value
 
-    def ok(self, value: T = None):
-        self._value = value
-        self._is_success = True
-
-    def fail(self):
-        """
-        Sets the result object to failed state.
-        """
-        self._is_success = False
+    @property
+    def is_success(self) -> bool:
+        return self._result
 
     def has_value(self) -> bool:
         """

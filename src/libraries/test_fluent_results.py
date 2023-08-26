@@ -18,6 +18,10 @@ def test_fail():
     """
     This test cover a basic scenario where Result object is created with a failed result.
     """
+    result = Result(False, 15_000)
+    assert isinstance(result.value, int) is True
+    assert result.value == 15_000
+    assert result.is_success is False
 
 
 def test_err_messages():

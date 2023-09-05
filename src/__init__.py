@@ -1,3 +1,3 @@
 """
-Module for the entire recognition service.
+Package for the entire recognition service.
 """

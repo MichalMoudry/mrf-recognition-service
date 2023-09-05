@@ -13,5 +13,14 @@ activate_virtual_env_macos:
 pip_freeze:
 	python -m pip freeze > requirements.txt
 
-run_api:
-	uvicorn app:api --reload --app-dir ./src/
+run:
+	uvicorn src.main:app --reload
+
+test:
+	pytest -q
+
+build_docker_image:
+	docker build -t recognition-service .
+
+run_docker_image:
+	docker run -d --name recognition-service -p 80:80 recognition-service

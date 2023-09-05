@@ -8,6 +8,21 @@ This section contains ways to get started (running, deploying, ...) with this se
 ### Cloud deployment
 
 ## Project structure
+- **/src** - A folder with the source code for this service.
+    - main.py
+    - /transport
+    - /service
+    - /database
+    - /libraries
+- **/test** - A folder with all the tests for this project.
+    - /test_images
 
 ## Used libraries
 - FastAPI
+- pytesseract
+- pytest
+- SQLAlchemy
+- Alembic
+- dapr
+
+More information can be found in [requirements.txt](./requirements.txt "Link to requirements.txt file") file.

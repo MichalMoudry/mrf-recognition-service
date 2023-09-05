@@ -1,7 +1,6 @@
 """
 Module containing constructs for recognition service API metadata.
 """
-
 GENERAL_TAG = "General"
 DOCUMENT_PROCESSING = "Document processing"
 

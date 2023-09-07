@@ -18,11 +18,11 @@ async def health() -> str:
 
 
 @app.post("/batch")
-async def create_batch(request_data: dto.CreateBatchModel) -> JSONResponse:
+async def create_batch(request_data: dto.CreateBatchModel):
     """
     An endpoint for creating a new batch of documents for processing.
     """
-    ...
+    return request_data
 
 
 @app.get("/batch/{batch_id}")

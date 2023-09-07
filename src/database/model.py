@@ -33,7 +33,7 @@ class DocumentBatch(Entity):
     """
     __tablename__ = "document_batches"
 
-    name = mapped_column(String(240))
+    name = mapped_column(String(180))
     state = mapped_column(Integer)
     start_date = mapped_column(TIMESTAMP())
     completed_date = mapped_column(TIMESTAMP(), nullable=True)
@@ -43,7 +43,7 @@ class DocumentBatch(Entity):
 class ProcessedDocument(Entity):
     __tablename__ = "processed_documents"
 
-    name = mapped_column(String(240))
+    name = mapped_column(String(180))
     content_type = mapped_column(String(240))
     is_archived = mapped_column(Boolean())
     archive_key = mapped_column(String(80))

@@ -5,11 +5,11 @@ A repository with a service for executing recognition of documents. This reposit
 This section contains ways to get started (running, deploying, ...) with this service.
 ### Local deployment
 For running this app locally, you need to have the following:
-| Requirement | Version | Adddition info |
+| Requirement | Version | Addditional info |
 |----|----|----|
 | Python | >=3.10 | |
 | Installed all the dependencies | - | This means having installed all the libraries in requirements.txt file |
-| Running an instance of PostgreSQL |||
+| Running an instance of PostgreSQL | | |
 
 ### Cloud deployment
 
@@ -37,6 +37,7 @@ For architecture overview of the entire system, visit: [Microservice Reference F
         - Testing if recognition of text on images works.
     - **/integration_tests** - A folder with packages containing integration tests of this service. Tests cover things like:
         - Correct API responses.
+- **/.github/workflows** - Is a folder with YAML files containing definitions for GitHub Actions pipelines.
 
 ## Used libraries
 - [FastAPI](https://github.com/tiangolo/fastapi "Link to the FastAPI GitHub repository") - Is a framework for creating web APIs.

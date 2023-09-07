@@ -13,7 +13,6 @@ This section contains ways to get started (running, deploying, ...) with this se
     - /transport
     - /service
     - /database
-    - /libraries
 - **/test** - A folder with all the tests for this project.
     - /test_images
 
@@ -24,5 +23,6 @@ This section contains ways to get started (running, deploying, ...) with this se
 - SQLAlchemy
 - Alembic
 - dapr
+- [Pydantic](https://github.com/pydantic/pydantic "A link to Pydantic GitHub repository") - A Python library for data validation.
 
 More information can be found in [requirements.txt](./requirements.txt "Link to requirements.txt file") file.

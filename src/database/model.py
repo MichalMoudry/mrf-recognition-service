@@ -3,10 +3,10 @@ A module with database model classes.
 """
 from enum import Enum
 from uuid import UUID
-from sqlalchemy import String, Boolean, Integer, TIMESTAMP
+from sqlalchemy import String, Boolean, Integer, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import mapped_column, relationship
 
 
 class Entity(DeclarativeBase):
@@ -37,6 +37,7 @@ class DocumentBatch(Entity):
     state = mapped_column(Integer)
     start_date = mapped_column(TIMESTAMP())
     completed_date = mapped_column(TIMESTAMP(), nullable=True)
+    documents: Mapped[list["ProcessedDocument"]] = relationship()
 
 
 class ProcessedDocument(Entity):
@@ -47,3 +48,4 @@ class ProcessedDocument(Entity):
     is_archived = mapped_column(Boolean())
     archive_key = mapped_column(String(80))
     date_archived = mapped_column(TIMESTAMP())
+    batch_id = mapped_column(ForeignKey("document_batches.id"))

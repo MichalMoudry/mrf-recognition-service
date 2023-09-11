@@ -14,7 +14,7 @@ pip_freeze:
 	python -m pip freeze > requirements.txt
 
 run:
-	uvicorn src.main:app --reload
+	flask --app ./src/main.py run
 
 test:
 	pytest -q

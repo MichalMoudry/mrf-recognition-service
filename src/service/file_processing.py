@@ -4,14 +4,13 @@ of uploaded files.
 """
 from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor
-from fastapi import UploadFile
 from PIL import Image
 from .recognition import get_recognition_service, RecognitionServiceType
 
 recognition_service = get_recognition_service(RecognitionServiceType.TESSERACT)
 
 
-async def pillow_images_generator(files: list[UploadFile]):
+async def pillow_images_generator(files):
     """
     Method for creating Pillow image from a list of uploaded files.
     """
@@ -19,7 +18,7 @@ async def pillow_images_generator(files: list[UploadFile]):
         yield Image.open(BytesIO(await file.read()))
 
 
-async def start_image_processing(files: list[UploadFile]):
+async def start_image_processing(files):
     file_gen = pillow_images_generator(files)
     """
     with ThreadPoolExecutor() as te:

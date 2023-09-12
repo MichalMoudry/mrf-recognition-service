@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="./repository_assets/mrf_logo.svg" alt="Microservice Reference Framework logo" />
+</p>
+
 # Recognition service
 A repository with a service for executing recognition of documents. This repository is part of [Microservice Reference Framework](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
 

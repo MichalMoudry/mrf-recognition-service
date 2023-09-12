@@ -47,7 +47,7 @@ class TesseractService(RecognitionService):
     def __init__(self, tess_path: Optional[str] = None) -> None:
         super().__init__()
         if tess_path is None:
-            self._tesseract_path = environ["TESSERACT_PATH"]
+            self._tesseract_path = "/opt/homebrew/bin/tesseract" #environ["TESSERACT_PATH"]
         else:
             self._tesseract_path = tess_path
 

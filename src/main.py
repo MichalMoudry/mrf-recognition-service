@@ -4,11 +4,12 @@ Module that contains endpoint methods for the recognition service.
 from flask import Flask, request
 from .transport import api_metadata
 from .transport.model import dto, validation
+from .service import file_processing
 
 app = Flask(__name__)
 
 
-@app.route("/healthz", methods=["GET"])
+@app.route("/health", methods=["GET"])
 def health() -> str:
     """
     Service health endpoint method.
@@ -17,12 +18,12 @@ def health() -> str:
 
 
 @app.route("/batch", methods=["POST"])
-def create_batch():
+async def create_batch():
     """
     An endpoint for creating a new batch of documents for processing.
     """
-    file = request.files["file"]
-    return {"file_name": file.content_type, "request_form": request.form}, 201
+    await file_processing.start_image_processing(request.files)
+    return "Batch created", 201
 
 
 @app.route("/batch/<batch_id>", methods=["GET"])
@@ -39,3 +40,7 @@ def delete_batch(batch_id: str):
     An endpoint for deleting processed document batches from the system.
     """
     return "Supplied batch ID is not a valid UUID.", 422
+
+
+if __name__ == "__main__":
+    app.run()

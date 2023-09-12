@@ -19,7 +19,9 @@ async def pillow_images_generator(files):
 
 
 async def start_image_processing(files):
-    file_gen = pillow_images_generator(files)
+    for file in files:
+        print(file)
+    #file_gen = pillow_images_generator(files)
     """
     with ThreadPoolExecutor() as te:
         processing = te.map()

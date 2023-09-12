@@ -9,5 +9,5 @@ def test_health_method():
         "TESTING": True,
     })
     client = app.test_client()
-    response = client.get("/healthz")
+    response = client.get("/health")
     assert response.data == b"healthy"

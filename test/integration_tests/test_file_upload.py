@@ -20,7 +20,8 @@ async def test_basic_file_upload():
         response = client.post("/batch", data={
             "batch_name": "test_batch_1",
             "file": (folder / "repo_screenshot.png").open("rb"),
-            "file2": (folder / "repo_screenshot.png").open("rb")
+            "file2": (folder / "repo_screenshot.png").open("rb"),
+            "file3": (folder / "repo_screenshot.png").open("rb")
         })
         assert response.status_code == 201
     loop = asyncio.get_running_loop()

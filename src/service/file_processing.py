@@ -5,13 +5,12 @@ of uploaded files.
 from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from PIL import Image
-from werkzeug.datastructures import FileStorage
 from .recognition import get_recognition_service, RecognitionServiceType
 
 recognition_service = get_recognition_service(RecognitionServiceType.TESSERACT)
 
 
-async def pillow_images_generator(files: dict[str, FileStorage]):
+async def pillow_images_generator(files):
     """
     Method for creating Pillow image from a list of uploaded files.
     """
@@ -21,7 +20,7 @@ async def pillow_images_generator(files: dict[str, FileStorage]):
         ))
 
 
-async def start_image_processing(files: dict[str, FileStorage]):
+async def start_image_processing(files):
     with ThreadPoolExecutor() as tp:
         futures = []
         img_gen = pillow_images_generator(files)

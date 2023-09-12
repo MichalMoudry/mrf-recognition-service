@@ -1,41 +1,46 @@
 """
 Module that contains endpoint methods for the recognition service.
 """
-from flask import Flask, request
-from .transport import api_metadata
-from .transport.model import dto, validation
-from .service import file_processing
+from quart import Quart, Response, request, jsonify
+from quart.datastructures import FileStorage
 
-app = Flask(__name__)
+app = Quart(__name__)
 
 
-@app.route("/health", methods=["GET"])
-def health() -> str:
+@app.get("/health")
+async def health() -> str:
     """
     Service health endpoint method.
     """
     return "healthy"
 
 
-@app.route("/batch", methods=["POST"])
-async def create_batch():
+@app.post("/batch")
+async def create_batch() -> Response:
     """
     An endpoint for creating a new batch of documents for processing.
     """
-    await file_processing.start_image_processing(request.files)
-    return "Batch created", 201
+    form = await request.form
+    print(form)
+    for i in form.items():
+        print(i[0], i[1])
+    print("--- Files")
+    files: dict[str, FileStorage] = await request.files
+    for i in files:
+        print(i, "=>", files[i].filename, files[i].content_type)
+    return jsonify("Batch created")
 
 
-@app.route("/batch/<batch_id>", methods=["GET"])
-def get_batch(batch_id: str):
+@app.get("/batch/<batch_id>")
+async def get_batch(batch_id: str):
     """
     An endpoint for obtaining information about a specific document batch.
     """
     return "Supplied batch ID is not a valid UUID.", 422
 
 
-@app.route("/batch/<batch_id>", methods=["DELETE"])
-def delete_batch(batch_id: str):
+@app.get("/batch/<batch_id>")
+async def delete_batch(batch_id: str):
     """
     An endpoint for deleting processed document batches from the system.
     """

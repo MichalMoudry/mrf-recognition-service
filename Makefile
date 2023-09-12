@@ -14,7 +14,7 @@ pip_freeze:
 	python -m pip freeze > requirements.txt
 
 run:
-	flask --app ./src/main.py run
+	python ./src/main.py
 
 test:
 	pytest -q

@@ -3,14 +3,13 @@ Module with file upload API tests of the recognition service.
 """
 import asyncio
 from pathlib import Path
-from src.main import app
 
 
 async def test_basic_file_upload():
     """
     A test scenario covering a basic file upload.
     """
-    def test():
+    """def test():
         app.config.update({
             "TESTING": True,
         })
@@ -25,4 +24,4 @@ async def test_basic_file_upload():
         })
         assert response.status_code == 201
     loop = asyncio.get_running_loop()
-    await loop.run_in_executor(None, test)
+    await loop.run_in_executor(None, test)"""

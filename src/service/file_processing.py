@@ -7,12 +7,11 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from PIL import Image
 from quart.datastructures import FileStorage
 from .recognition import get_recognition_service, RecognitionServiceType
-from datetime import datetime
 
 recognition_service = get_recognition_service(RecognitionServiceType.TESSERACT)
 
 
-async def pillow_images_generator(files):
+async def pillow_images_generator(files: dict[str, FileStorage]):
     """
     Method for creating Pillow image from a list of uploaded files.
     """
@@ -22,8 +21,7 @@ async def pillow_images_generator(files):
         ))
 
 
-async def start_image_processing(files: list[FileStorage]):
-    print(datetime.now(), ": Executing task")
+async def start_image_processing(batch_name: str, files: dict[str, FileStorage]):
     with ThreadPoolExecutor() as tp:
         futures = []
         img_gen = pillow_images_generator(files)

@@ -22,7 +22,7 @@ For running this app locally, you need to have the following:
 For architecture overview of the entire system, visit: [Microservice Reference Framework Repository](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
 
 ## Project structure
-- **/src** - A folder with the source code for this service.
+- **/src** - A folder with the source code and tests for this service.
     - **main.py** - The entry point for the service.
     - **/transport** - A module containing a transport layer of this service. Transport layer contains stuff like:
         - Classes (Data Transfer Objects) that are used as models for HTTP requests and responses.
@@ -35,12 +35,12 @@ For architecture overview of the entire system, visit: [Microservice Reference F
     - **/database** - A module representing a database layer of this service. This module contains elements like:
         - Model classes for the SQLAlchemy ORM (Object Relational Mapper) system.
         - Database migrations which are used by Alembic to properly version the database scheme.
-- **/tests** - A folder with all the tests and test assets for this project. This includes:
-    - **/test_images** - A folder with images that are used for the purpose of testing recognition and file upload.
-    - **unit_tests** - A folder with packages that contain unit tests of this service. Tests cover things like:
-        - Testing if recognition of text on images works.
-    - **integration_tests** - A folder with packages containing integration tests of this service. Tests cover things like:
-        - Correct API responses.
+  - **/tests** - A folder with all the tests and test assets for this project. This includes:
+      - **/test_images** - A folder with images that are used for the purpose of testing recognition and file upload.
+      - **unit_tests** - A folder with packages that contain unit tests of this service. Tests cover things like:
+          - Testing if recognition of text on images works.
+      - **integration_tests** - A folder with packages containing integration tests of this service. Tests cover things like:
+          - Correct API responses.
 - **/.github/workflows** - Is a folder with YAML files containing definitions for GitHub Actions pipelines.
 
 ## Used libraries

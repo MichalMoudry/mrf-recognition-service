@@ -8,4 +8,4 @@ class CreateBatchModel(BaseModel):
     """
     A model class for creating a single document batch.
     """
-    name: str = Field(..., min_length=3, max_length=180)
+    batch_name: str = Field(..., min_length=3, max_length=180)

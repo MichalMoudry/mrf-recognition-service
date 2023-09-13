@@ -3,7 +3,7 @@ A module with database model classes.
 """
 from enum import Enum
 from uuid import UUID
-from sqlalchemy import String, Boolean, Integer, TIMESTAMP, ForeignKey
+from sqlalchemy import String, Boolean, Integer, TIMESTAMP, ForeignKey, LargeBinary
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
@@ -48,4 +48,5 @@ class ProcessedDocument(Entity):
     is_archived = mapped_column(Boolean())
     archive_key = mapped_column(String(80))
     date_archived = mapped_column(TIMESTAMP())
+    data = mapped_column(LargeBinary(), nullable=True)
     batch_id = mapped_column(ForeignKey("document_batches.id"))

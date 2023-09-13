@@ -35,11 +35,11 @@ For architecture overview of the entire system, visit: [Microservice Reference F
     - **/database** - A module representing a database layer of this service. This module contains elements like:
         - Model classes for the SQLAlchemy ORM (Object Relational Mapper) system.
         - Database migrations which are used by Alembic to properly version the database scheme.
-- **/test** - A folder with all the tests for this project.
+- **/tests** - A folder with all the tests and test assets for this project. This includes:
     - **/test_images** - A folder with images that are used for the purpose of testing recognition and file upload.
-    - **/unit_tests** - A folder with packages that contain unit tests of this service. Tests cover things like:
+    - **unit_tests** - A folder with packages that contain unit tests of this service. Tests cover things like:
         - Testing if recognition of text on images works.
-    - **/integration_tests** - A folder with packages containing integration tests of this service. Tests cover things like:
+    - **integration_tests** - A folder with packages containing integration tests of this service. Tests cover things like:
         - Correct API responses.
 - **/.github/workflows** - Is a folder with YAML files containing definitions for GitHub Actions pipelines.
 

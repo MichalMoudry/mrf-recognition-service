@@ -3,6 +3,7 @@ Module that contains endpoint methods for the recognition service.
 """
 from quart import Quart, Response, request, jsonify
 from quart.datastructures import FileStorage
+from service.file_processing import start_image_processing
 
 app = Quart(__name__)
 
@@ -16,19 +17,20 @@ async def health() -> str:
 
 
 @app.post("/batch")
-async def create_batch() -> Response:
+async def create_batch() -> tuple[Response, int]:
     """
     An endpoint for creating a new batch of documents for processing.
     """
-    form = await request.form
+    app.add_background_task(start_image_processing, "Test")
+    """form = await request.form
     print(form)
     for i in form.items():
         print(i[0], i[1])
     print("--- Files")
     files: dict[str, FileStorage] = await request.files
     for i in files:
-        print(i, "=>", files[i].filename, files[i].content_type)
-    return jsonify("Batch created")
+        print(i, "=>", files[i].filename, files[i].content_type)"""
+    return jsonify("Batch created"), 201
 
 
 @app.get("/batch/<batch_id>")

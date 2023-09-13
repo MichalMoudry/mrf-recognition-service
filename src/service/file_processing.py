@@ -5,7 +5,9 @@ of uploaded files.
 from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from PIL import Image
+from quart.datastructures import FileStorage
 from .recognition import get_recognition_service, RecognitionServiceType
+from datetime import datetime
 
 recognition_service = get_recognition_service(RecognitionServiceType.TESSERACT)
 
@@ -20,7 +22,8 @@ async def pillow_images_generator(files):
         ))
 
 
-async def start_image_processing(files):
+async def start_image_processing(files: list[FileStorage]):
+    print(datetime.now(), ": Executing task")
     with ThreadPoolExecutor() as tp:
         futures = []
         img_gen = pillow_images_generator(files)

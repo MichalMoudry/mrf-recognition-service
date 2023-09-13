@@ -6,6 +6,7 @@ from pytest import mark
 from src.service.recognition import RecognitionService, TesseractService
 
 
+@mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
 def test_service_setup():
     """
     A test where setup of the recognition service is tested.
@@ -24,7 +25,7 @@ def test_img_recognition_by_path():
     """
     service = TesseractService("/opt/homebrew/bin/tesseract")
     result = service.process_img_by_path(
-        path.join(getcwd(), "test/test_images/repo_screenshot.png")
+        path.join(getcwd(), "tests/test_images/repo_screenshot.png")
     )
     assert "Identity microservice example" in result
     assert "Solution structure" in result

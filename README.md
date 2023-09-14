@@ -5,22 +5,6 @@
 # Recognition service
 A repository with a service for executing recognition of documents. This repository is part of [Microservice Reference Framework](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
 
-## Getting started
-This section contains ways to get started (running, deploying, ...) with this service.
-### Local deployment
-For running this app locally, you need to have the following:
-| Requirement | Version | Addditional info |
-|----|----|----|
-| Python | >=3.10 | |
-| Installed all the dependencies | - | This means having installed all the libraries in requirements.txt file |
-| Running an instance of PostgreSQL | | |
-
-### Cloud deployment
-
-## Service architecture
-
-For architecture overview of the entire system, visit: [Microservice Reference Framework Repository](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
-
 ## Project structure
 - **/src** - A folder with the source code and tests for this service.
     - **main.py** - The entry point for the service.
@@ -43,8 +27,25 @@ For architecture overview of the entire system, visit: [Microservice Reference F
           - Correct API responses.
 - **/.github/workflows** - Is a folder with YAML files containing definitions for GitHub Actions pipelines.
 
+## Getting started
+This section contains ways to get started (running, deploying, ...) with this service.
+### Local deployment
+For running this app locally, you need to have the following:
+| Requirement | Version | Addditional info |
+|----|----|----|
+| Python | >=3.10 | |
+| Installed all the dependencies | - | This means having installed all the libraries in requirements.txt file |
+| Running an instance of PostgreSQL | | |
+
+### Cloud deployment
+
+## Service architecture
+For architecture overview of the entire system, visit: [Microservice Reference Framework Repository](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
+
+Architecture of this specific service is described in the diagram below.
+
 ## Used libraries
-- [FastAPI](https://github.com/tiangolo/fastapi "Link to the FastAPI GitHub repository") - Is a framework for creating web APIs.
+- Quart - Is a framework for creating web APIs.
 - [pytesseract](https://github.com/madmaze/pytesseract "Link to the pytesseract GitHub repository") - Is a library for enabling use of OCR in Python apps. It is a wrapper for Tesseract OCR.
 - [pytest](https://github.com/pytest-dev/pytest/ "Link to the pytest GitHub repository") - A testing framework for writing functional tests.
 - [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy "Link to the SQLAlchemy GitHub repository") - A Python SQL toolkit and ORM (Object Relational Mapper) system.

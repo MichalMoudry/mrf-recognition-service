@@ -22,12 +22,13 @@ async def pillow_images_generator(files: dict[str, FileStorage]):
 
 
 async def start_image_processing(batch_name: str, files: dict[str, FileStorage]):
+    """
+    Function for starting processing of a document batch.
+    """
     with ThreadPoolExecutor() as tp:
         futures = []
         img_gen = pillow_images_generator(files)
         """for i in files:
-            futures.append(tp.submit(test, files[i]))
+            futures.append(tp.submit(print_file, files[i]))
         for future in as_completed(futures):
-            res = future.result()
-            temp = datetime.now()
-            print(temp, res)"""
+            res = future.result()"""

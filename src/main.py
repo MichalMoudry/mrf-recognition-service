@@ -24,11 +24,12 @@ async def create_batch(data: dto.CreateBatchModel) -> tuple[str, int]:
     """
     An endpoint for creating a new batch of documents for processing.
     """
-    app.add_background_task(
+    await execute_image_processing(data.batch_name, await request.files)
+    """app.add_background_task(
         execute_image_processing,
         data.batch_name,
         await request.files
-    )
+    )"""
     return "Batch created", 201
 
 

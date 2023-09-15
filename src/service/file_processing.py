@@ -3,9 +3,8 @@ Package for helping with processing (enhancement, read, conversion, ...)
 of uploaded files.
 """
 from io import BytesIO
-from zlib import decompress
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from PIL import Image
+from PIL import Image, ImageFile
 from quart.datastructures import FileStorage
 from .recognition import get_recognition_service, RecognitionServiceType
 
@@ -26,11 +25,18 @@ def process_file(file: FileStorage):
     """
     Function for processing a single uploaded file.
     """
-    img = Image.open(
-        BytesIO(
-            decompress(file.stream.read())
+    try:
+        print("")
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
+        img = Image.open(
+            BytesIO(
+                file.stream.read()
+            )
         )
-    )
+        print(file.name, ":", img.width, img.height)
+        recognition_service.process_image(img)
+    except Exception as err:
+        print(f"\n{file.name}", err)
 
 
 async def execute_image_processing(batch_name: str, files: dict[str, FileStorage]):

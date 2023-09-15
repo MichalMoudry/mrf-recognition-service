@@ -31,6 +31,7 @@ A repository with a service for executing recognition of documents. This reposit
 This section contains ways to get started (running, deploying, ...) with this service.
 ### Local deployment
 For running this app locally, you need to have the following:
+
 | Requirement | Version | Addditional info |
 |----|----|----|
 | Python | >=3.10 | |

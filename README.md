@@ -27,6 +27,27 @@ A repository with a service for executing recognition of documents. This reposit
           - Correct API responses.
 - **/.github/workflows** - Is a folder with YAML files containing definitions for GitHub Actions pipelines.
 
+## Service architecture
+For architecture overview of the entire system, visit: [Microservice Reference Framework Repository](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
+
+Architecture of this specific service is described in the diagram below.
+
+```mermaid
+classDiagram
+    class transport["Transport layer"]
+    class service["Service layer"]
+    class database["Persistance layer"]
+    transport <-- service
+    service <-- database
+    
+    note for transport "validates requests\nparses request content\ncontains HTTP middleware\nrequest & response contracts"
+    note for database "contains migrations\n..."
+```
+**Diagram catalog**:
+- Transport
+- Service
+- Database
+
 ## Getting started
 This section contains ways to get started (running, deploying, ...) with this service.
 ### Local deployment
@@ -39,11 +60,6 @@ For running this app locally, you need to have the following:
 | Running an instance of PostgreSQL | | |
 
 ### Cloud deployment
-
-## Service architecture
-For architecture overview of the entire system, visit: [Microservice Reference Framework Repository](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
-
-Architecture of this specific service is described in the diagram below.
 
 ## Used libraries
 - Quart - Is a framework for creating web APIs.

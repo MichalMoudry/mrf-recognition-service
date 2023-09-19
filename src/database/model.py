@@ -36,6 +36,7 @@ class DocumentBatch(Entity):
     state: Mapped[int] = mapped_column(SmallInteger)
     start_date = mapped_column(TIMESTAMP())
     completed_date = mapped_column(TIMESTAMP(), nullable=True)
+    workflow_id = mapped_column(ForeignKey("workflows.id"))
     documents: Mapped[list["ProcessedDocument"]] = relationship()
 
 
@@ -64,6 +65,7 @@ class Workflow(Entity):
     skip_enhancement: Mapped[bool] = mapped_column(Boolean())
     expect_diff_images: Mapped[bool] = mapped_column(Boolean())
     templates: Mapped[list["DocumentTemplate"]] = relationship()
+    batches: Mapped[list["DocumentBatch"]] = relationship()
 
 
 class DocumentTemplate(Entity):
@@ -75,7 +77,7 @@ class DocumentTemplate(Entity):
     width: Mapped[float] = mapped_column(Float())
     height: Mapped[float] = mapped_column(Float())
     workflow_id = mapped_column(ForeignKey("workflows.id"))
-    templates: Mapped[list["TemplateField"]] = relationship()
+    fields: Mapped[list["TemplateField"]] = relationship()
 
 
 class TemplateField(Entity):

@@ -40,9 +40,9 @@ class RecognitionService(ABC):
         ...
 
     @abstractmethod
-    def process_image(self, image: Image.Image, lang: Optional[str] = None):
+    def process_image_full(self, image: Image.Image, lang: Optional[str] = None) -> str:
         """
-        Method for processing a PIL image.
+        Method for a full page processing of a PIL image.
         """
         ...
 
@@ -66,8 +66,8 @@ class TesseractService(RecognitionService):
         language = lang if lang is not None else super().default_language
         return pytesseract.image_to_string(Image.open(path), language)
 
-    def process_image(self, image: Image.Image, lang: Optional[str] = None):
-        ...
+    def process_image_full(self, image: Image.Image, lang: Optional[str] = None) -> str:
+        return pytesseract.image_to_string(image, lang)
 
 
 def get_recognition_service(service_type: RecognitionServiceType) -> RecognitionService:

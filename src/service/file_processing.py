@@ -26,15 +26,13 @@ def process_file(file: FileStorage):
     Function for processing a single uploaded file.
     """
     try:
-        print("")
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         img = Image.open(
             BytesIO(
                 file.stream.read()
             )
         )
-        print(file.name, ":", img.width, img.height)
-        recognition_service.process_image(img)
+        return recognition_service.process_image_full(img)
     except Exception as err:
         print(f"\n{file.name}", err)
 

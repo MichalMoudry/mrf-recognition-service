@@ -3,7 +3,7 @@ A module with database model classes.
 """
 from enum import Enum
 from uuid import UUID
-from sqlalchemy import String, Boolean, Integer, TIMESTAMP, ForeignKey, LargeBinary
+from sqlalchemy import String, Boolean, Integer, TIMESTAMP, ForeignKey, LargeBinary, Float
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
@@ -41,6 +41,9 @@ class DocumentBatch(Entity):
 
 
 class ProcessedDocument(Entity):
+    """
+    A business object representing a processed document.
+    """
     __tablename__ = "processed_documents"
 
     name = mapped_column(String(180))
@@ -50,3 +53,25 @@ class ProcessedDocument(Entity):
     date_archived = mapped_column(TIMESTAMP())
     data = mapped_column(LargeBinary(), nullable=True)
     batch_id = mapped_column(ForeignKey("document_batches.id"))
+
+
+class Workflow(Entity):
+    """
+    A business object representing a recognition workflow and its settings.
+    """
+    __tablename__ = "workflows"
+
+    is_full_page_recog: Mapped[bool] = mapped_column(Boolean())
+    skip_enhancement = mapped_column(Boolean())
+    expect_diff_images = mapped_column(Boolean())
+
+
+class DocumentTemplate(Entity):
+    """
+    A business object that represents a document template.
+    """
+    __tablename__ = "document_templates"
+
+    data = mapped_column(LargeBinary(), nullable=False)
+    width = mapped_column(Float())
+    height = mapped_column(Float())

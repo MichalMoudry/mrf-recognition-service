@@ -2,8 +2,7 @@
 A module with database model classes.
 """
 from enum import Enum
-from uuid import UUID
-from sqlalchemy import String, Boolean, Integer, TIMESTAMP, ForeignKey, LargeBinary, Float
+from sqlalchemy import String, Uuid, Boolean, SmallInteger, TIMESTAMP, ForeignKey, LargeBinary, Float
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
@@ -13,7 +12,7 @@ class Entity(DeclarativeBase):
     """
     A base class for database entities.
     """
-    id: Mapped[UUID] = mapped_column(primary_key=True)
+    id = mapped_column(Uuid(), primary_key=True)
     date_added = mapped_column(TIMESTAMP())
     date_updated = mapped_column(TIMESTAMP())
 
@@ -34,7 +33,7 @@ class DocumentBatch(Entity):
     __tablename__ = "document_batches"
 
     name = mapped_column(String(180))
-    state = mapped_column(Integer)
+    state: Mapped[int] = mapped_column(SmallInteger)
     start_date = mapped_column(TIMESTAMP())
     completed_date = mapped_column(TIMESTAMP(), nullable=True)
     documents: Mapped[list["ProcessedDocument"]] = relationship()
@@ -46,11 +45,11 @@ class ProcessedDocument(Entity):
     """
     __tablename__ = "processed_documents"
 
-    name = mapped_column(String(180))
-    content_type = mapped_column(String(240))
+    name = mapped_column(String(255))
+    content_type = mapped_column(String(255))
     is_archived = mapped_column(Boolean())
-    archive_key = mapped_column(String(80))
-    date_archived = mapped_column(TIMESTAMP())
+    archive_key = mapped_column(String(128), nullable=True)
+    date_archived = mapped_column(TIMESTAMP(), nullable=True)
     data = mapped_column(LargeBinary(), nullable=True)
     batch_id = mapped_column(ForeignKey("document_batches.id"))
 
@@ -61,9 +60,10 @@ class Workflow(Entity):
     """
     __tablename__ = "workflows"
 
-    is_full_page_recog: Mapped[bool] = mapped_column(Boolean())
-    skip_enhancement = mapped_column(Boolean())
-    expect_diff_images = mapped_column(Boolean())
+    is_full_page_recognition: Mapped[bool] = mapped_column(Boolean())
+    skip_enhancement: Mapped[bool] = mapped_column(Boolean())
+    expect_diff_images: Mapped[bool] = mapped_column(Boolean())
+    templates: Mapped[list["DocumentTemplate"]] = relationship()
 
 
 class DocumentTemplate(Entity):
@@ -72,6 +72,22 @@ class DocumentTemplate(Entity):
     """
     __tablename__ = "document_templates"
 
-    data = mapped_column(LargeBinary(), nullable=False)
+    width: Mapped[float] = mapped_column(Float())
+    height: Mapped[float] = mapped_column(Float())
+    workflow_id = mapped_column(ForeignKey("workflows.id"))
+    templates: Mapped[list["TemplateField"]] = relationship()
+
+
+class TemplateField(Entity):
+    """
+    A business object representing document template's field.
+    """
+    __tablename__ = "template_fields"
+
     width = mapped_column(Float())
     height = mapped_column(Float())
+    x_position = mapped_column(Float())
+    y_position = mapped_column(Float())
+    expected_value = mapped_column(String(255), nullable=True)
+    is_identifying = mapped_column(Boolean())
+    template_id = mapped_column(ForeignKey("document_templates.id"))

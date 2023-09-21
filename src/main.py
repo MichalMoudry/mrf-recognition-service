@@ -3,8 +3,9 @@ Module that contains endpoint methods for the recognition service.
 """
 from quart import Quart, request
 from quart_schema import QuartSchema, DataSource, validate_request
-from src.transport.model import dto
-from src.service.file_processing import execute_image_processing
+from dotenv import load_dotenv
+from transport.model import dto
+from service.file_processing import execute_image_processing
 
 app = Quart(__name__)
 QuartSchema(app)
@@ -24,12 +25,11 @@ async def create_batch(data: dto.CreateBatchModel) -> tuple[str, int]:
     """
     An endpoint for creating a new batch of documents for processing.
     """
-    await execute_image_processing(data.batch_name, await request.files)
-    """app.add_background_task(
+    app.add_background_task(
         execute_image_processing,
         data.batch_name,
         await request.files
-    )"""
+    )
     return "Batch created", 201
 
 
@@ -50,4 +50,5 @@ async def delete_batch(batch_id: str):
 
 
 if __name__ == "__main__":
+    load_dotenv()
     app.run()

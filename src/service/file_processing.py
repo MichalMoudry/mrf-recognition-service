@@ -41,9 +41,9 @@ async def execute_image_processing(batch_name: str, files: dict[str, FileStorage
     """
     Function for starting/executing a processing of the document batch.
     """
-    with ThreadPoolExecutor() as tp:
+    """with ThreadPoolExecutor() as tp:
         futures = []
         for key in files:
             futures.append(tp.submit(process_file, files[key]))
         for future in as_completed(futures):
-            res = future.result()
+            res = future.result()"""

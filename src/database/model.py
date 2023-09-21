@@ -12,7 +12,7 @@ class Entity(DeclarativeBase):
     """
     A base class for database entities.
     """
-    id = mapped_column(Uuid(), primary_key=True)
+    id: Mapped[Uuid] = mapped_column(Uuid(), primary_key=True)
     date_added = mapped_column(TIMESTAMP())
     date_updated = mapped_column(TIMESTAMP())
 
@@ -52,6 +52,7 @@ class ProcessedDocument(Entity):
     archive_key = mapped_column(String(128), nullable=True)
     date_archived = mapped_column(TIMESTAMP(), nullable=True)
     data = mapped_column(LargeBinary(), nullable=True)
+    values: Mapped[list["TemplateFieldValue"]] = relationship()
     batch_id = mapped_column(ForeignKey("document_batches.id"))
 
 
@@ -92,4 +93,14 @@ class TemplateField(Entity):
     y_position = mapped_column(Float())
     expected_value = mapped_column(String(255), nullable=True)
     is_identifying = mapped_column(Boolean())
-    template_id = mapped_column(ForeignKey("document_templates.id"))
+    template_id: Mapped[Uuid] = mapped_column(ForeignKey("document_templates.id"))
+
+
+class TemplateFieldValue(Entity):
+    """
+    A business object representing a recognized value on a specific document.
+    """
+
+    name = mapped_column(String())
+    value = mapped_column(String())
+    document_id: Mapped[Uuid] = mapped_column(ForeignKey("processed_documents.id"))

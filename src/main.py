@@ -6,9 +6,11 @@ from quart_schema import QuartSchema, DataSource, validate_request
 from dotenv import load_dotenv
 from transport.model import dto
 from service.file_processing import execute_image_processing
+from service.service_collection import ServiceCollection
 
 app = Quart(__name__)
 QuartSchema(app)
+services = ServiceCollection()
 
 
 @app.get("/health")
@@ -30,6 +32,11 @@ async def create_batch(data: dto.CreateBatchModel) -> tuple[str, int]:
         data.batch_name,
         await request.files
     )
+    services.document_batch_service.create_batch(
+        data.batch_name,
+        data.workflow_id,
+        []
+    )
     return "Batch created", 201
 
 
@@ -41,7 +48,7 @@ async def get_batch(batch_id: str):
     return "Supplied batch ID is not a valid UUID.", 422
 
 
-@app.get("/batch/<batch_id>")
+@app.delete("/batch/<batch_id>")
 async def delete_batch(batch_id: str):
     """
     An endpoint for deleting processed document batches from the system.

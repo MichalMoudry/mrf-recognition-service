@@ -5,6 +5,7 @@ from uuid import UUID
 from datetime import datetime
 from src.database import Session
 from src.database.model import DocumentBatch, ProcessedDocument, BatchState
+from src.database.query import select_batch
 
 
 class DocumentBatchService:
@@ -24,4 +25,17 @@ class DocumentBatchService:
         batch.date_added, batch.date_updated, batch.start_date = datetime.utcnow()
 
         session.add(batch)
+        session.commit()
+
+    @staticmethod
+    def get_batch(batch_id: UUID):
+        session = Session()
+        res = session.execute(select_batch(batch_id)).first()
+        session.commit()
+        print(res)
+
+    @staticmethod
+    def delete_batch(batch_id: UUID):
+        session = Session()
+
         session.commit()

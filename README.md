@@ -53,11 +53,11 @@ This section contains ways to get started (running, deploying, ...) with this se
 ### Local deployment
 For running this app locally, you need to have the following:
 
-| Requirement | Version | Addditional info |
-|----|----|----|
-| Python | >=3.10 | |
-| Installed all the dependencies | - | This means having installed all the libraries in requirements.txt file |
-| Running an instance of PostgreSQL | | |
+| Requirement                       | Version | Addditional info                                                       |
+|-----------------------------------|---------|------------------------------------------------------------------------|
+| Python                            | >=3.10  |                                                                        |
+| Installed all the dependencies    | -       | This means having installed all the libraries in requirements.txt file |
+| Running an instance of PostgreSQL |         |                                                                        |
 
 ### Cloud deployment
 
@@ -70,6 +70,6 @@ For running this app locally, you need to have the following:
 - [dapr](https://github.com/dapr/dapr "Link to the dapr GitHub repository") - Is a library that integrates this service with _dapr_ (or Distributed Application Runtime). This runtime is used for building systems based on microservice architecture.
 - [Pydantic](https://github.com/pydantic/pydantic "A link to Pydantic GitHub repository") - A Python library for data validation.
 
-More information can be found in the [requirements.txt](./requirements.txt "Link to requirements.txt file") file.
+More information can be found in the [pyproject.toml](./pyproject.toml "Link to requirements.txt file") file.
 
 ## Documentation

@@ -1,7 +1,7 @@
 """
 Package containing a collection of all services.
 """
-from doc_batch_service import DocumentBatchService
+from .doc_batch_service import DocumentBatchService
 
 
 class ServiceCollection:

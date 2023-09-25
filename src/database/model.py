@@ -75,8 +75,10 @@ class DocumentTemplate(Entity):
     """
     __tablename__ = "document_templates"
 
+    name: Mapped[str] = mapped_column(String(255))
     width: Mapped[float] = mapped_column(Float())
     height: Mapped[float] = mapped_column(Float())
+    image = mapped_column(LargeBinary())
     workflow_id = mapped_column(ForeignKey("workflows.id"))
     fields: Mapped[list["TemplateField"]] = relationship()
 
@@ -100,7 +102,8 @@ class TemplateFieldValue(Entity):
     """
     A business object representing a recognized value on a specific document.
     """
+    __tablename__ = "field_values"
 
-    name = mapped_column(String())
-    value = mapped_column(String())
+    name = mapped_column(String(255))
+    value = mapped_column(String(255))
     document_id: Mapped[Uuid] = mapped_column(ForeignKey("processed_documents.id"))

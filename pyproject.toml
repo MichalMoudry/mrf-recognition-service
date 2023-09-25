@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "mrf-recognition-service"
+version = "0.1.0"
+description = "A repository with a service for executing recognition of documents"
+authors = ["Michal Moudrý"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+sqlalchemy = "^2.0.21"
+quart = "^0.18.4"
+quart-schema = "^0.17.1"
+python-dotenv = "^1.0.0"
+pytesseract = "^0.3.10"
+psycopg2-binary = "^2.9.7"
+
+
+[tool.poetry.group.dev.dependencies]
+alembic = "^1.12.0"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.2"
+pytest-asyncio = "^0.21.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -10,14 +10,8 @@ activate_virtual_env:
 activate_virtual_env_macos:
 	source venv/bin/activate
 
-pip_freeze:
-	python -m pip freeze > requirements.txt
-
 run:
 	python ./src/main.py
-
-test:
-	pytest -q
 
 build_docker_image:
 	docker build -t recognition-service .

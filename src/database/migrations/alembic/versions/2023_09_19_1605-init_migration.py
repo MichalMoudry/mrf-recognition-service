@@ -74,8 +74,10 @@ def upgrade() -> None:
     op.create_table(
         "document_templates",
         sa.Column("id", sa.Uuid, primary_key=True),
+        sa.Column("name", sa.String(255), nullable=False),
         sa.Column("width", sa.Float, nullable=False),
         sa.Column("height", sa.Float, nullable=False),
+        sa.Column("image", sa.LargeBinary, nullable=False),
         sa.Column("workflow_id", sa.Uuid, nullable=False),
         sa.Column("date_added", sa.TIMESTAMP, nullable=False),
         sa.Column("date_updated", sa.TIMESTAMP, nullable=False)
@@ -98,13 +100,33 @@ def upgrade() -> None:
         sa.Column("y_position", sa.Float, nullable=False),
         sa.Column("expected_value", sa.String(255), nullable=True),
         sa.Column("is_identifying", sa.Boolean, nullable=False),
-        sa.Column("template_id", sa.Uuid, nullable=False)
+        sa.Column("template_id", sa.Uuid, nullable=False),
+        sa.Column("date_added", sa.TIMESTAMP, nullable=False),
+        sa.Column("date_updated", sa.TIMESTAMP, nullable=False)
     )
     op.create_foreign_key(
         "fk_template",
         "template_fields",
         "document_templates",
         local_cols=["template_id"],
+        remote_cols=["id"],
+        ondelete="CASCADE"
+    )
+
+    op.create_table(
+        "field_values",
+        sa.Column("id", sa.Uuid, primary_key=True),
+        sa.Column("name", sa.String(255), nullable=False),
+        sa.Column("value", sa.String(255), nullable=False),
+        sa.Column("document_id", sa.Uuid, nullable=False),
+        sa.Column("date_added", sa.TIMESTAMP, nullable=False),
+        sa.Column("date_updated", sa.TIMESTAMP, nullable=False)
+    )
+    op.create_foreign_key(
+        "fk_document",
+        "field_values",
+        "processed_documents",
+        local_cols=["document_id"],
         remote_cols=["id"],
         ondelete="CASCADE"
     )
@@ -116,3 +138,4 @@ def downgrade() -> None:
     op.drop_table("workflows")
     op.drop_table("document_templates")
     op.drop_table("template_fields")
+    op.drop_table("field_values")

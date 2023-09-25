@@ -3,9 +3,9 @@ Package with code comprising the document batch service.
 """
 from uuid import UUID
 from datetime import datetime
-from src.database import Session
-from src.database.model import DocumentBatch, ProcessedDocument, BatchState
-from src.database.query import select_batch
+from database import Session
+from database.model import DocumentBatch, ProcessedDocument, BatchState
+from database.query import select_batch
 
 
 class DocumentBatchService:

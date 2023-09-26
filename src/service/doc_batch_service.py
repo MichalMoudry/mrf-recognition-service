@@ -22,7 +22,7 @@ class DocumentBatchService:
             documents=documents,
             workflow_id=workflow_id
         )
-        batch.date_added, batch.date_updated, batch.start_date = datetime.utcnow()
+        batch.date_added=batch.date_updated=batch.start_date = datetime.utcnow()
 
         session.add(batch)
         session.commit()

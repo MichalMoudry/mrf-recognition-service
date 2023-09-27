@@ -9,5 +9,15 @@ class ServiceCollection:
     """
     Class with attributes for each service.
     """
-    document_batch_service = DocumentBatchService()
-    workflow_service = WorkflowService()
+
+    def __init__(self) -> None:
+        self._doc_batch_service = DocumentBatchService()
+        self._workflow_service = WorkflowService()
+
+    @property
+    def document_batch_service(self) -> DocumentBatchService:
+        return self._doc_batch_service
+
+    @property
+    def workflow_service(self) -> WorkflowService:
+        return self._workflow_service

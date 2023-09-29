@@ -1,7 +1,7 @@
 """
 Package with tests related to service's configuration.
 """
-from src.config import load_configuration, CONFIG
+from src.internal.config import load_configuration, CONFIG
 
 
 def test_basic_cfg_load():

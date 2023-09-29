@@ -1,5 +1,5 @@
 """
-Module for handling recognition service's configuration.
+Package for handling recognition service's configuration.
 """
 from os import environ
 from dotenv import load_dotenv

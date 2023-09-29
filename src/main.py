@@ -3,9 +3,8 @@ Module that contains endpoint methods for the recognition service.
 """
 from quart import Quart, request
 from quart_schema import QuartSchema, DataSource, validate_request
-from transport.model import dto
-from service.file_processing import execute_image_processing
-from service.service_collection import ServiceCollection
+from internal.transport.model import dto
+from internal.service.service_collection import ServiceCollection
 
 app = Quart(__name__)
 QuartSchema(app)
@@ -31,11 +30,6 @@ async def create_batch(data: dto.CreateBatchModel) -> tuple[str, int]:
         data.batch_name,
         await request.files
     )"""
-    services.document_batch_service.create_batch(
-        data.batch_name,
-        data.workflow_id,
-        []
-    )
     return "Batch created", 201
 
 

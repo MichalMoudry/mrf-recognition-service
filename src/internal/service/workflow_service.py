@@ -2,7 +2,7 @@
 Package containing code for a workflow service.
 """
 from uuid import UUID
-from database import Session
+from .database import Session
 
 
 class WorkflowService:

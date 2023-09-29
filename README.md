@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./repository_assets/mrf_logo.svg" alt="Microservice Reference Framework logo" />
+    <img src="./assets/mrf_logo.svg" alt="Microservice Reference Framework logo" draggable="false" />
 </p>
 
 # Recognition service

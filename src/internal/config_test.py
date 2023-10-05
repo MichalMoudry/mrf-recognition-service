@@ -1,5 +1,5 @@
 """
-Package with tests related to service's configuration.
+Module with tests related to service's configuration.
 """
 from .config import load_configuration, CONFIG
 

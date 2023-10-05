@@ -3,6 +3,7 @@ Module with basic API tests of the recognition service.
 """
 from pathlib import Path
 from uuid import uuid4
+from pytest import mark
 from quart.datastructures import FileStorage
 from main import app
 
@@ -17,6 +18,7 @@ async def test_health_method():
     assert (await res.data) == b'healthy'
 
 
+@mark.skip(reason="Only runnable with a database running.")
 async def test_basic_file_upload():
     """
     A test scenario covering a basic file upload.

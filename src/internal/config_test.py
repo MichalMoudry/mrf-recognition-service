@@ -8,6 +8,7 @@ def test_basic_cfg_load():
     """
     A test scenario for testing environment values before and after config load.
     """
+    CONFIG.clear() # Clear config, so the test is isolated.
     before = CONFIG.get("DB_CONN")
     assert before is None
 

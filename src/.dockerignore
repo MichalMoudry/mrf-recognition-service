@@ -6,5 +6,6 @@
 Dockerfile
 venv
 test_*
+*_test.py
 **/__pycache__
 *.pyc

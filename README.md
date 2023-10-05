@@ -3,7 +3,7 @@
 </p>
 
 # Recognition service
-A repository with a service for executing recognition of documents. This repository is part of [Microservice Reference Framework](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
+A repository with a service for executing recognition of documents. This repository is part of [Microservices Reference Framework](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
 
 ## Project structure
 - **/src** - A folder with the source code and tests for this service.
@@ -68,6 +68,6 @@ For running this app locally, you need to have the following:
 - [dapr](https://github.com/dapr/dapr "Link to the dapr GitHub repository") - Is a library that integrates this service with _dapr_ (or Distributed Application Runtime). This runtime is used for building systems based on microservice architecture.
 - [Pydantic](https://github.com/pydantic/pydantic "A link to Pydantic GitHub repository") - A Python library for data validation.
 
-More information can be found in the [pyproject.toml](./pyproject.toml "Link to requirements.txt file") file.
+More information can be found in the [pyproject.toml](./pyproject.toml "Link to pyproject.toml file") file.
 
 ## Documentation

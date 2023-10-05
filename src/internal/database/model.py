@@ -3,7 +3,7 @@ A module with database model classes.
 """
 from datetime import datetime
 from enum import Enum
-from uuid import uuid4
+from uuid import uuid4, UUID
 from sqlalchemy import String, Uuid, Boolean, SmallInteger, TIMESTAMP, ForeignKey, LargeBinary, Float
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
@@ -15,8 +15,8 @@ class Entity(DeclarativeBase):
     A base class for database entities.
     """
     id: Mapped[Uuid] = mapped_column(Uuid(), primary_key=True)
-    date_added = mapped_column(TIMESTAMP())
-    date_updated = mapped_column(TIMESTAMP())
+    date_added: Mapped[datetime] = mapped_column(TIMESTAMP())
+    date_updated: Mapped[datetime] = mapped_column(TIMESTAMP())
 
 
 class BatchState(Enum):
@@ -58,13 +58,22 @@ class ProcessedDocument(Entity):
     batch_id = mapped_column(ForeignKey("document_batches.id"))
 
 
-def new_processsed_document():
+def new_processsed_document(
+        doc_name: str,
+        type: str,
+        data: bytes,
+        batch_id: UUID):
     """
     A constructor function for the ProcessedDocument entity.
     """
     now = datetime.utcnow()
     return ProcessedDocument(
         id=uuid4(),
+        name=doc_name,
+        content_type=type,
+        is_archived=False,
+        data=data,
+        batch_id=batch_id,
         date_added=now,
         date_updated=now
     )

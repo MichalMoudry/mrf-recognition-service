@@ -11,7 +11,7 @@ activate_virtual_env_macos:
 	source venv/bin/activate
 
 run:
-	python ./src/main.py
+	python ./main.py
 
 build_docker_image:
 	docker build -t recognition-service .

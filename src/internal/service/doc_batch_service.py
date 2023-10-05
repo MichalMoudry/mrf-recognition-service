@@ -20,14 +20,22 @@ class DocumentBatchService:
         batch = DocumentBatch(
             name=name,
             state=BatchState.PROCESSING,
-            documents=[
-                new_processsed_document() for x in documents
-            ],
             workflow_id=workflow_id
         )
         batch.date_added=batch.date_updated=batch.start_date = datetime.utcnow()
 
         session.add(batch)
+        session.flush() # Flush to get batch id
+
+        processed_docs = [
+            new_processsed_document(
+                dto.name,
+                dto.content_type,
+                dto.content,
+                batch.id
+            ) for dto in documents
+        ]
+        session.add_all(processed_docs)
         session.commit()
 
     @staticmethod

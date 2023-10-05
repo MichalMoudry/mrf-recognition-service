@@ -2,8 +2,9 @@
 Module that contains endpoint methods for the recognition service.
 """
 from quart import Quart, request
+from quart.datastructures import FileStorage
 from quart_schema import QuartSchema, DataSource, validate_request
-from internal.transport.model import dto
+from internal.transport.model import dto, contracts
 from internal.service.service_collection import ServiceCollection
 
 app = Quart(__name__)
@@ -20,21 +21,27 @@ async def health() -> str:
 
 
 @app.post("/batch")
-@validate_request(dto.CreateBatchModel, source=DataSource.FORM_MULTIPART)
-async def create_batch(data: dto.CreateBatchModel) -> tuple[str, int]:
+@validate_request(contracts.CreateBatchModel, source=DataSource.FORM_MULTIPART)
+async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     """
     An endpoint for creating a new batch of documents for processing.
     """
-    """app.add_background_task(
-        execute_image_processing,
-        data.batch_name,
-        await request.files
-    )"""
+    uploaded_files: dict[str, FileStorage] = await request.files
     services.document_batch_service.create_batch(
         data.batch_name,
         data.workflow_id,
-        data.documents
+        [dto.DocumentDto(
+            key,
+            uploaded_files[key].stream.read(),
+            uploaded_files[key].content_type
+        ) for key in uploaded_files]
     )
+
+    """app.add_background_task(
+        execute_image_processing,
+        data.batch_name,
+        uploaded_files
+    )"""
     return "Batch created", 201
 
 

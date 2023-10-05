@@ -1,20 +1,14 @@
 """
-Package with DTOs for the web API.
+Package with DTOs for the transport layer.
 """
-from uuid import UUID
-from pydantic import BaseModel, Field
+from dataclasses import dataclass
 
 
+@dataclass
 class DocumentDto:
     """
     A DTO representing data from a client about a document.
     """
-
-
-class CreateBatchModel(BaseModel):
-    """
-    A model class for creating a single document batch.
-    """
-    batch_name: str = Field(..., min_length=3, max_length=180)
-    workflow_id: UUID
-    documents: list
+    name: str
+    content: bytes
+    content_type: str

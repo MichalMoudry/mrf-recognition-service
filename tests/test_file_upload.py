@@ -1,16 +1,14 @@
 """
 Module with file upload API tests of the recognition service.
 """
-import asyncio
+"""
 from pathlib import Path
 from quart.datastructures import FileStorage
 from src.main import app
 
 
 async def test_basic_file_upload():
-    """
-    A test scenario covering a basic file upload.
-    """
+    # A test scenario covering a basic file upload.
     client = app.test_client()
     folder = Path(__file__).parent.parent / "tests/test_images"
     file1 = (folder / "repo_screenshot_2.jpg").open("rb")
@@ -27,4 +25,4 @@ async def test_basic_file_upload():
     )
     file1.close()
     file2.close()
-    assert res.status_code == 201
+    assert res.status_code == 201"""

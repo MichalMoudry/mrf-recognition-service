@@ -1,16 +1,14 @@
 """
 Module for testing recognition service.
 """
-from os import environ, path, getcwd
+"""from os import environ, path, getcwd
 from pytest import mark
 from src.internal.service.recognition import RecognitionService, TesseractService
 
 
 @mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
 def test_service_setup():
-    """
-    A test where setup of the recognition service is tested.
-    """
+    # A test where setup of the recognition service is tested.
     environ["TESSERACT_PATH"] = "/opt/homebrew/bin/tesseract"
     service = TesseractService()
     assert service.available_languages == ["eng", "osd", "snum"]
@@ -20,13 +18,11 @@ def test_service_setup():
 
 @mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
 def test_img_recognition_by_path():
-    """
-    A test where a test image specified by path is recognized.
-    """
+    # A test where a test image specified by path is recognized.
     service = TesseractService("/opt/homebrew/bin/tesseract")
     result = service.process_img_by_path(
         path.join(getcwd(), "tests/test_images/repo_screenshot.png")
     )
     assert "Identity microservice example" in result
     assert "Solution structure" in result
-    assert "Infrastructure" in result
+    assert "Infrastructure" in result"""

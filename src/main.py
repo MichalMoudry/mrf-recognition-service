@@ -60,6 +60,5 @@ async def delete_batch(batch_id: str):
     """
     return "Supplied batch ID is not a valid UUID.", 422
 
-
 if __name__ == "__main__":
     app.run()

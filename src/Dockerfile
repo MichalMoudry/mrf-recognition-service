@@ -18,6 +18,7 @@ COPY poetry.lock pyproject.toml ./
 
 RUN poetry install --no-root --no-ansi --without dev
 
+# -------------- Release section --------------
 FROM python:3.11.5-slim as release
 WORKDIR /app
 

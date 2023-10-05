@@ -3,7 +3,7 @@ Module for testing recognition service.
 """
 from os import environ, path, getcwd
 from pytest import mark
-from src.service.recognition import RecognitionService, TesseractService
+from src.internal.service.recognition import RecognitionService, TesseractService
 
 
 @mark.skip(reason="Can be allowed to run on systems with recognition capabilities")

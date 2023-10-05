@@ -1,7 +1,9 @@
 """
 A module with database model classes.
 """
+from datetime import datetime
 from enum import Enum
+from uuid import uuid4
 from sqlalchemy import String, Uuid, Boolean, SmallInteger, TIMESTAMP, ForeignKey, LargeBinary, Float
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
@@ -54,6 +56,18 @@ class ProcessedDocument(Entity):
     data = mapped_column(LargeBinary(), nullable=True)
     values: Mapped[list["TemplateFieldValue"]] = relationship()
     batch_id = mapped_column(ForeignKey("document_batches.id"))
+
+
+def new_processsed_document():
+    """
+    A constructor function for the ProcessedDocument entity.
+    """
+    now = datetime.utcnow()
+    return ProcessedDocument(
+        id=uuid4(),
+        date_added=now,
+        date_updated=now
+    )
 
 
 class Workflow(Entity):

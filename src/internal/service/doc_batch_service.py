@@ -4,13 +4,14 @@ Package with code comprising the document batch service.
 from uuid import UUID
 from datetime import datetime
 from internal.database import Session
-from internal.database.model import DocumentBatch, ProcessedDocument, BatchState
+from internal.database.model import DocumentBatch, new_processsed_document, BatchState
 from internal.database.query import select_batch
+from internal.transport.model.dto import DocumentDto
 
 
 class DocumentBatchService:
     @staticmethod
-    def create_batch(name: str, workflow_id: UUID, documents: list[ProcessedDocument]):
+    def create_batch(name: str, workflow_id: UUID, documents: list[DocumentDto]):
         """
         Function for creating a new document batch in the system.
         """
@@ -19,7 +20,9 @@ class DocumentBatchService:
         batch = DocumentBatch(
             name=name,
             state=BatchState.PROCESSING,
-            documents=documents,
+            documents=[
+                new_processsed_document() for x in documents
+            ],
             workflow_id=workflow_id
         )
         batch.date_added=batch.date_updated=batch.start_date = datetime.utcnow()

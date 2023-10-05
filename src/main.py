@@ -30,6 +30,11 @@ async def create_batch(data: dto.CreateBatchModel) -> tuple[str, int]:
         data.batch_name,
         await request.files
     )"""
+    services.document_batch_service.create_batch(
+        data.batch_name,
+        data.workflow_id,
+        data.documents
+    )
     return "Batch created", 201
 
 

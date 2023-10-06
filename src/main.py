@@ -1,12 +1,20 @@
 """
 Module that contains endpoint methods for the recognition service.
 """
+from cloudevents.sdk.event import v1
+from dapr.ext.grpc import App
+from dapr.clients.grpc._response import TopicEventResponse
+from time import sleep
 from quart import Quart, request
 from quart.datastructures import FileStorage
 from quart_schema import QuartSchema, DataSource, validate_request
+
 from internal.transport.model import dto, contracts
 from internal.service.service_collection import ServiceCollection
+from internal.config import Configuration
 
+cfg = Configuration()
+dapr_app = App()
 app = Quart(__name__)
 QuartSchema(app)
 services = ServiceCollection()
@@ -59,6 +67,19 @@ async def delete_batch(batch_id: str):
     An endpoint for deleting processed document batches from the system.
     """
     return "Supplied batch ID is not a valid UUID.", 422
+
+
+@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="workflow_update")
+def workflow_update(event: v1.Event) -> TopicEventResponse:
+    """
+    An endpoint for receiving updates about a specific workflow.
+    """
+    should_retry = cfg.dapr_settings.should_retry
+    if should_retry:
+        should_retry = False
+        sleep(0.5)
+        return TopicEventResponse("retry")
+    return TopicEventResponse("success")
 
 if __name__ == "__main__":
     app.run()

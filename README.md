@@ -64,7 +64,6 @@ For running this app locally, you need to have the following:
 - [pytesseract](https://github.com/madmaze/pytesseract "Link to the pytesseract GitHub repository") - Is a library for enabling use of OCR in Python apps. It is a wrapper for Tesseract OCR.
 - [pytest](https://github.com/pytest-dev/pytest/ "Link to the pytest GitHub repository") - A testing framework for writing functional tests.
 - [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy "Link to the SQLAlchemy GitHub repository") - A Python SQL toolkit and ORM (Object Relational Mapper) system.
-- [Alembic](https://github.com/sqlalchemy/alembic "Link to the Alembic GitHub repository") - Is a tool for creating, managing and running database migrations for SQLAlchemy.
 - [dapr](https://github.com/dapr/dapr "Link to the dapr GitHub repository") - Is a library that integrates this service with _dapr_ (or Distributed Application Runtime). This runtime is used for building systems based on microservice architecture.
 - [Pydantic](https://github.com/pydantic/pydantic "A link to Pydantic GitHub repository") - A Python library for data validation.
 

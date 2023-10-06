@@ -14,10 +14,8 @@ quart-schema = "^0.17.1"
 python-dotenv = "^1.0.0"
 pytesseract = "^0.3.10"
 psycopg2-binary = "^2.9.7"
-
-
-[tool.poetry.group.dev.dependencies]
-alembic = "^1.12.0"
+dapr = "^1.11.0"
+dapr-ext-grpc = "^1.11.0"
 
 
 [tool.poetry.group.test.dependencies]

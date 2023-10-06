@@ -37,7 +37,7 @@ class DocumentBatch(Entity):
     name = mapped_column(String(180))
     state: Mapped[int] = mapped_column(SmallInteger)
     start_date = mapped_column(TIMESTAMP())
-    completed_date = mapped_column(TIMESTAMP(), nullable=True)
+    completed_date: Mapped[datetime | None] = mapped_column(TIMESTAMP(), nullable=True)
     workflow_id = mapped_column(ForeignKey("workflows.id"))
     documents: Mapped[list["ProcessedDocument"]] = relationship()
 

@@ -22,9 +22,9 @@ class DocumentBatchService:
             state=BatchState.PROCESSING,
             workflow_id=workflow_id
         )
-        batch.date_added=batch.date_updated=batch.start_date = datetime.utcnow()
+        batch.date_added=batch.date_updated=batch.date_updated=batch.start_date = datetime.utcnow()
 
-        session.add(batch)
+        """session.add(batch)
         session.flush() # Flush to get batch id
 
         processed_docs = [
@@ -35,7 +35,7 @@ class DocumentBatchService:
                 batch.id
             ) for dto in documents
         ]
-        session.add_all(processed_docs)
+        session.add_all(processed_docs)"""
         session.commit()
 
     @staticmethod

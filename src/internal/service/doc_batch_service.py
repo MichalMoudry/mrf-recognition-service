@@ -4,7 +4,7 @@ Package with code comprising the document batch service.
 from uuid import UUID
 from datetime import datetime
 from internal.database import Session
-from internal.database.model import DocumentBatch, new_processsed_document, BatchState
+from internal.database.model import DocumentBatch, new_document_batch, new_processsed_document, BatchState
 from internal.database.query import select_batch
 from internal.transport.model.dto import DocumentDto
 
@@ -16,13 +16,7 @@ class DocumentBatchService:
         Function for creating a new document batch in the system.
         """
         session = Session()
-
-        batch = DocumentBatch(
-            name=name,
-            state=BatchState.PROCESSING,
-            workflow_id=workflow_id
-        )
-        batch.date_added=batch.date_updated=batch.date_updated=batch.start_date = datetime.utcnow()
+        batch = new_document_batch(name, workflow_id)
 
         """session.add(batch)
         session.flush() # Flush to get batch id

@@ -11,7 +11,7 @@ CREATE TABLE workflows (
 
 CREATE TABLE document_batches (
     id UUID PRIMARY KEY,
-    name VARCAHR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     state SMALLINT NOT NULL,
     start_date TIMESTAMP NOT NULL,
     completed_date TIMESTAMP,
@@ -26,10 +26,10 @@ CREATE TABLE document_batches (
 
 CREATE TABLE processed_documents (
     id UUID PRIMARY KEY,
-    name VARCAHR(255) NOT NULL,
-    content_type VARCAHR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    content_type VARCHAR(255) NOT NULL,
     is_archived BOOLEAN NOT NULL,
-    archive_key VARCAHR(255),
+    archive_key VARCHAR(255),
     date_archived TIMESTAMP,
     data BYTEA,
     batch_id UUID NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE processed_documents (
 
 CREATE TABLE document_templates (
     id UUID PRIMARY KEY,
-    name VARCAHR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     width REAL NOT NULL,
     height REAL NOT NULL,
     image BYTEA NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE template_fields (
     height REAL NOT NULL,
     x_position REAL NOT NULL,
     y_position REAL NOT NULL,
-    expected_value VARCAHR(255),
+    expected_value VARCHAR(255),
     is_identifying BOOLEAN NOT NULL,
     template_id UUID NOT NULL,
     date_added TIMESTAMP NOT NULL,
@@ -75,11 +75,11 @@ CREATE TABLE template_fields (
 
 CREATE TABLE field_values (
     id UUID PRIMARY KEY,
-    name VARCAHR(255) NOT NULL,
-    value VARCAHR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    value VARCHAR(255) NOT NULL,
     document_id UUID NOT NULL,
     date_added TIMESTAMP NOT NULL,
-    date_updated TIMESTAMP NOT NULL
+    date_updated TIMESTAMP NOT NULL,
     CONSTRAINT fk_document
         FOREIGN KEY(document_id)
             REFERENCES processed_documents(id)

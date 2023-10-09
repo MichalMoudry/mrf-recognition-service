@@ -42,22 +42,6 @@ class DocumentBatch(Entity):
     documents: Mapped[list["ProcessedDocument"]] = relationship()
 
 
-def new_document_batch(name: str, workflow: UUID) -> DocumentBatch:
-    """
-    A constructor function for the DocumentBatch class.
-    """
-    now = datetime.utcnow()
-    return DocumentBatch(
-        id=uuid4(),
-        name=name,
-        state=BatchState.PROCESSING,
-        start_date=now,
-        workflow_id=workflow,
-        date_added=now,
-        date_updated=now
-    )
-
-
 class ProcessedDocument(Entity):
     """
     A business object representing a processed document.
@@ -74,11 +58,31 @@ class ProcessedDocument(Entity):
     batch_id = mapped_column(ForeignKey("document_batches.id"))
 
 
+def new_document_batch(name: str, workflow: UUID, docs: list[ProcessedDocument]) -> DocumentBatch:
+    """
+    A constructor function for the DocumentBatch class.
+    """
+    now = datetime.utcnow()
+    batch_id = uuid4()
+    for doc in docs:
+        doc.id = batch_id
+    return DocumentBatch(
+        id=batch_id,
+        name=name,
+        state=BatchState.PROCESSING,
+        start_date=now,
+        workflow_id=workflow,
+        documents=docs,
+        date_added=now,
+        date_updated=now
+    )
+
+
 def new_processsed_document(
         doc_name: str,
         type: str,
         data: bytes,
-        batch_id: UUID) -> ProcessedDocument:
+        batch_id: UUID | None = None) -> ProcessedDocument:
     """
     A constructor function for the ProcessedDocument entity.
     """

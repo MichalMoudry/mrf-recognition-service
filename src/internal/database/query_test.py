@@ -5,11 +5,11 @@ from datetime import datetime
 from dotenv import load_dotenv
 from os import environ
 from pathlib import Path
-from uuid import uuid4
+from uuid import uuid4, UUID
 from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import sessionmaker
 from model import new_document_batch, new_processsed_document, Workflow
-from query import insert_batch
+from query import insert_batch, select_batch, delete_batch
 
 load_dotenv()
 db_conn = environ.get("DB_CONN")
@@ -45,6 +45,7 @@ def test_insert_batch():
     """
     A simple test scenario for testing INSERT command for a DocumentBatch entity.
     """
+    seed_database()
     session = Session()
     folder = Path(__file__).parent.parent.parent.parent / "tests/test_images"
     file1 = (folder / "repo_screenshot_2.jpg").open("rb")
@@ -58,9 +59,20 @@ def test_insert_batch():
         ]
     )
     session.execute(insert_batch(batch))
+    session.bulk_save_objects(batch.documents)
     session.commit()
+
+    session2 = Session()
+    result = session2.execute(
+        select_batch(
+            UUID(str(batch.id))
+        )
+    ).all()
+    session2.execute(delete_batch(UUID(str(batch.id))))
+    session2.commit()
+    for res in result:
+        print(res)
     file1.close()
     file2.close()
 
-#seed_database()
 test_insert_batch()

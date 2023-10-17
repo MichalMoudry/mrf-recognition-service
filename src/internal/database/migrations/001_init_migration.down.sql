@@ -1,10 +1,10 @@
 BEGIN;
 
-DROP TABLE workflows;
-DROP TABLE document_batches;
-DROP TABLE processed_documents;
-DROP TABLE document_templates;
-DROP TABLE template_fields;
-DROP TABLE field_values;
+DROP TABLE recognition.workflows;
+DROP TABLE recognition.document_batches;
+DROP TABLE recognition.processed_documents;
+DROP TABLE recognition.document_templates;
+DROP TABLE recognition.template_fields;
+DROP TABLE recognition.field_values;
 
 COMMIT;

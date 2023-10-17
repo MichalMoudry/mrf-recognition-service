@@ -1,6 +1,8 @@
 BEGIN;
 
-CREATE TABLE workflows (
+CREATE SCHEMA recognition;
+
+CREATE TABLE recognition.workflows (
     id UUID PRIMARY KEY,
     is_full_page_recognition BOOLEAN NOT NULL,
     skip_enhancement BOOLEAN NOT NULL,
@@ -9,7 +11,7 @@ CREATE TABLE workflows (
     date_updated TIMESTAMP NOT NULL
 );
 
-CREATE TABLE document_batches (
+CREATE TABLE recognition.document_batches (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     state SMALLINT NOT NULL,
@@ -20,11 +22,11 @@ CREATE TABLE document_batches (
     date_updated TIMESTAMP NOT NULL,
     CONSTRAINT fk_workflow
         FOREIGN KEY(workflow_id)
-            REFERENCES workflows(id)
+            REFERENCES recognition.workflows(id)
             ON DELETE CASCADE
 );
 
-CREATE TABLE processed_documents (
+CREATE TABLE recognition.processed_documents (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     content_type VARCHAR(255) NOT NULL,
@@ -37,11 +39,11 @@ CREATE TABLE processed_documents (
     date_updated TIMESTAMP NOT NULL,
     CONSTRAINT fk_batch
         FOREIGN KEY(batch_id)
-            REFERENCES document_batches(id)
+            REFERENCES recognition.document_batches(id)
             ON DELETE CASCADE
 );
 
-CREATE TABLE document_templates (
+CREATE TABLE recognition.document_templates (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     width REAL NOT NULL,
@@ -52,11 +54,11 @@ CREATE TABLE document_templates (
     date_updated TIMESTAMP NOT NULL,
     CONSTRAINT fk_workflow
         FOREIGN KEY(workflow_id)
-            REFERENCES workflows(id)
+            REFERENCES recognition.workflows(id)
             ON DELETE CASCADE
 );
 
-CREATE TABLE template_fields (
+CREATE TABLE recognition.template_fields (
     id UUID PRIMARY KEY,
     width REAL NOT NULL,
     height REAL NOT NULL,
@@ -69,11 +71,11 @@ CREATE TABLE template_fields (
     date_updated TIMESTAMP NOT NULL,
     CONSTRAINT fk_template
         FOREIGN KEY(template_id)
-            REFERENCES document_templates(id)
+            REFERENCES recognition.document_templates(id)
             ON DELETE CASCADE
 );
 
-CREATE TABLE field_values (
+CREATE TABLE recognition.field_values (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     value VARCHAR(255) NOT NULL,
@@ -82,7 +84,7 @@ CREATE TABLE field_values (
     date_updated TIMESTAMP NOT NULL,
     CONSTRAINT fk_document
         FOREIGN KEY(document_id)
-            REFERENCES processed_documents(id)
+            REFERENCES recognition.processed_documents(id)
             ON DELETE CASCADE
 );
 

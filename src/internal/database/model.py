@@ -4,16 +4,19 @@ A module with database model classes.
 from datetime import datetime
 from enum import Enum
 from uuid import uuid4, UUID
-from sqlalchemy import String, Uuid, Boolean, SmallInteger, TIMESTAMP, ForeignKey, LargeBinary, Float
+from sqlalchemy import MetaData, String, Uuid, Boolean, SmallInteger, TIMESTAMP, ForeignKey, LargeBinary, Float
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
+
+metadata_obj = MetaData(schema="recognition")
 
 
 class Entity(DeclarativeBase):
     """
     A base class for database entities.
     """
+    metadata = metadata_obj
     id: Mapped[Uuid] = mapped_column(Uuid(), primary_key=True)
     date_added: Mapped[datetime] = mapped_column(TIMESTAMP())
     date_updated: Mapped[datetime] = mapped_column(TIMESTAMP())
@@ -65,7 +68,7 @@ def new_document_batch(name: str, workflow: UUID, docs: list[ProcessedDocument])
     now = datetime.utcnow()
     batch_id = uuid4()
     for doc in docs:
-        doc.id = batch_id
+        doc.batch_id = batch_id
     return DocumentBatch(
         id=batch_id,
         name=name,

@@ -16,7 +16,7 @@ class DocumentBatchService:
         Function for creating a new document batch in the system.
         """
         session = Session()
-        batch = new_document_batch(name, workflow_id)
+        batch = new_document_batch(name, workflow_id, [])
 
         """session.add(batch)
         session.flush() # Flush to get batch id

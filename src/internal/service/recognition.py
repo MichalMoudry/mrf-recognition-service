@@ -46,6 +46,17 @@ class RecognitionService(ABC):
         """
         ...
 
+    @abstractmethod
+    def process_image_with_bounding_boxes(
+        self,
+        image: Image.Image,
+        lang: Optional[str] = None
+    ) -> str:
+        """
+        Method for processing an image with bouding boxes estimates.
+        """
+        ...
+
 
 class TesseractService(RecognitionService):
     """
@@ -53,8 +64,10 @@ class TesseractService(RecognitionService):
     """
     def __init__(self, tess_path: Optional[str] = None) -> None:
         super().__init__()
+        self._default_language = super().default_language
         if tess_path is None:
-            self._tesseract_path = "/opt/homebrew/bin/tesseract" #environ["TESSERACT_PATH"]
+            cmd_path = environ.get("TESSERACT_PATH")
+            self._tesseract_path = cmd_path if not None else "/opt/homebrew/bin/tesseract"
         else:
             self._tesseract_path = tess_path
 
@@ -63,11 +76,16 @@ class TesseractService(RecognitionService):
         return pytesseract.get_languages(config="")
     
     def process_img_by_path(self, path: str, lang: Optional[str] = None) -> str:
-        language = lang if lang is not None else super().default_language
+        language = lang if lang is not None else self._default_language
         return pytesseract.image_to_string(Image.open(path), language)
 
     def process_image_full(self, image: Image.Image, lang: Optional[str] = None) -> str:
-        return pytesseract.image_to_string(image, lang)
+        language = lang if lang is not None else self._default_language
+        return pytesseract.image_to_string(image, language)
+
+    def process_image_with_bounding_boxes(self, image: Image.Image, lang: Optional[str] = None):
+        language = lang if lang is not None else self._default_language
+        return pytesseract.image_to_boxes(image, language)
 
 
 def get_recognition_service(service_type: RecognitionServiceType) -> RecognitionService:

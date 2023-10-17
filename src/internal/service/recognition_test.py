@@ -3,6 +3,7 @@ Module for testing recognition service.
 """
 from os import environ, path, getcwd
 from pytest import mark
+from PIL import Image
 from .recognition import RecognitionService, TesseractService
 
 
@@ -30,3 +31,15 @@ def test_img_recognition_by_path():
     assert "Identity microservice example" in result
     assert "Solution structure" in result
     assert "Infrastructure" in result
+
+
+@mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
+def test_recognition_with_bounding_boxes():
+    """
+    A test where recognition with bounding boxes.
+    """
+    service = TesseractService("/opt/homebrew/bin/tesseract")
+    result = service.process_image_with_bounding_boxes(
+        Image.open(path.join(getcwd(), "tests/test_images/repo_screenshot.png"))
+    )
+    assert len(result) > 0

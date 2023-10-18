@@ -37,9 +37,10 @@ class DocumentBatch(Entity):
     """
     __tablename__ = "document_batches"
 
-    name = mapped_column(String(180))
+    name = mapped_column(String(255))
     state: Mapped[int] = mapped_column(SmallInteger)
     start_date = mapped_column(TIMESTAMP())
+    author_id = mapped_column(String(255))
     completed_date: Mapped[datetime | None] = mapped_column(TIMESTAMP(), nullable=True)
     workflow_id = mapped_column(ForeignKey("workflows.id"))
     documents: Mapped[list["ProcessedDocument"]] = relationship()
@@ -61,7 +62,12 @@ class ProcessedDocument(Entity):
     batch_id = mapped_column(ForeignKey("document_batches.id"))
 
 
-def new_document_batch(name: str, workflow: UUID, docs: list[ProcessedDocument]) -> DocumentBatch:
+def new_document_batch(
+        name: str,
+        author: str,
+        workflow: UUID,
+        docs: list[ProcessedDocument]
+    ) -> DocumentBatch:
     """
     A constructor function for the DocumentBatch class.
     """
@@ -75,6 +81,7 @@ def new_document_batch(name: str, workflow: UUID, docs: list[ProcessedDocument])
         state=BatchState.PROCESSING,
         start_date=now,
         workflow_id=workflow,
+        author_id=author,
         documents=docs,
         date_added=now,
         date_updated=now

@@ -52,6 +52,7 @@ def test_insert_batch():
     file2 = (folder / "repo_screenshot.png").open("rb")
     batch = new_document_batch(
         "test_batch_1",
+        "test_user_1",
         default_workflow_id,
         [
             new_processsed_document(file1.name, "image/jpg", file1.read()),

@@ -18,6 +18,7 @@ CREATE TABLE recognition.document_batches (
     start_date TIMESTAMP NOT NULL,
     completed_date TIMESTAMP,
     workflow_id UUID NOT NULL,
+    author VARCHAR(255) NOT NULL,
     date_added TIMESTAMP NOT NULL,
     date_updated TIMESTAMP NOT NULL,
     CONSTRAINT fk_workflow

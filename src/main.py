@@ -8,6 +8,7 @@ from time import sleep
 from quart import Quart, request
 from quart.datastructures import FileStorage
 from quart_schema import QuartSchema, DataSource, validate_request
+import json
 
 from internal.transport.model import dto, contracts
 from internal.service.service_collection import ServiceCollection
@@ -69,7 +70,7 @@ async def delete_batch(batch_id: str):
     return "Supplied batch ID is not a valid UUID.", 422
 
 
-@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="workflow_update")
+@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_update")
 def workflow_update(event: v1.Event) -> TopicEventResponse:
     """
     An endpoint for receiving updates about a specific workflow.
@@ -79,6 +80,27 @@ def workflow_update(event: v1.Event) -> TopicEventResponse:
         should_retry = False
         sleep(0.5)
         return TopicEventResponse("retry")
+    return TopicEventResponse("success")
+
+
+@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_delete")
+def workflow_delete(event: v1.Event) -> TopicEventResponse:
+    """
+    An endpoint for receiving a delete event of a specific workflow.
+    """
+    return TopicEventResponse("success")
+
+
+@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="user_delete")
+def user_delete(event: v1.Event):
+    """
+    An endpoint for receiving a delete event for user's data.
+    """
+    data = event.Data()
+    if data is None:
+        return TopicEventResponse("drop")
+    parsed_data = json.loads(str(data))
+    print(f'Received: id={parsed_data["id"]}, message="{parsed_data["message"]}"', flush=True)
     return TopicEventResponse("success")
 
 if __name__ == "__main__":

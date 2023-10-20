@@ -14,9 +14,11 @@ ENV PATH="$POETRY_HOME/bin:$PATH"
 
 WORKDIR /app
 
-COPY poetry.lock pyproject.toml ./
+COPY pyproject.toml .
+COPY poetry.lock .
+COPY /src .
 
-RUN poetry install --no-root --no-ansi --without dev
+RUN poetry install --no-root --no-ansi --without test
 
 # -------------- Release section --------------
 FROM python:3.11.5-slim as release
@@ -28,6 +30,12 @@ WORKDIR /app
 ENV PATH="/app/.venv/bin:$PATH"
 
 COPY --from=build /app/.venv/ ./.venv
+COPY --from=build /app/main.py .
+COPY --from=build /app/internal ./internal
 
 RUN apt-get update \
     && apt-get -y install tesseract-ocr
+
+EXPOSE 5000
+CMD [ "python3", "main.py" ]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]

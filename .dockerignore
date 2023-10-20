@@ -6,6 +6,7 @@
 Dockerfile
 venv
 test_*
-*_test.py
+**/*_test.py
 **/__pycache__
 *.pyc
+**/migrations

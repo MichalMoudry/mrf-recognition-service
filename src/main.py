@@ -10,6 +10,10 @@ from quart.datastructures import FileStorage
 from quart_schema import QuartSchema, DataSource, validate_request
 import json
 
+import asyncio
+from hypercorn.config import Config
+from hypercorn.asyncio import serve
+
 from internal.transport.model import dto, contracts
 from internal.service.service_collection import ServiceCollection
 from internal.config import Configuration
@@ -103,5 +107,8 @@ def user_delete(event: v1.Event):
     print(f'Received: id={parsed_data["id"]}, message="{parsed_data["message"]}"', flush=True)
     return TopicEventResponse("success")
 
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    server_cfg = Config()
+    server_cfg.bind = ["0.0.0.0:8000"]
+    asyncio.run(serve(app, server_cfg))

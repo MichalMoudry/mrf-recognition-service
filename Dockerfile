@@ -1,4 +1,4 @@
-FROM python:3.11.5-slim as build
+FROM python:3.11.6-slim as build
 
 # Configure poetry
 ENV POETRY_HOME="/opt/poetry" \
@@ -21,7 +21,7 @@ COPY /src .
 RUN poetry install --no-root --no-ansi --without test
 
 # -------------- Release section --------------
-FROM python:3.11.5-slim as release
+FROM python:3.11.6-slim as release
 WORKDIR /app
 
 #ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -36,6 +36,6 @@ COPY --from=build /app/internal ./internal
 RUN apt-get update \
     && apt-get -y install tesseract-ocr
 
-EXPOSE 5000
+EXPOSE 8000
 CMD [ "python3", "main.py" ]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]

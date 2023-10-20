@@ -15,13 +15,4 @@ class CreateBatchModel(BaseModel):
     """
     batch_name: str = Field(..., min_length=3, max_length=180)
     workflow_id: UUID
-
-
-@dataclass
-class CloudEventV1(Generic[T]):
-    """
-    A class representing an incoming cloud event.
-    """
-    id: str
-    data: T
-    source: str
+    user_id: str = Field(..., min_length=3, max_length=120)

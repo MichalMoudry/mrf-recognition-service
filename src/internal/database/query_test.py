@@ -6,10 +6,11 @@ from dotenv import load_dotenv
 from os import environ
 from pathlib import Path
 from uuid import uuid4, UUID
+from pytest import mark
 from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import sessionmaker
-from model import new_document_batch, new_processsed_document, Workflow
-from query import insert_batch, select_batch, delete_batch
+#from model import new_document_batch, new_processsed_document, Workflow
+#from query import insert_batch, select_batch, delete_batch
 
 load_dotenv()
 db_conn = environ.get("DB_CONN")
@@ -41,6 +42,7 @@ def seed_database():
     print("Finished inserting test data.")
 
 
+@mark.skip(reason="Only runnable with a running database")
 def test_insert_batch():
     """
     A simple test scenario for testing INSERT command for a DocumentBatch entity.
@@ -76,4 +78,5 @@ def test_insert_batch():
     file1.close()
     file2.close()
 
-test_insert_batch()
+if __name__ == "__main__":
+    test_insert_batch()

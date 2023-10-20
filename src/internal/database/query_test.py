@@ -9,8 +9,8 @@ from uuid import uuid4, UUID
 from pytest import mark
 from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import sessionmaker
-#from model import new_document_batch, new_processsed_document, Workflow
-#from query import insert_batch, select_batch, delete_batch
+from model import new_document_batch, new_processsed_document, Workflow
+from query import insert_batch, select_batch, delete_batch
 
 load_dotenv()
 db_conn = environ.get("DB_CONN")

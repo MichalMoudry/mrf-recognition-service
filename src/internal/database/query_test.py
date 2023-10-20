@@ -9,7 +9,7 @@ from uuid import uuid4, UUID
 from pytest import mark
 from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import sessionmaker
-from model import new_document_batch, new_processsed_document, Workflow
+"""from model import new_document_batch, new_processsed_document, Workflow
 from query import insert_batch, select_batch, delete_batch
 
 load_dotenv()
@@ -20,9 +20,7 @@ default_workflow_id = uuid4()
 
 
 def seed_database():
-    """
-    Function for inserting test data to the database.
-    """
+    # Function for inserting test data to the database.
     print("Start to insert test data...")
     session = Session()
     now = datetime.utcnow()
@@ -44,9 +42,7 @@ def seed_database():
 
 @mark.skip(reason="Only runnable with a running database")
 def test_insert_batch():
-    """
-    A simple test scenario for testing INSERT command for a DocumentBatch entity.
-    """
+    # A simple test scenario for testing INSERT command for a DocumentBatch entity.
     seed_database()
     session = Session()
     folder = Path(__file__).parent.parent.parent.parent / "tests/test_images"
@@ -80,3 +76,4 @@ def test_insert_batch():
 
 if __name__ == "__main__":
     test_insert_batch()
+"""

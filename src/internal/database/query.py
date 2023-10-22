@@ -41,6 +41,13 @@ def delete_batch(batch_id: UUID):
     return delete(DocumentBatch).where(DocumentBatch.id == batch_id)
 
 
+def delete_batch_by_uid(user_id: str):
+    """
+    Query for deleting all user's batches.
+    """
+    return delete(DocumentBatch).where(DocumentBatch.author_id == user_id)
+
+
 def select_processed_documents(batch_id: UUID):
     """
     Query for obtaining processed documents for a specific batch.

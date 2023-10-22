@@ -1,6 +1,8 @@
 """
 Package containing code related to a user service.
 """
+from internal.database import Session
+from internal.database.query import delete_batch_by_uid
 
 
 class UserService:
@@ -12,4 +14,7 @@ class UserService:
         """
         Method for deleting all user's data.
         """
+        session = Session()
+        session.execute(delete_batch_by_uid(user_id))
+        session.commit()
         return True

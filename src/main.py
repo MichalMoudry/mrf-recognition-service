@@ -3,7 +3,6 @@ Module that contains endpoint methods for the recognition service.
 """
 from cloudevents.sdk.event import v1
 from dapr.ext.grpc import App
-from dapr.clients.grpc._response import TopicEventResponse
 from time import sleep
 from quart import Quart, request
 from quart.datastructures import FileStorage
@@ -75,7 +74,7 @@ async def delete_batch(batch_id: str):
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_update")
-def workflow_update(event: v1.Event) -> TopicEventResponse:
+def workflow_update(event: v1.Event) -> str:
     """
     An endpoint for receiving updates about a specific workflow.
     """
@@ -83,29 +82,30 @@ def workflow_update(event: v1.Event) -> TopicEventResponse:
     if should_retry:
         should_retry = False
         sleep(0.5)
-        return TopicEventResponse("retry")
-    return TopicEventResponse("success")
+        return "retry"
+    return "success"
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_delete")
-def workflow_delete(event: v1.Event) -> TopicEventResponse:
+def workflow_delete(event: v1.Event) -> str:
     """
     An endpoint for receiving a delete event of a specific workflow.
     """
-    return TopicEventResponse("success")
+    return "success"
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="user_delete")
-def user_delete(event: v1.Event):
+async def user_delete(event: v1.Event = None):
     """
     An endpoint for receiving a delete event for user's data.
     """
     data = event.Data()
     if data is None:
-        return TopicEventResponse("drop")
-    parsed_data = json.loads(str(data))
+        return "drop"
+    parsed_data: dict[str, any] = json.loads(str(data))
     print(f'Received: id={parsed_data["id"]}, message="{parsed_data["message"]}"', flush=True)
-    return TopicEventResponse("success")
+    services.user_service.delete_users_data(parsed_data["user_id"])
+    return "success"
 
 
 if __name__ == "__main__":

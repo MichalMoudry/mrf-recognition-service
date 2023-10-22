@@ -41,6 +41,7 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     uploaded_files: dict[str, FileStorage] = await request.files
     services.document_batch_service.create_batch(
         data.batch_name,
+        data.user_id,
         data.workflow_id,
         [dto.DocumentDto(
             key,
@@ -95,14 +96,14 @@ def workflow_delete(event: v1.Event) -> str:
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="user_delete")
-async def user_delete(event: v1.Event = None):
+async def user_delete(event: v1.Event):
     """
     An endpoint for receiving a delete event for user's data.
     """
     data = event.Data()
     if data is None:
         return "drop"
-    parsed_data: dict[str, any] = json.loads(str(data))
+    parsed_data = json.loads(str(data))
     print(f'Received: id={parsed_data["id"]}, message="{parsed_data["message"]}"', flush=True)
     services.user_service.delete_users_data(parsed_data["user_id"])
     return "success"

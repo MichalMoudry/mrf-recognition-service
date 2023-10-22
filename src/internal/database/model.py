@@ -63,6 +63,7 @@ class ProcessedDocument(Entity):
 
 
 def new_document_batch(
+        batch_id: UUID,
         name: str,
         author: str,
         workflow: UUID,
@@ -72,9 +73,6 @@ def new_document_batch(
     A constructor function for the DocumentBatch class.
     """
     now = datetime.utcnow()
-    batch_id = uuid4()
-    for doc in docs:
-        doc.batch_id = batch_id
     return DocumentBatch(
         id=batch_id,
         name=name,

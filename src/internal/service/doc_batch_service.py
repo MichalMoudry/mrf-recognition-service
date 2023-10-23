@@ -5,6 +5,7 @@ from uuid import UUID, uuid4
 from internal.database import Session
 from internal.database.model import new_document_batch, new_processsed_document
 from internal.database.query import select_batch, delete_batch
+from internal.database.dto import BatchInfo
 from internal.transport.model.dto import DocumentDto
 
 
@@ -27,11 +28,13 @@ class DocumentBatchService:
         session.commit()
 
     @staticmethod
-    def get_batch(batch_id: UUID):
+    def get_batch(batch_id: UUID) -> BatchInfo | None:
         session = Session()
         res = session.execute(select_batch(batch_id)).first()
         session.commit()
-        print(res)
+        if res is None:
+            return None
+        return BatchInfo(res.t[0], res.t[1], res.t[2], res.t[3])
 
     @staticmethod
     def delete_batch(batch_id: UUID):

@@ -90,7 +90,7 @@ def new_processsed_document(
         doc_name: str,
         type: str,
         data: bytes,
-        batch_id: UUID | None = None) -> ProcessedDocument:
+        batch_id: UUID) -> ProcessedDocument:
     """
     A constructor function for the ProcessedDocument entity.
     """

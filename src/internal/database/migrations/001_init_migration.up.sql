@@ -1,7 +1,5 @@
 BEGIN;
 
-CREATE SCHEMA recognition;
-
 CREATE TABLE recognition.workflows (
     id UUID PRIMARY KEY,
     is_full_page_recognition BOOLEAN NOT NULL,
@@ -18,7 +16,7 @@ CREATE TABLE recognition.document_batches (
     start_date TIMESTAMP NOT NULL,
     completed_date TIMESTAMP,
     workflow_id UUID NOT NULL,
-    author VARCHAR(255) NOT NULL,
+    author_id VARCHAR(255) NOT NULL,
     date_added TIMESTAMP NOT NULL,
     date_updated TIMESTAMP NOT NULL,
     CONSTRAINT fk_workflow

@@ -4,6 +4,7 @@ Module for testing recognition service.
 from os import environ, path, getcwd
 from pytest import mark
 from PIL import Image
+import json
 from .recognition import RecognitionService, TesseractService
 
 
@@ -31,6 +32,22 @@ def test_img_recognition_by_path():
     assert "Identity microservice example" in result
     assert "Solution structure" in result
     assert "Infrastructure" in result
+
+
+def test_image_recognition_full():
+    """
+    A test covering a complete image recognition.
+    """
+    environ["TESSERACT_PATH"] = "/opt/homebrew/bin/tesseract"
+    service = TesseractService()
+    result = service.process_image_full(
+        Image.open(path.join(getcwd(), "tests/test_images/repo_screenshot.png"))
+    ).split("\n\n")
+    json_result = json.dumps(result)
+    assert len(result) > 0
+    assert len(json_result) > 0
+    assert "Identity microservice example" in result
+    assert "Solution structure" in result
 
 
 @mark.skip(reason="Can be allowed to run on systems with recognition capabilities")

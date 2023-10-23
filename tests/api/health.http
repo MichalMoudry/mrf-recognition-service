@@ -1,0 +1,4 @@
+@hostname=localhost
+@port=8000
+
+GET http://{{hostname}}:{{port}}/health HTTP/1.1

@@ -14,6 +14,7 @@ from hypercorn.config import Config
 from hypercorn.asyncio import serve
 
 from internal.transport.model import dto, contracts
+from internal.transport.validation import is_string_valid_uuid
 from internal.service.service_collection import ServiceCollection
 from internal.config import Configuration
 
@@ -63,7 +64,25 @@ async def get_batch(batch_id: str):
     """
     An endpoint for obtaining information about a specific document batch.
     """
-    return "Supplied batch ID is not a valid UUID.", 422
+    parsed_id = is_string_valid_uuid(batch_id)
+    if parsed_id is None:
+        return "Supplied batch ID is not a valid UUID.", 422
+
+    data = services.document_batch_service.get_batch(parsed_id)
+    if data is None:
+        return "", 200
+    return data, 200
+
+
+@app.get("/batch/<batch_id>")
+async def get_batch_images(batch_id: str):
+    """
+    An endpoint for obtaining a list of images from a document batch.
+    """
+    parsed_id = is_string_valid_uuid(batch_id)
+    if parsed_id is None:
+        return "Supplied batch ID is not a valid UUID.", 422
+    return "", 200
 
 
 @app.delete("/batch/<batch_id>")
@@ -71,7 +90,11 @@ async def delete_batch(batch_id: str):
     """
     An endpoint for deleting processed document batches from the system.
     """
-    return "Supplied batch ID is not a valid UUID.", 422
+    parsed_id = is_string_valid_uuid(batch_id)
+    if parsed_id is None:
+        return "Supplied batch ID is not a valid UUID.", 422
+    services.document_batch_service.delete_batch(parsed_id)
+    return "", 200
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_update")
@@ -92,6 +115,11 @@ def workflow_delete(event: v1.Event) -> str:
     """
     An endpoint for receiving a delete event of a specific workflow.
     """
+    data = event.Data()
+    if data is None:
+        return "drop"
+    parsed_data = json.loads(str(data))
+    services.workflow_service.delete_workflow(parsed_data["workflow_id"])
     return "success"
 
 

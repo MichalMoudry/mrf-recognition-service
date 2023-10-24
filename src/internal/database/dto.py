@@ -15,3 +15,16 @@ class BatchInfo:
     name: str
     start_date: datetime
     completed_date: datetime | None
+
+
+@dataclass
+class ProcessedDocumentDto:
+    """
+    A DTO for a processed document.
+    """
+    id: UUID
+    name: str
+    data: bytes
+    content_type: str
+    archive_key: str | None
+    is_archived: bool

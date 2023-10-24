@@ -15,7 +15,7 @@ CREATE TABLE recognition.document_batches (
     state SMALLINT NOT NULL,
     start_date TIMESTAMP NOT NULL,
     completed_date TIMESTAMP,
-    workflow_id UUID NOT NULL,
+    workflow_id UUID NULL,
     author_id VARCHAR(255) NOT NULL,
     date_added TIMESTAMP NOT NULL,
     date_updated TIMESTAMP NOT NULL,

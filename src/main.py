@@ -40,7 +40,7 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     An endpoint for creating a new batch of documents for processing.
     """
     uploaded_files: dict[str, FileStorage] = await request.files
-    services.document_batch_service.create_batch(
+    batch_id = services.document_batch_service.create_batch(
         data.batch_name,
         data.user_id,
         data.workflow_id,
@@ -51,11 +51,11 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
         ) for key in uploaded_files]
     )
 
-    """app.add_background_task(
+    app.add_background_task(
         execute_image_processing,
         data.batch_name,
         uploaded_files
-    )"""
+    )
     return "Batch created", 201
 
 
@@ -82,7 +82,8 @@ async def get_batch_images(batch_id: str):
     parsed_id = is_string_valid_uuid(batch_id)
     if parsed_id is None:
         return "Supplied batch ID is not a valid UUID.", 422
-    return "", 200
+    images = services.document_batch_service.get_batch_images(parsed_id)
+    return images, 200
 
 
 @app.delete("/batch/<batch_id>")

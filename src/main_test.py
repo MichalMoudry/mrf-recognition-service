@@ -32,7 +32,8 @@ async def test_basic_file_upload():
         "/batch",
         form={
             "batch_name": "test_batch_1",
-            "workflow_id": f"{uuid4()}"
+            "workflow_id": f"{uuid4()}",
+            "user_id": "test_user_1"
         },
         files={
             "file1": FileStorage(file1, content_type=".jpg"),

@@ -1,6 +1,7 @@
 """
 Package containg code for file processing logic.
 """
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from io import BytesIO
 from uuid import UUID
 from PIL import Image, ImageFile
@@ -14,44 +15,44 @@ async def pillow_images_generator(files: dict[str, FileStorage]):
     """
     Method for creating Pillow image from a list of uploaded files.
     """
+    ImageFile.LOAD_TRUNCATED_IMAGES = True
     for file_name in files:
         yield Image.open(BytesIO(
             files[file_name].stream.read()
         ))
 
 
-def process_file(file: FileStorage):
-    """
-    Function for processing a single uploaded file.
-    """
-    try:
-        ImageFile.LOAD_TRUNCATED_IMAGES = True
-        img = Image.open(
-            BytesIO(
-                file.stream.read()
-            )
-        )
-        return recognition_service.process_image_full(img)
-    except Exception as err:
-        print(f"\n{file.name}", err)
-
-
 class FileProcessingService:
     """
     A service class containing logic for file processing.
     """
-
     @staticmethod
-    async def process_files(batch_id: UUID, files: dict[str, FileStorage]):
+    def __process_image(image: Image.Image) -> str | None:
+        """
+        Method for processing PIL image.
+        """
+        try:
+            result = recognition_service.process_image_full(image)
+            print(result, f"image info: {image.height} | {image.width}")
+        except Exception as err:
+            print("Error processing a file", err)
+            return None
+        return result
+
+    async def process_files(self, batch_id: UUID, files: dict[str, FileStorage]):
         """
         A method for processing multiple files from a client.
         """
         print(f"Batch: {batch_id}")
         for key in files:
             print(f"Processing: {files[key].name}")
-        """with ThreadPoolExecutor() as tp:
+
         futures = []
-        for key in files:
-            futures.append(tp.submit(process_file, files[key]))
-        for future in as_completed(futures):
-            res = future.result()"""
+        with ThreadPoolExecutor() as tp:
+            async for image in pillow_images_generator(files):
+                futures.append(
+                    tp.submit(self.__process_image, image)
+                )
+            for future in as_completed(futures):
+                res = future.result()
+                print(f"Future result: {res}")

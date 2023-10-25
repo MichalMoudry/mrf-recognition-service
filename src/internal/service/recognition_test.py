@@ -34,6 +34,7 @@ def test_img_recognition_by_path():
     assert "Infrastructure" in result
 
 
+@mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
 def test_image_recognition_full():
     """
     A test covering a complete image recognition.

@@ -1,12 +1,8 @@
 """
 Module with definitions of contracts of this service.
 """
-from dataclasses import dataclass
-from typing import TypeVar, Generic
 from uuid import UUID
 from pydantic import BaseModel, Field
-
-T = TypeVar("T")
 
 
 class CreateBatchModel(BaseModel):

@@ -13,10 +13,11 @@ import asyncio
 from hypercorn.config import Config
 from hypercorn.asyncio import serve
 
+from internal.config import Configuration
 from internal.transport.model import dto, contracts
 from internal.transport.validation import is_string_valid_uuid
 from internal.service.service_collection import ServiceCollection
-from internal.config import Configuration
+
 
 cfg = Configuration()
 dapr_app = App()
@@ -52,8 +53,8 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     )
 
     app.add_background_task(
-        execute_image_processing,
-        data.batch_name,
+        services.fp_service.process_files,
+        batch_id,
         uploaded_files
     )
     return "Batch created", 201

@@ -1,10 +1,8 @@
 """
-Package for helping with processing (enhancement, read, conversion, ...)
-of uploaded files.
+Package containg code for file processing logic.
 """
 from io import BytesIO
 from uuid import UUID
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from PIL import Image, ImageFile
 from quart.datastructures import FileStorage
 from .recognition import get_recognition_service, RecognitionServiceType
@@ -38,14 +36,20 @@ def process_file(file: FileStorage):
         print(f"\n{file.name}", err)
 
 
-async def execute_image_processing(batch_id: UUID, files: dict[str, FileStorage]):
+class FileProcessingService:
     """
-    Function for starting/executing a processing of the document batch.
+    A service class containing logic for file processing.
     """
-    print(f"Batch: {batch_id}")
-    for key in files:
-        print(f"Processing: {files[key].name}")
-    """with ThreadPoolExecutor() as tp:
+
+    @staticmethod
+    async def process_files(batch_id: UUID, files: dict[str, FileStorage]):
+        """
+        A method for processing multiple files from a client.
+        """
+        print(f"Batch: {batch_id}")
+        for key in files:
+            print(f"Processing: {files[key].name}")
+        """with ThreadPoolExecutor() as tp:
         futures = []
         for key in files:
             futures.append(tp.submit(process_file, files[key]))

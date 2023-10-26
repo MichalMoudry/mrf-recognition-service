@@ -63,8 +63,7 @@ class FileProcessingService:
                 )
             for future in as_completed(futures):
                 res: ProcessedDocumentInfo = future.result()
-                if res.was_successful is False:
-                    status = BatchState.FAILED
+                if res.was_successful is False: status = BatchState.FAILED
                 results.append(res)
 
         processed_documents = [

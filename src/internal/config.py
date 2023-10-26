@@ -1,5 +1,5 @@
 """
-Package for handling recognition service's configuration.
+Module for handling recognition service's configuration.
 """
 from dataclasses import dataclass
 from os import environ

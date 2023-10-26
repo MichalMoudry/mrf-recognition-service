@@ -1,5 +1,5 @@
 """
-Package containing code for a workflow service.
+Module containing code for a workflow service.
 """
 from uuid import UUID
 from internal.database import Session

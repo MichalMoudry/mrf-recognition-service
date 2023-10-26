@@ -1,5 +1,5 @@
 """
-Package containing code related to a user service.
+Module containing code related to a user service.
 """
 from internal.database import Session
 from internal.database.query import delete_batch_by_uid

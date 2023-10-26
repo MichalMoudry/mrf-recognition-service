@@ -1,9 +1,10 @@
 """
 Module containing all the database queries.
 """
+from datetime import datetime
 from uuid import UUID
-from sqlalchemy import select, insert, delete, Insert
-from .model import DocumentBatch, Workflow, ProcessedDocument, DocumentTemplate
+from sqlalchemy import select, insert, update, delete, Insert
+from .model import DocumentBatch, Workflow, ProcessedDocument, DocumentTemplate, BatchState
 from .dto import BatchInfo, ProcessedDocumentDto
 
 
@@ -25,19 +26,17 @@ def select_batches(user_id: str):
     ).where(DocumentBatch.author_id == user_id).order_by(DocumentBatch.start_date)
 
 
-def insert_batch(batch: DocumentBatch) -> Insert:
+def update_batch(batch_id: UUID, status: BatchState, finish_date: datetime):
     """
-    Query for obtaining a query for inserting a document batch to the database.
+    Query for updating a specific document batch.
     """
-    return insert(DocumentBatch).values(
-        id=batch.id,
-        name=batch.name,
-        state=0,
-        start_date=batch.start_date,
-        author_id=batch.author_id,
-        workflow_id=batch.workflow_id,
-        date_added=batch.date_added,
-        date_updated=batch.date_updated
+    return update(
+        DocumentBatch
+    ).where(
+        DocumentBatch.id == batch_id
+    ).values(
+        state=status.value,
+        completed_date=finish_date
     )
 
 

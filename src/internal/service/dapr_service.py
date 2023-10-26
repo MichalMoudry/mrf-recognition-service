@@ -1,5 +1,5 @@
 """
-Package containing code related to a Dapr service.
+Module containing code related to a Dapr service.
 """
 
 

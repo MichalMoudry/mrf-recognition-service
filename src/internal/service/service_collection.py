@@ -1,5 +1,5 @@
 """
-Package containing a collection of all services.
+Module containing a collection of all services.
 """
 from .doc_batch_service import DocumentBatchService
 from .workflow_service import WorkflowService

@@ -44,12 +44,7 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     batch_id = services.document_batch_service.create_batch(
         data.batch_name,
         data.user_id,
-        data.workflow_id,
-        [dto.DocumentDto(
-            key,
-            uploaded_files[key].stream.read(),
-            uploaded_files[key].content_type
-        ) for key in uploaded_files]
+        data.workflow_id
     )
 
     app.add_background_task(

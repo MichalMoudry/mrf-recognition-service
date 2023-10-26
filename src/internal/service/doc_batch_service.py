@@ -15,22 +15,15 @@ class DocumentBatchService:
     """
 
     @staticmethod
-    def create_batch(name: str, user_id: str, workflow_id: UUID, documents: list[DocumentDto]) -> UUID:
+    def create_batch(name: str, user_id: str, workflow_id: UUID) -> UUID:
         """
         Function for creating a new document batch in the system.
         """
         session = Session()
-        
-        batch_id = uuid4()
-        batch = new_document_batch(batch_id, name, user_id, workflow_id, [
-            new_processsed_document(doc.name, doc.content_type, doc.content, batch_id)
-            for doc in documents
-        ])
-
-        session.execute(query.insert_batch(batch))
-        session.bulk_save_objects(batch.documents)
+        batch = new_document_batch(name, user_id, workflow_id, [])
+        session.add(batch)
         session.commit()
-        return batch_id
+        return batch.id
 
     @staticmethod
     def get_batch(batch_id: UUID) -> BatchInfo | None:

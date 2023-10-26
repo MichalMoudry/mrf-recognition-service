@@ -32,7 +32,7 @@ CREATE TABLE recognition.processed_documents (
     is_archived BOOLEAN NOT NULL,
     archive_key VARCHAR(255),
     date_archived TIMESTAMP,
-    data BYTEA,
+    data BYTEA NULL,
     batch_id UUID NOT NULL,
     date_added TIMESTAMP NOT NULL,
     date_updated TIMESTAMP NOT NULL,

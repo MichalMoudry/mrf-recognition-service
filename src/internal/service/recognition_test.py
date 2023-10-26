@@ -43,7 +43,7 @@ def test_image_recognition_full():
     service = TesseractService()
     result = service.process_image_full(
         Image.open(path.join(getcwd(), "tests/test_images/repo_screenshot.png"))
-    ).split("\n\n")
+    )
     json_result = json.dumps(result)
     assert len(result) > 0
     assert len(json_result) > 0

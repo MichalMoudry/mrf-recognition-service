@@ -3,6 +3,7 @@ A module with database model classes.
 """
 from datetime import datetime
 from enum import Enum
+from typing import Optional
 from uuid import uuid4, UUID
 from sqlalchemy import MetaData, String, Uuid, Boolean, SmallInteger, TIMESTAMP, ForeignKey, LargeBinary, Float
 from sqlalchemy.orm import DeclarativeBase
@@ -63,7 +64,6 @@ class ProcessedDocument(Entity):
 
 
 def new_document_batch(
-        batch_id: UUID,
         name: str,
         author: str,
         workflow: UUID,
@@ -74,9 +74,9 @@ def new_document_batch(
     """
     now = datetime.utcnow()
     return DocumentBatch(
-        id=batch_id,
+        id=uuid4(),
         name=name,
-        state=BatchState.PROCESSING,
+        state=0,
         start_date=now,
         workflow_id=workflow,
         author_id=author,
@@ -89,7 +89,7 @@ def new_document_batch(
 def new_processsed_document(
         doc_name: str,
         type: str,
-        data: bytes,
+        data: Optional[bytes],
         batch_id: UUID) -> ProcessedDocument:
     """
     A constructor function for the ProcessedDocument entity.
@@ -158,3 +158,18 @@ class TemplateFieldValue(Entity):
     name = mapped_column(String(255))
     value = mapped_column(String(255))
     document_id: Mapped[Uuid] = mapped_column(ForeignKey("processed_documents.id"))
+
+
+def new_field_value(name: str, value: str, doc_id: UUID):
+    """
+    A constructor for the TemplateFieldValue model.
+    """
+    now = datetime.utcnow()
+    return TemplateFieldValue(
+        id=uuid4(),
+        name=name,
+        value=value,
+        document_id=doc_id,
+        date_added=now,
+        date_updated=now
+    )

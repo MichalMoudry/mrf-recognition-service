@@ -1,5 +1,5 @@
 """
-Package containing DTO's for database select queries.
+Module containing DTO's for database select queries.
 """
 from datetime import datetime
 from dataclasses import dataclass

@@ -1,5 +1,5 @@
 """
-Package for assisting with model validation.
+Module for assisting with model validation.
 """
 from uuid import UUID
 

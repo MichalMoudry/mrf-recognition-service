@@ -82,7 +82,7 @@ async def test_basic_file_upload():
     assert res.status_code == 202
 
 
-#@mark.skip(reason="Only runnable with a Tesseract engine and DB.")
+@mark.skip(reason="Only runnable with a Tesseract engine and DB.")
 async def test_file_upload_bt():
     """
     A test for validating a background task that is spawned during a file upload.

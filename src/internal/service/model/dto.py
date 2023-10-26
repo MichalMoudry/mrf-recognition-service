@@ -1,9 +1,12 @@
 """
 Module containing DTOs related to the service layer.
 """
+from datetime import datetime
 from io import BytesIO
 from typing import Optional
+from uuid import UUID
 from PIL import Image
+from attr import dataclass
 
 
 class ProcessedDocumentInfo:
@@ -80,3 +83,27 @@ class ProcessedDocumentInfo:
         Method for setting result of processing.
         """
         self._was_successful = result
+
+
+@dataclass
+class BatchStatistic:
+    """
+    A DTO encapsulating information/statistics about a document batch.
+    """
+    batch_id: UUID
+    start_date: datetime
+    end_date: datetime
+    number_of_documents: int
+    status: int
+
+    def serialize(self):
+        """
+        Method for assisting in JSON serialization.
+        """
+        return {
+            "batch_id": f"{self.batch_id}",
+            "start_date": f"{self.start_date}",
+            "end_date": f"{self.end_date}",
+            "number_of_documents": self.number_of_documents,
+            "status": self.status
+        }

@@ -10,8 +10,9 @@ from quart.datastructures import FileStorage
 from internal.database import Session
 from internal.database.query import update_batch
 from internal.database.model import new_processsed_document, new_field_value, BatchState, TemplateFieldValue
-from internal.service.model.dto import ProcessedDocumentInfo
+from internal.service.model.dto import ProcessedDocumentInfo, BatchStatistic
 from .recognition import get_recognition_service, RecognitionServiceType
+from .dapr_service import DaprService
 
 recognition_service = get_recognition_service(RecognitionServiceType.TESSERACT)
 
@@ -54,7 +55,7 @@ class FileProcessingService:
         """
         futures = []
         results: list[ProcessedDocumentInfo] = []
-        is_success = True
+        status = BatchState.COMPLETED
         with ThreadPoolExecutor() as tp:
             async for image in pillow_images_generator(files):
                 futures.append(
@@ -63,7 +64,7 @@ class FileProcessingService:
             for future in as_completed(futures):
                 res: ProcessedDocumentInfo = future.result()
                 if res.was_successful is False:
-                    is_success = False
+                    status = BatchState.FAILED
                 results.append(res)
 
         processed_documents = [
@@ -90,8 +91,19 @@ class FileProcessingService:
         session.execute(
             update_batch(
                 batch_id,
-                BatchState.COMPLETED if is_success else BatchState.FAILED,
+                status,
                 datetime.utcnow()
             )
         )
         session.commit()
+
+        DaprService.publish_event(
+            "batch-finish-stat",
+            BatchStatistic(
+                batch_id,
+                datetime.now(),
+                datetime.utcnow(),
+                len(processed_documents),
+                status.value
+            )
+        )

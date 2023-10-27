@@ -27,7 +27,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./src
+          context: .
           push: true
           tags: michalmoudry/recognition-service:latest
           labels: ${{ steps.meta.outputs.labels }}

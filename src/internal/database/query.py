@@ -1,10 +1,10 @@
 """
 Module containing all the database queries.
 """
+from datetime import datetime
 from uuid import UUID
-from sqlalchemy import select, insert, delete, Insert
-from .model import DocumentBatch, Workflow, ProcessedDocument, DocumentTemplate
-#from model import DocumentBatch, Workflow, ProcessedDocument, DocumentTemplate
+from sqlalchemy import select, insert, update, delete
+from .model import DocumentBatch, Workflow, ProcessedDocument, DocumentTemplate, BatchState
 
 
 def select_batch(batch_id: UUID):
@@ -15,22 +15,35 @@ def select_batch(batch_id: UUID):
         DocumentBatch.id,
         DocumentBatch.name,
         DocumentBatch.start_date,
-        DocumentBatch.completed_date
+        DocumentBatch.completed_date,
+        DocumentBatch.state
     ).where(DocumentBatch.id == batch_id)
 
 
-def insert_batch(batch: DocumentBatch) -> Insert:
+def select_batches(workflow_id: UUID):
     """
-    Query for obtaining a query for inserting a document batch to the database.
+    Query for selecting all user's document batches.
     """
-    return insert(DocumentBatch).values(
-        id=batch.id,
-        name=batch.name,
-        state=0,
-        start_date=batch.start_date,
-        workflow_id=batch.workflow_id,
-        date_added=batch.date_added,
-        date_updated=batch.date_updated
+    return select(
+        DocumentBatch.id,
+        DocumentBatch.name,
+        DocumentBatch.start_date,
+        DocumentBatch.completed_date,
+        DocumentBatch.state
+    ).where(DocumentBatch.workflow_id == workflow_id).order_by(DocumentBatch.start_date)
+
+
+def update_batch(batch_id: UUID, status: BatchState, finish_date: datetime):
+    """
+    Query for updating a specific document batch.
+    """
+    return update(
+        DocumentBatch
+    ).where(
+        DocumentBatch.id == batch_id
+    ).values(
+        state=status.value,
+        completed_date=finish_date
     )
 
 
@@ -39,6 +52,13 @@ def delete_batch(batch_id: UUID):
     Query for obtaining a delete query for deleting a specific document batch.
     """
     return delete(DocumentBatch).where(DocumentBatch.id == batch_id)
+
+
+def delete_batch_by_uid(user_id: str):
+    """
+    Query for deleting all user's batches.
+    """
+    return delete(DocumentBatch).where(DocumentBatch.author_id == user_id)
 
 
 def select_processed_documents(batch_id: UUID):
@@ -50,6 +70,7 @@ def select_processed_documents(batch_id: UUID):
         ProcessedDocument.name,
         ProcessedDocument.data,
         ProcessedDocument.content_type,
+        ProcessedDocument.archive_key,
         ProcessedDocument.is_archived
     ).where(ProcessedDocument.batch_id == batch_id)
 
@@ -62,8 +83,7 @@ def select_workflow(workflow_id: UUID):
         Workflow.id,
         Workflow.is_full_page_recognition,
         Workflow.expect_diff_images,
-        Workflow.skip_enhancement,
-        Workflow.date_added
+        Workflow.skip_enhancement
     ).where(Workflow.id == workflow_id)
 
 

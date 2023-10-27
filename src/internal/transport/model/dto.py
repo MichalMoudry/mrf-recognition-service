@@ -1,5 +1,5 @@
 """
-Package with DTOs for the transport layer.
+Module with DTOs for the transport layer.
 """
 from dataclasses import dataclass
 

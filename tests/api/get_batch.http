@@ -1,0 +1,4 @@
+@hostname=localhost
+@port=8000
+
+GET http://{{hostname}}:{{port}}/batch/7dee94a3-2941-4c00-8c12-2e86606f86c6 HTTP/1.1

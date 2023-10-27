@@ -26,7 +26,7 @@ A repository with a service for executing recognition of documents. This reposit
 - **/.github/workflows** - Is a folder with YAML files containing definitions for GitHub Actions pipelines.
 
 ## Service architecture
-For architecture overview of the entire system, visit: [Microservice Reference Framework Repository](https://github.com/MichalMoudry/microservice-reference-framework "Link to Microservice Reference Framework repository").
+For architecture overview of the entire system, visit: [Microservices Reference Framework Repository](https://github.com/MichalMoudry/microservices-reference-framework "Link to Microservices Reference Framework repository").
 
 Architecture of this specific service is described in the diagram below.
 
@@ -42,20 +42,9 @@ classDiagram
     note for database "contains migrations\n..."
 ```
 **Diagram catalog**:
-- Transport
-- Service
-- Database
-
-## Getting started
-This section contains ways to get started (running, deploying, ...) with this service.
-### Local deployment
-For running this app locally, you need to have the following:
-
-| Requirement                       | Version | Addditional info                                                       |
-|-----------------------------------|---------|------------------------------------------------------------------------|
-| Python                            | >=3.10  |                                                                        |
-| Installed all the dependencies    | -       | This means having installed all the libraries in requirements.txt file |
-| Running an instance of PostgreSQL |         |                                                                        |
+- **Transport** - Is a layer responsible to handling incoming HTTP requests.
+- **Service** - This layer contains all the business logic of this service.
+- **Database** - This layer is only responsible for dealing with a database.
 
 ## Deployment
 ### Deployment process

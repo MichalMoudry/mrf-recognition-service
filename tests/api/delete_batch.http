@@ -1,0 +1,4 @@
+@hostname=localhost
+@port=8000
+
+DELETE http://{{hostname}}:{{port}}/batch/84f5667e-0a7d-4b0b-8e48-1eae693e70b6 HTTP/1.1

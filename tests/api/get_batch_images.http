@@ -1,0 +1,5 @@
+@hostname=localhost
+@port=8000
+@batch_id=369dff15-9a91-4bb7-b55c-bbd648bbba20
+
+GET http://{{hostname}}:{{port}}/batch/{{batch_id}}/images HTTP/1.1

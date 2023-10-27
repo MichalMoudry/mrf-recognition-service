@@ -70,7 +70,7 @@ jobs:
         with:
           inlineScript: |
             az containerapp dapr enable \
-              -n analytics-service \
+              -n recognition-service \
               -g ${{ secrets.AZURE_RESOURCE_GROUP }} \
               --dapr-app-id recognition-service \
               --dapr-app-protocol grpc \

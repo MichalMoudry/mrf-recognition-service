@@ -37,7 +37,7 @@ def test_processed_document_serialization():
     )
     res = True
     try:
-        json_str = json.dumps(dto.__dict__)
+        json_str = json.dumps(dto.serialize())
         assert len(json_str) > 0
     except Exception as err:
         res = False

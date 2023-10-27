@@ -1,12 +1,20 @@
 """
 Package with code comprising the document batch service.
 """
-from uuid import UUID, uuid4
+import base64
+from uuid import UUID
 from internal.database import Session
 from internal.database.model import new_document_batch, new_processsed_document
 from internal.database import query
-from internal.database.dto import BatchInfo, ProcessedDocumentDto
-from internal.transport.model.dto import DocumentDto
+from internal.service.model.dto import BatchInfo, ProcessedDocumentDto
+
+
+def encode_to_base64(data: bytes | None):
+    """
+    Method for encoding a byte array to a base64 string.
+    """
+    if data is None: return ""
+    return base64.b64encode(data).decode()
 
 
 class DocumentBatchService:
@@ -26,23 +34,37 @@ class DocumentBatchService:
         return batch.id
 
     @staticmethod
-    def get_batch(batch_id: UUID) -> BatchInfo | None:
+    def get_batch(batch_id: UUID):
         session = Session()
-        res = session.execute(query.select_batch(batch_id)).first()
+        rows = session.execute(query.select_batch(batch_id)).all()
         session.commit()
-        if res is None:
+        rows_len = len(rows)
+        if rows_len == 0:
             return None
-        return res.t[0]
+        return [BatchInfo(row[0], row[1], row[2], row[3], row[4]).serialize() for row in rows][0]
 
     @staticmethod
-    def get_batch_images(batch_id: UUID) -> list[ProcessedDocumentDto]:
+    def get_batches(workflow_id: UUID):
+        """
+        A method for obtaining a list of information about document batches.
+        """
+        session = Session()
+        rows = session.execute(query.select_batches(workflow_id)).all()
+        session.commit()
+        return [BatchInfo(row[0], row[1], row[2], row[3], row[4]).serialize() for row in rows]
+
+    @staticmethod
+    def get_batch_images(batch_id: UUID):
         """
         A method for obtaining images from a specific document batch.
         """
         session = Session()
         res = session.execute(query.select_processed_documents(batch_id)).all()
         session.commit()
-        return [row.t[0] for row in res]
+        return [
+            ProcessedDocumentDto(row[0], row[1], encode_to_base64(row[2]), row[3], row[4], row[5]).serialize()
+            for row in res
+        ]
 
     @staticmethod
     def delete_batch(batch_id: UUID):

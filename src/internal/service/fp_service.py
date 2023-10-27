@@ -49,7 +49,7 @@ class FileProcessingService:
             image.was_successful = False
         return image
 
-    async def process_files(self, batch_id: UUID, files: dict[str, FileStorage]):
+    async def process_files(self, batch_id: UUID, workflow_id: UUID, files: dict[str, FileStorage]):
         """
         A method for processing multiple files from a client.
         """
@@ -103,6 +103,7 @@ class FileProcessingService:
                 datetime.now(),
                 datetime.utcnow(),
                 len(processed_documents),
-                status.value
+                status.value,
+                workflow_id
             )
         )

@@ -40,7 +40,7 @@ def setup_batch():
     batch = model.new_document_batch("test_batch", "test_author", workflow_id, [])
     session.add(batch)
     session.commit()
-    return batch.id
+    return (batch.id, workflow_id)
 
 
 async def test_health_method():
@@ -82,7 +82,7 @@ async def test_basic_file_upload():
     assert res.status_code == 202
 
 
-@mark.skip(reason="Only runnable with a Tesseract engine and DB.")
+#@mark.skip(reason="Only runnable with a Tesseract engine and DB.")
 async def test_file_upload_bt():
     """
     A test for validating a background task that is spawned during a file upload.
@@ -90,10 +90,11 @@ async def test_file_upload_bt():
     folder = Path(__file__).parent.parent / "tests/test_images"
     file1 = (folder / "repo_screenshot_2.jpg").open("rb")
     file2 = (folder / "repo_screenshot.png").open("rb")
-    batch_id = setup_batch()
+    batch_id, workflow_id = setup_batch()
 
     await services.fp_service.process_files(
         batch_id,
+        workflow_id,
         {
             "file1": FileStorage(file1, content_type=".jpg"),
             "file2": FileStorage(file2, content_type=".png")

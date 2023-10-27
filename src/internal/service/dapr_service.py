@@ -4,6 +4,7 @@ Module containing code related to a Dapr service.
 import json
 from typing import TypeVar
 from dapr.clients import DaprClient
+from internal.service.model.dto import JsonSerializable
 
 PUBSUB_NAME = "mrf_pub_sub"
 T = TypeVar("T")
@@ -15,7 +16,7 @@ class DaprService:
     """
 
     @staticmethod
-    def publish_event(topic: str, data):
+    def publish_event(topic: str, data: JsonSerializable):
         """
         Method for publishing an event into the MQ.
         """
@@ -23,6 +24,6 @@ class DaprService:
             client.publish_event(
                 pubsub_name=PUBSUB_NAME,
                 topic_name=topic,
-                data=json.dumps(data),
+                data=json.dumps(data.serialize()),
                 data_content_type="application/json"
             )

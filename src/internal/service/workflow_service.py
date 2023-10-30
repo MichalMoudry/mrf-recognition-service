@@ -5,6 +5,7 @@ from uuid import UUID
 from internal.database import Session
 from internal.database.query import select_workflow, delete_workflow
 from internal.service.model.dto import WorkflowDto
+from internal.transport.model.contracts import WorkflowSettings
 
 
 class WorkflowService:
@@ -29,7 +30,8 @@ class WorkflowService:
         session.commit()
 
     @staticmethod
-    def update_workflow():
+    def update_workflow(id: UUID, settings: WorkflowSettings) -> bool:
         """
         A method for updating a specific workflow.
         """
+        return True

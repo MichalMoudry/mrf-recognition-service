@@ -3,7 +3,7 @@ Module that contains endpoint methods for the recognition service.
 """
 from cloudevents.sdk.event import v1
 from dapr.ext.grpc import App
-from time import sleep
+from pydantic import ValidationError
 from quart import Quart, request
 from quart.datastructures import FileStorage
 from quart_schema import QuartSchema, DataSource, validate_request
@@ -120,16 +120,32 @@ def workflow_add(event: v1.Event) -> str:
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_update")
-def workflow_update(event: v1.Event) -> str:
+def workflow_update(event: v1.Event):
     """
     An endpoint for receiving updates about a specific workflow.
     """
-    should_retry = cfg.dapr_settings.should_retry
-    if should_retry:
-        should_retry = False
-        sleep(0.5)
-        return "retry"
-    return "success"
+    data = event.Data()
+    if data is None:
+        return "drop", 400
+
+    parsed_data = json.loads(str(data))
+    workflow_id = is_string_valid_uuid(parsed_data["workflow_id"])
+    if workflow_id is None:
+        return "drop", 400
+
+    try:
+        settings = contracts.WorkflowSettings(
+            is_full_page_recognition=parsed_data["is_full_page_recognition"],
+            skip_img_recognition=parsed_data["skip_img_recognition"],
+            expect_diff_images=parsed_data["skip_img_recognition"]
+        )
+    except ValidationError as err:
+        return err.errors(), 200
+    result = services.workflow_service.update_workflow(
+        workflow_id,
+        settings
+    )
+    return "success", 200
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_delete")
@@ -160,6 +176,7 @@ async def user_delete(event: v1.Event):
 
 
 if __name__ == "__main__":
+    print("Hello from recognition service!  ʕ•ᴥ•ʔ")
     server_cfg = Config()
     server_cfg.bind = ["0.0.0.0:8000"]
     asyncio.run(serve(app, server_cfg))

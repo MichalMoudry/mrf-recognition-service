@@ -112,10 +112,28 @@ async def delete_batch(batch_id: str):
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_add")
-def workflow_add(event: v1.Event) -> str:
+def workflow_add(event: v1.Event):
     """
     An endpoint for receiving data about a new workflow.
     """
+    data = event.Data()
+    if data is None:
+        return "drop", 400
+    parsed_data = json.loads(str(data))
+
+    workflow_id = is_string_valid_uuid(parsed_data["workflow_id"])
+    if workflow_id is None:
+        return "", 500
+    try:
+        settings = contracts.WorkflowSettings(
+            is_full_page_recognition=parsed_data["is_full_page_recognition"],
+            skip_img_recognition=parsed_data["skip_img_recognition"],
+            expect_diff_images=parsed_data["skip_img_recognition"]
+        )
+    except ValidationError as err:
+        return err.errors(), 400
+
+    services.workflow_service.add_workflow(workflow_id, settings)
     return "success"
 
 
@@ -127,7 +145,6 @@ def workflow_update(event: v1.Event):
     data = event.Data()
     if data is None:
         return "drop", 400
-
     parsed_data = json.loads(str(data))
     workflow_id = is_string_valid_uuid(parsed_data["workflow_id"])
     if workflow_id is None:
@@ -140,7 +157,7 @@ def workflow_update(event: v1.Event):
             expect_diff_images=parsed_data["skip_img_recognition"]
         )
     except ValidationError as err:
-        return err.errors(), 200
+        return err.errors(), 400
     result = services.workflow_service.update_workflow(
         workflow_id,
         settings

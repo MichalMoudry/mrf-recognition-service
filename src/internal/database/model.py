@@ -120,6 +120,25 @@ class Workflow(Entity):
     batches: Mapped[list["DocumentBatch"]] = relationship()
 
 
+def new_workflow(
+        workflow_id: UUID,
+        full_page: bool,
+        skip_enhancement: bool,
+        diff_images: bool) -> Workflow:
+    """
+    A constructor function for Workflow entity.
+    """
+    now = datetime.utcnow()
+    return Workflow(
+        id=workflow_id,
+        is_full_page_recognition=full_page,
+        skip_enhancement=skip_enhancement,
+        expect_diff_images=diff_images,
+        date_added=now,
+        date_updated=now
+    )
+
+
 class DocumentTemplate(Entity):
     """
     A business object that represents a document template.

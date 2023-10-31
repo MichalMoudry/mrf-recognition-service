@@ -3,7 +3,7 @@ Module containg code for file processing logic.
 """
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
-from uuid import UUID
+from uuid import UUID, uuid4
 from PIL import ImageFile
 from quart.datastructures import FileStorage
 
@@ -48,6 +48,32 @@ class FileProcessingService:
             image.empty_content()
             image.was_successful = False
         return image
+    
+    async def test_process_image(self, files: dict[str, FileStorage]):
+        futures = []
+        results: list[ProcessedDocumentInfo] = []
+        status = BatchState.COMPLETED
+        with ThreadPoolExecutor() as tp:
+            async for image in pillow_images_generator(files):
+                futures.append(
+                    tp.submit(self.__process_image, image)
+                )
+            for future in as_completed(futures):
+                res: ProcessedDocumentInfo = future.result()
+                if res.was_successful is False: status = BatchState.FAILED
+                results.append(res)
+        DaprService.publish_event(
+            "batch-finish-stat",
+            BatchStatistic(
+                uuid4(),
+                datetime.now(),
+                datetime.utcnow(),
+                len(files),
+                status.value,
+                uuid4()
+            )
+        )
+        return results
 
     async def process_files(self, batch_id: UUID, workflow_id: UUID, files: dict[str, FileStorage]):
         """

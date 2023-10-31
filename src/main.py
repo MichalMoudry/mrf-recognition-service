@@ -60,8 +60,27 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     return "Batch created", 201
 
 
+@app.post("/batch/test")
+@validate_request(contracts.CreateBatchModel, source=DataSource.FORM_MULTIPART)
+async def read_documents(data: contracts.CreateBatchModel):
+    """
+    A endpoint for testing if document reading works.
+    """
+    workflow = services.workflow_service.get_workflow(data.workflow_id)
+    if workflow is None:
+        return "Supplied workflow id is not", 400
+
+    uploaded_files: dict[str, FileStorage] = await request.files
+    result = await services.fp_service.test_process_image(uploaded_files)
+    for res in result:
+        print(f"---- {res.name} ----")
+        for row in res.results:
+            print(f"\t- {row}")
+    return "Document were processed", 200
+
+
 @app.get("/batches/<workflow_id>")
-def get_batches(workflow_id: str):
+async def get_batches(workflow_id: str):
     """
     An endpoint for obtaining a list for document batches for a workflow.
     """

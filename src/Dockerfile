@@ -14,9 +14,7 @@ ENV PATH="$POETRY_HOME/bin:$PATH"
 
 WORKDIR /app
 
-COPY pyproject.toml .
-COPY poetry.lock .
-COPY /src .
+COPY . .
 
 RUN poetry install --no-root --no-ansi --without test
 

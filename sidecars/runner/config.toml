@@ -1,0 +1,2 @@
+environment = "[dev]"
+connection_string = "postgres://root:root@localhost:5432/serv-db?sslmode=disable"

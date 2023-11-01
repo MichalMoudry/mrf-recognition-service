@@ -14,7 +14,7 @@ run:
 	python ./main.py
 
 build_docker_image:
-	docker build -t recognition-service .
+	docker build -t recognition-service ./src
 
 run_docker_image:
 	docker run -d --name recognition-service -p 80:80 recognition-service

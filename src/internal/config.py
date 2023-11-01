@@ -17,17 +17,12 @@ def load_configuration():
     if db_conn != None:
         CONFIG["DB_CONN"] = db_conn
 
-    should_retry = environ.get("DAPR_SHOULD_RETRY")
-    if should_retry is not None:
-        CONFIG["DAPR_SHOULD_RETRY"] = should_retry
-
 
 @dataclass
 class DaprSettings:
     """
     A class representing Dapr's settings.
     """
-    should_retry: bool
 
 
 class Configuration:
@@ -35,9 +30,7 @@ class Configuration:
     A class for handling app's configuration.
     """
     def __init__(self) -> None:
-        self._dapr_settings = DaprSettings(
-            bool(CONFIG["DAPR_SHOULD_RETRY"])
-        )
+        self._dapr_settings = DaprSettings()
 
     @property
     def dapr_settings(self) -> DaprSettings:

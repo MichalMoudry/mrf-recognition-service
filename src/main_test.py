@@ -79,7 +79,7 @@ async def test_basic_file_upload():
 
     file1.close()
     file2.close()
-    assert res.status_code == 202
+    assert res.status_code == 201
 
 
 @mark.skip(reason="Only runnable with a Tesseract engine and DB.")

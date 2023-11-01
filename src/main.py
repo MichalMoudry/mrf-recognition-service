@@ -42,7 +42,7 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     """
     workflow = services.workflow_service.get_workflow(data.workflow_id)
     if workflow is None:
-        return "Supplied workflow id is not", 400
+        return "Supplied workflow id is not in the DB", 400
 
     uploaded_files: dict[str, FileStorage] = await request.files
     batch_id = services.document_batch_service.create_batch(

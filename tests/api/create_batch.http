@@ -1,0 +1,24 @@
+@hostname=localhost
+@port=8000
+
+POST http://{{hostname}}:{{port}}/batch HTTP/1.1
+Content-Type: multipart/form-data; boundary=WebKitFormBoundary
+
+--WebKitFormBoundary
+Content-Disposition: form-data; name="batch_name"
+
+test_batch_1
+--WebKitFormBoundary
+Content-Disposition: form-data; name="workflow_id"
+
+0d14b1b6-e578-4a17-a59b-36ebbfc441ab
+--WebKitFormBoundary
+Content-Disposition: form-data; name="user_id"
+
+test_user_1
+--WebKitFormBoundary
+Content-Disposition: form-data; name="repo_screenshot"; filename="repo_screenshot_2.jpg"
+Content-Type: image/jpg
+
+< ./repo_screenshot_2.jpg
+--WebKitFormBoundary

@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"job-runner/internal/config"
+	"job-runner/internal/database"
 	"job-runner/internal/service"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,9 +15,18 @@ import (
 )
 
 func main() {
+	fmt.Println("Hello from job runner! ʕ•ᴥ•ʔ")
+
+	cfg, err := config.ReadCfgFromFile("config.toml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	database.OpenDb(cfg.ConnectionString)
+
 	scheduler := gocron.NewScheduler(time.UTC)
 	scheduler.Every(1).Minute().Do(service.PrintJob)
-	scheduler.Every(1).Day().At("01:00:00").Do(service.ArchiveJob)
+	scheduler.Cron("* * * * *").Do(service.ArchiveJob)
+	scheduler.Cron("0 3 * * *").Do(service.ArchiveJob)
 	scheduler.StartAsync()
 
 	// Exit handling

@@ -75,7 +75,7 @@ jobs:
       - name: Pull go-migrate
         run: |
           docker pull migrate/migrate
-          docker run -v ./src/database/migrations:/migrations --network host migrate/migrate -path=/migrations/ \
+          docker run -v ./src/internal/database/migrations:/migrations --network host migrate/migrate -path=/migrations/ \
           -database postgres://$DB_ADMIN_NAME:$DB_ADMIN_PASSWORD@$DB_SERVER_NAME:5432/mrf?search_path=recognition up
 
   deploy:

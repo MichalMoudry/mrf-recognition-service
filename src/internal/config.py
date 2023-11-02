@@ -13,12 +13,9 @@ def load_configuration():
     Function for loading service's configuration.
     """
     load_dotenv()
-    print(environ.keys())
     db_conn = environ.get("DB_CONN")
     if db_conn != None:
         CONFIG["DB_CONN"] = db_conn
-    else:
-        CONFIG["DB_CONN"] = ""
 
 
 @dataclass

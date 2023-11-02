@@ -22,11 +22,12 @@ func main() {
 		log.Fatal(err)
 	}
 	database.OpenDb(cfg.ConnectionString)
+	services := service.NewServiceCollection()
 
 	scheduler := gocron.NewScheduler(time.UTC)
-	scheduler.Every(1).Minute().Do(service.PrintJob)
-	scheduler.Cron("* * * * *").Do(service.ArchiveJob)
-	scheduler.Cron("0 3 * * *").Do(service.ArchiveJob)
+	scheduler.Every(1).Minute().Do(services.JobService.PrintJob)
+	scheduler.Every(7).Seconds().DoWithJobDetails(services.JobService.ArchiveJob, cfg)
+	scheduler.Cron("0 3 * * *").DoWithJobDetails(services.JobService.ArchiveJob)
 	scheduler.StartAsync()
 
 	// Exit handling

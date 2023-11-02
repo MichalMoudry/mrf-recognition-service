@@ -1,11 +1,21 @@
 """
 Module for handling recognition service's configuration.
 """
-from dataclasses import dataclass
 from os import environ
 from dotenv import load_dotenv
 
 CONFIG: dict[str, str] = {}
+
+
+def parse_db_conn_string(conn: str) -> str:
+    """
+    Function for forming a DB connection string into a SQLAlchemy accepted one.
+    """
+    parts: dict[str, str] = {}
+    for item in conn.split(" "):
+        split = item.split("=")
+        parts[split[0]] = split[1]
+    return f"postgresql+psycopg2://{parts['user']}:{parts['password']}@{parts['host']}/{parts['dbname']}?sslmode={parts['sslmode']}"
 
 
 def load_configuration():
@@ -15,26 +25,5 @@ def load_configuration():
     load_dotenv()
     db_conn = environ.get("DB_CONN")
     if db_conn != None:
-        CONFIG["DB_CONN"] = db_conn
-
-
-@dataclass
-class DaprSettings:
-    """
-    A class representing Dapr's settings.
-    """
-
-
-class Configuration:
-    """
-    A class for handling app's configuration.
-    """
-    def __init__(self) -> None:
-        self._dapr_settings = DaprSettings()
-
-    @property
-    def dapr_settings(self) -> DaprSettings:
-        """
-        Property containg settings for Dapr.
-        """
-        return self._dapr_settings
+        print(parse_db_conn_string(db_conn))
+        CONFIG["DB_CONN"] = parse_db_conn_string(db_conn)

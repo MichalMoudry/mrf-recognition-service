@@ -13,13 +13,10 @@ import asyncio
 from hypercorn.config import Config
 from hypercorn.asyncio import serve
 
-from internal.config import Configuration
 from internal.transport.model import contracts
 from internal.transport.validation import is_string_valid_uuid
 from internal.service.service_collection import ServiceCollection
 
-
-cfg = Configuration()
 dapr_app = App()
 app = Quart(__name__)
 QuartSchema(app)

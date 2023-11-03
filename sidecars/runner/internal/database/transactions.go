@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	db_errors "job-runner/internal/database/errors"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -22,6 +23,9 @@ func (TransactionManager) BeginTransaction(ctx context.Context) (*sqlx.Tx, error
 // This function ends a specific database transaction.
 func (TransactionManager) EndTransaction(transaction *sqlx.Tx, err error) error {
 	if err != nil {
+		if transaction == nil {
+			return db_errors.ErrNilTransaction
+		}
 		if rollbackErr := transaction.Rollback(); rollbackErr != nil {
 			err = errors.Join(rollbackErr, err)
 		}

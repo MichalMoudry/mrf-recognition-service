@@ -127,7 +127,7 @@ async def delete_batch(batch_id: str):
     return "", 200
 
 
-@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_add")
+@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="new-workflow")
 def workflow_add(event: v1.Event):
     """
     An endpoint for receiving data about a new workflow.
@@ -153,7 +153,7 @@ def workflow_add(event: v1.Event):
     return "success"
 
 
-@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_update")
+@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="workflow_update")
 def workflow_update(event: v1.Event):
     """
     An endpoint for receiving updates about a specific workflow.
@@ -181,17 +181,17 @@ def workflow_update(event: v1.Event):
     return "success", 200
 
 
-@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_delete")
-def workflow_delete(event: v1.Event) -> str:
+@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="workflow_delete")
+def workflow_delete(event: v1.Event):
     """
     An endpoint for receiving a delete event of a specific workflow.
     """
     data = event.Data()
     if data is None:
-        return "drop"
+        return "drop", 400
     parsed_data = json.loads(str(data))
-    services.workflow_service.delete_workflow(parsed_data["workflow_id"])
-    return "success"
+    services.workflow_service.delete_workflow(parsed_data)
+    return "success", 200
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="user_delete")

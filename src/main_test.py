@@ -1,11 +1,14 @@
 """
 Module with basic API tests of the recognition service.
 """
+import json
+from cloudevents.sdk.event import v1
 from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 from pytest import mark
 from quart.datastructures import FileStorage
+from internal.transport.model.contracts import WorkflowSettings
 from main import app, services
 from internal.database import Session, model
 
@@ -100,3 +103,44 @@ async def test_file_upload_bt():
             "file2": FileStorage(file2, content_type=".png")
         }
     )
+
+
+def test_cloud_event_handling():
+    """
+    A test covering handling of cloud events in handler methods.
+    """
+    workflow_id = uuid4()
+    test_event = v1.Event()
+    test_event.SetData(f"\"{workflow_id}\"")
+    test_event.SetSource("test_service")
+    test_event.SetEventTime("2023-11-6T12:41:00Z")
+    test_event.SetEventID("id-1234-5678-9101")
+
+    data = test_event.Data()
+    parsed_data = json.loads(str(data))
+    assert str(workflow_id) == parsed_data
+
+
+def test_complex_cloud_event_handling():
+    """
+    Test handling of more complex events.
+    """
+    settings = WorkflowSettings(
+        is_full_page_recognition=True,
+        expect_diff_images=False,
+        skip_img_recognition=True
+    )
+    settings_str = json.dumps({
+        "is_full_page_recognition": settings.is_full_page_recognition,
+        "skip_img_enchancement": settings.skip_img_recognition,
+        "expecte_diff_images": settings.expect_diff_images
+    })
+
+    test_event = v1.Event()
+    test_event.SetData(settings_str)
+    test_event.SetSource("test_service")
+    test_event.SetEventTime("2023-11-6T12:41:00Z")
+    test_event.SetEventID("id-1234-5678-9101")
+    data = test_event.Data()
+    parsed_data = json.loads(str(data))
+    assert str(parsed_data).lower().replace("\'", "\"") == settings_str

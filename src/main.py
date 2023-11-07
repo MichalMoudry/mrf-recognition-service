@@ -203,8 +203,8 @@ async def user_delete(event: v1.Event):
     if data is None:
         return "drop"
     parsed_data = json.loads(str(data))
-    print(f'Received: id={parsed_data["id"]}, message="{parsed_data["message"]}"', flush=True)
-    services.user_service.delete_users_data(parsed_data["user_id"])
+    print(f'Received: id={event.id}, source="{event.source}"', flush=True)
+    services.user_service.delete_users_data(parsed_data)
     return "success"
 
 

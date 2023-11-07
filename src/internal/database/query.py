@@ -4,7 +4,8 @@ Module containing all the database queries.
 from datetime import datetime
 from uuid import UUID
 from sqlalchemy import select, insert, update, delete
-from .model import DocumentBatch, Workflow, ProcessedDocument, DocumentTemplate, BatchState
+from internal.database.model import DocumentBatch, Workflow, ProcessedDocument, DocumentTemplate, BatchState
+from internal.service.model.dto import WorkflowDto
 
 
 def select_batch(batch_id: UUID):
@@ -85,6 +86,17 @@ def select_workflow(workflow_id: UUID):
         Workflow.expect_diff_images,
         Workflow.skip_enhancement
     ).where(Workflow.id == workflow_id)
+
+
+def update_workflow(data: WorkflowDto):
+    """
+    Query for updating a specific workflow.
+    """
+    return update(Workflow).where(Workflow.id == data.id).values(
+        is_full_page_recognition=data.is_full_page_recognition,
+        skip_enhancement=data.skip_enhancement,
+        expect_diff_images=data.expect_diff_images
+    )
 
 
 def delete_workflow(workflow_id: UUID):

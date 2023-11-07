@@ -4,7 +4,7 @@ Module containing code for a workflow service.
 from uuid import UUID
 from internal.database import Session
 from internal.database.model import new_workflow
-from internal.database.query import select_workflow, delete_workflow
+from internal.database.query import select_workflow, update_workflow, delete_workflow
 from internal.service.model.dto import WorkflowDto
 from internal.transport.model.contracts import WorkflowSettings
 
@@ -51,5 +51,13 @@ class WorkflowService:
         A method for updating a specific workflow.
         """
         session = Session()
+        session.execute(
+            update_workflow(WorkflowDto(
+                id,
+                settings.is_full_page_recognition,
+                settings.expect_diff_images,
+                settings.skip_img_recognition)
+            )
+        )
         session.commit()
         return True

@@ -182,3 +182,15 @@ class WorkflowDto:
     is_full_page_recognition: bool
     expect_diff_images: bool
     skip_enhancement: bool
+
+
+@dataclass
+class BoundingBox:
+    """
+    A DTO representing a single bounding box on the image.
+    """
+    value: str
+    left: int
+    top: int
+    width: int
+    height: int

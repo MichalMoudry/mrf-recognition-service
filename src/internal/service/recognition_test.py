@@ -5,7 +5,9 @@ from os import environ, path, getcwd
 from pytest import mark
 from PIL import Image
 import json
-from .recognition import RecognitionService, TesseractService
+
+from internal.service.model.dto import BoundingBox
+from internal.service.recognition import RecognitionService, TesseractService
 
 
 @mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
@@ -51,7 +53,7 @@ def test_image_recognition_full():
     assert "Solution structure" in result
 
 
-@mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
+#@mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
 def test_recognition_with_bounding_boxes():
     """
     A test where recognition with bounding boxes.

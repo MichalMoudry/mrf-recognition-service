@@ -53,7 +53,7 @@ def test_image_recognition_full():
     assert "Solution structure" in result
 
 
-#@mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
+@mark.skip(reason="Can be allowed to run on systems with recognition capabilities")
 def test_recognition_with_bounding_boxes():
     """
     A test where recognition with bounding boxes.

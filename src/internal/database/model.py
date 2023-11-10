@@ -168,9 +168,20 @@ class TemplateField(Entity):
     template_id: Mapped[Uuid] = mapped_column(ForeignKey("document_templates.id"))
 
 
-def new_template():
+def new_template(name: str, width: float, height: float, img: bytes, workflow_id: UUID) -> DocumentTemplate:
     """
     """
+    now = datetime.utcnow()
+    return DocumentTemplate(
+        id=uuid4(),
+        name=name,
+        width=width,
+        height=height,
+        image=img,
+        workflow_id=workflow_id,
+        date_added=now,
+        date_updated=now
+    )
 
 
 class TemplateFieldValue(Entity):

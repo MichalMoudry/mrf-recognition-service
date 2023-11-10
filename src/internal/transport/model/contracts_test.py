@@ -2,6 +2,7 @@
 Module with tests for Data Transfer Object validation.
 """
 import json
+from operator import le
 from uuid import uuid4
 from pydantic import ValidationError
 from . import contracts
@@ -54,3 +55,38 @@ def test_workflow_settings_wrong_init():
         )
     except ValidationError as err:
         assert err is not None
+
+
+def test_default_create_template_model():
+    """
+    Testing a default init of CreateTemplateModel class.
+    """
+    try:
+        dto = contracts.CreateTemplateModel(
+            template_name="test_template",
+            width=50,
+            height=30,
+            workflow_id=uuid4(),
+            fields=[
+                contracts.TemplateFieldModel(
+                    field_name="test_field_1",
+                    width=10,
+                    height=10,
+                    x_position=2,
+                    y_position=1,
+                    is_identifying=False
+                ),
+                contracts.TemplateFieldModel(
+                    field_name="test_field_2",
+                    width=10,
+                    height=10,
+                    x_position=2,
+                    y_position=1,
+                    is_identifying=False
+                )
+            ]
+        )
+        json_str = dto.model_dump_json()
+        assert len(json_str) > 0
+    except ValidationError as err:
+        assert err is None

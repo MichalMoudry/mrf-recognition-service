@@ -24,11 +24,12 @@ class WorkflowSettings(BaseModel):
 
 
 class TemplateFieldModel(BaseModel):
+    field_name: str
     width: float
     height: float
     x_position: float
     y_position: float
-    expected_value: str | None
+    expected_value: str | None = Field(default=None)
     is_identifying: bool
 
 
@@ -40,4 +41,4 @@ class CreateTemplateModel(BaseModel):
     width: float
     height: float
     workflow_id: UUID
-    fields: list[TemplateFieldModel]
+    fields: list[TemplateFieldModel] = Field(min_length=1)

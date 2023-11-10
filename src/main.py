@@ -137,7 +137,7 @@ async def create_template(data: contracts.CreateTemplateModel):
     uploaded_files: dict[str, FileStorage] = await request.files
     if len(uploaded_files) > 1:
         return "You can only upload one file.", 400
-    services.template_service.create_new_template(data)
+    services.template_service.create_new_template(data, next(uploaded_files.values()))
     return "Ok", 201
 
 

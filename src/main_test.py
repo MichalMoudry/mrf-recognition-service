@@ -8,6 +8,7 @@ from pathlib import Path
 from uuid import uuid4
 from pytest import mark
 from quart.datastructures import FileStorage
+from internal.transport.model import contracts
 from internal.transport.model.contracts import WorkflowSettings
 from main import app, services
 from internal.database import Session, model
@@ -146,7 +147,7 @@ def test_complex_cloud_event_handling():
     assert str(parsed_data).lower().replace("\'", "\"") == settings_str
 
 
-@mark.skip(reason="Only runnable with a database running.")
+#@mark.skip(reason="Only runnable with a database running.")
 async def test_create_template():
     """
     Testing POST /template endpoint.
@@ -162,7 +163,15 @@ async def test_create_template():
             "template_name": "test_template_1",
             "width": "54.32",
             "height": "32.22",
-            "workflow_id": f"{uuid4()}"
+            "workflow_id": f"{uuid4()}",
+            "fields": contracts.TemplateFieldModel(
+                field_name="test_field_1",
+                width=10,
+                height=10,
+                x_position=1,
+                y_position=2,
+                is_identifying=False
+            ).model_dump_json()
         },
         files={
             "file1": FileStorage(file1, content_type=".jpg")

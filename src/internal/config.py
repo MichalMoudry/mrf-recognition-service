@@ -25,5 +25,6 @@ def load_configuration():
     load_dotenv()
     db_conn = environ.get("DB_CONN")
     if db_conn != None:
-        print(parse_db_conn_string(db_conn))
         CONFIG["DB_CONN"] = parse_db_conn_string(db_conn)
+    else:
+        CONFIG["DB_CONN"] = parse_db_conn_string("dbname=data-persistence host=localhost port=5432 sslmode=disable user=root password=root")

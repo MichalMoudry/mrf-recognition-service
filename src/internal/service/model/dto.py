@@ -132,6 +132,16 @@ class BatchFinishEvent(JsonSerializable):
     user_id: str
     status: BatchState
 
+    def serialize(self):
+        """
+        Method for assisting in JSON serialization.
+        """
+        return {
+            "batch_id": f"{self.batch_id}",
+            "user_id": self.user_id,
+            "status": self.status
+        }
+
 
 @dataclass
 class BatchInfo(JsonSerializable):

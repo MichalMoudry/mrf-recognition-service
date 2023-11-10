@@ -17,7 +17,7 @@ class TemplateService:
         """
         Method for creating a new document template in the system.
         """
-        #session = Session()
+        session = Session()
         template = new_template(
             data.template_name,
             data.width,
@@ -25,6 +25,5 @@ class TemplateService:
             image.stream.read(),
             data.workflow_id
         )
-        print(template)
-        #session.add(template)
-        #session.commit()
+        session.add(template)
+        session.commit()

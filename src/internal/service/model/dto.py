@@ -124,6 +124,16 @@ class BatchStatistic(JsonSerializable):
 
 
 @dataclass
+class BatchFinishEvent(JsonSerializable):
+    """
+    A DTO encapsulating an event of a finished batch.
+    """
+    batch_id: UUID
+    user_id: str
+    status: BatchState
+
+
+@dataclass
 class BatchInfo(JsonSerializable):
     """
     A DTO for document batch select queries.

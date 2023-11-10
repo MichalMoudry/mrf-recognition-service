@@ -52,6 +52,7 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
         services.fp_service.process_files,
         batch_id,
         workflow.id,
+        data.user_id,
         uploaded_files
     )
     return "Batch created", 201

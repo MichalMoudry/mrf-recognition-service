@@ -10,7 +10,7 @@ from quart.datastructures import FileStorage
 from internal.database import Session
 from internal.database.query import update_batch
 from internal.database.model import new_processsed_document, new_field_value, BatchState, TemplateFieldValue
-from internal.service.model.dto import ProcessedDocumentInfo, BatchStatistic
+from internal.service.model.dto import BatchFinishEvent, ProcessedDocumentInfo, BatchStatistic
 from .recognition import get_recognition_service, RecognitionServiceType
 from .dapr_service import DaprService
 
@@ -75,7 +75,7 @@ class FileProcessingService:
         )
         return results
 
-    async def process_files(self, batch_id: UUID, workflow_id: UUID, files: dict[str, FileStorage]):
+    async def process_files(self, batch_id: UUID, workflow_id: UUID, user_id: str, files: dict[str, FileStorage]):
         """
         A method for processing multiple files from a client.
         """
@@ -131,5 +131,13 @@ class FileProcessingService:
                 len(processed_documents),
                 status.value,
                 workflow_id
+            )
+        )
+        DaprService.publish_event(
+            "batch-finish",
+            BatchFinishEvent(
+                batch_id,
+                user_id,
+                status
             )
         )

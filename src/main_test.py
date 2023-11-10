@@ -147,7 +147,7 @@ def test_complex_cloud_event_handling():
     assert str(parsed_data).lower().replace("\'", "\"") == settings_str
 
 
-#@mark.skip(reason="Only runnable with a database running.")
+@mark.skip(reason="Only runnable with a database running.")
 async def test_create_template():
     """
     Testing POST /template endpoint.

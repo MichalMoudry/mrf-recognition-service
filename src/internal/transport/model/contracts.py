@@ -21,3 +21,23 @@ class WorkflowSettings(BaseModel):
     is_full_page_recognition: bool
     skip_img_recognition: bool
     expect_diff_images: bool
+
+
+class TemplateFieldModel(BaseModel):
+    width: float
+    height: float
+    x_position: float
+    y_position: float
+    expected_value: str | None
+    is_identifying: bool
+
+
+class CreateTemplateModel(BaseModel):
+    """
+    A model class for creating a new document template.
+    """
+    template_name: str
+    width: float
+    height: float
+    workflow_id: UUID
+    fields: list[TemplateFieldModel]

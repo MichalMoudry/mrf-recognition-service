@@ -144,3 +144,31 @@ def test_complex_cloud_event_handling():
     data = test_event.Data()
     parsed_data = json.loads(str(data))
     assert str(parsed_data).lower().replace("\'", "\"") == settings_str
+
+
+@mark.skip(reason="Only runnable with a database running.")
+async def test_create_template():
+    """
+    Testing POST /template endpoint.
+    """
+    folder = Path(__file__).parent.parent / "tests/test_images"
+    client = app.test_client()
+    file1 = (folder / "repo_screenshot_2.jpg").open("rb")
+    file2 = (folder / "repo_screenshot.png").open("rb")
+
+    res = await client.post(
+        "/template",
+        form={
+            "template_name": "test_template_1",
+            "width": "54.32",
+            "height": "32.22",
+            "workflow_id": f"{uuid4()}"
+        },
+        files={
+            "file1": FileStorage(file1, content_type=".jpg")
+        }
+    )
+
+    file1.close()
+    file2.close()
+    assert res.status_code == 201

@@ -127,6 +127,30 @@ async def delete_batch(batch_id: str):
     return "", 200
 
 
+@app.post("/template")
+@validate_request(contracts.CreateTemplateModel, source=DataSource.FORM_MULTIPART)
+async def create_template(data: contracts.CreateTemplateModel):
+    """
+    An endpoint for creating a new document template.
+    """
+    uploaded_files: dict[str, FileStorage] = await request.files
+    if len(uploaded_files) > 1:
+        return "You can only upload one file.", 400
+    services.template_service.create_new_template(data)
+    return "Ok", 201
+
+
+@app.get("/workflow/<workflow_id>/templates")
+async def get_templates(workflow_id: str):
+    """
+    An endpoint for obtaining information about a specific template.
+    """
+    parsed_id = is_string_valid_uuid(workflow_id)
+    if parsed_id is None:
+        return "Supplied batch ID is not a valid UUID.", 400
+    return "", 200
+
+
 @dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="new-workflow")
 def workflow_add(event: v1.Event):
     """

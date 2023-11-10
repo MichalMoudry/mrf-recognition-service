@@ -168,6 +168,11 @@ class TemplateField(Entity):
     template_id: Mapped[Uuid] = mapped_column(ForeignKey("document_templates.id"))
 
 
+def new_template():
+    """
+    """
+
+
 class TemplateFieldValue(Entity):
     """
     A business object representing a recognized value on a specific document.

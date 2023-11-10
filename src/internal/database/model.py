@@ -2,7 +2,7 @@
 A module with database model classes.
 """
 from datetime import datetime
-from enum import Enum
+from enum import IntEnum
 from typing import Optional
 from uuid import uuid4, UUID
 from sqlalchemy import MetaData, String, Uuid, Boolean, SmallInteger, TIMESTAMP, ForeignKey, LargeBinary, Float
@@ -23,7 +23,7 @@ class Entity(DeclarativeBase):
     date_updated: Mapped[datetime] = mapped_column(TIMESTAMP())
 
 
-class BatchState(Enum):
+class BatchState(IntEnum):
     """
     An enum representing current state of the document batch.
     """

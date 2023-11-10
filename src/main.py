@@ -64,10 +64,6 @@ async def read_documents(data: contracts.CreateBatchModel):
     """
     A endpoint for testing if document reading works.
     """
-    workflow = services.workflow_service.get_workflow(data.workflow_id)
-    if workflow is None:
-        return "Supplied workflow id is not", 400
-
     uploaded_files: dict[str, FileStorage] = await request.files
     result = await services.fp_service.test_process_image(uploaded_files)
     for res in result:

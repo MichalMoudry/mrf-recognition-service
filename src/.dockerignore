@@ -10,3 +10,4 @@ test_*
 **/__pycache__
 *.pyc
 **/migrations
+**/sidecars

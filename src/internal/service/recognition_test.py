@@ -5,7 +5,9 @@ from os import environ, path, getcwd
 from pytest import mark
 from PIL import Image
 import json
-from .recognition import RecognitionService, TesseractService
+
+from internal.service.model.dto import BoundingBox
+from internal.service.recognition import RecognitionService, TesseractService
 
 
 @mark.skip(reason="Can be allowed to run on systems with recognition capabilities")

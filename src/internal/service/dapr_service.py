@@ -2,12 +2,10 @@
 Module containing code related to a Dapr service.
 """
 import json
-from typing import TypeVar
 from dapr.clients import DaprClient
 from internal.service.model.dto import JsonSerializable
 
-PUBSUB_NAME = "mrf_pub_sub"
-T = TypeVar("T")
+PUBSUB_NAME = "mrf-pub-sub"
 
 
 class DaprService:

@@ -120,6 +120,25 @@ class Workflow(Entity):
     batches: Mapped[list["DocumentBatch"]] = relationship()
 
 
+def new_workflow(
+        workflow_id: UUID,
+        full_page: bool,
+        skip_enhancement: bool,
+        diff_images: bool) -> Workflow:
+    """
+    A constructor function for Workflow entity.
+    """
+    now = datetime.utcnow()
+    return Workflow(
+        id=workflow_id,
+        is_full_page_recognition=full_page,
+        skip_enhancement=skip_enhancement,
+        expect_diff_images=diff_images,
+        date_added=now,
+        date_updated=now
+    )
+
+
 class DocumentTemplate(Entity):
     """
     A business object that represents a document template.
@@ -147,6 +166,22 @@ class TemplateField(Entity):
     expected_value = mapped_column(String(255), nullable=True)
     is_identifying = mapped_column(Boolean())
     template_id: Mapped[Uuid] = mapped_column(ForeignKey("document_templates.id"))
+
+
+def new_template(name: str, width: float, height: float, img: bytes, workflow_id: UUID) -> DocumentTemplate:
+    """
+    """
+    now = datetime.utcnow()
+    return DocumentTemplate(
+        id=uuid4(),
+        name=name,
+        width=width,
+        height=height,
+        image=img,
+        workflow_id=workflow_id,
+        date_added=now,
+        date_updated=now
+    )
 
 
 class TemplateFieldValue(Entity):

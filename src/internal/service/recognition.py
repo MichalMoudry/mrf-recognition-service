@@ -8,6 +8,8 @@ from PIL import Image
 from os import environ
 import pytesseract
 
+from internal.service.model.dto import BoundingBox
+
 
 class RecognitionServiceType(Enum):
     """
@@ -54,7 +56,7 @@ class RecognitionService(ABC):
         self,
         image: Image.Image,
         lang: Optional[str] = None
-    ) -> str:
+    ) -> list[BoundingBox]:
         """
         Method for processing an image with bouding boxes estimates.
         """
@@ -86,9 +88,19 @@ class TesseractService(RecognitionService):
         language = lang if lang is not None else self._default_language
         return str(pytesseract.image_to_string(image, language)).split("\n\n")
 
-    def process_image_with_bounding_boxes(self, image: Image.Image, lang: Optional[str] = None):
-        language = lang if lang is not None else self._default_language
-        return pytesseract.image_to_boxes(image, language)
+    def process_image_with_bounding_boxes(self, image: Image.Image, lang: Optional[str] = None) -> list[BoundingBox]:
+        results = pytesseract.image_to_data(image, output_type="dict")
+
+        boxes: list[BoundingBox] = []
+        for i in range(len(results["level"])):
+            text = results["text"][i]
+            if text == "" or text == " ":
+                continue
+            (x, y, w, h) = (results["left"][i], results["top"][i], results["width"][i], results["height"][i])
+            boxes.append(
+                BoundingBox(text, x, y, w, h)
+            )
+        return boxes
 
 
 def get_recognition_service(service_type: RecognitionServiceType) -> RecognitionService:

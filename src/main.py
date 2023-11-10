@@ -3,7 +3,7 @@ Module that contains endpoint methods for the recognition service.
 """
 from cloudevents.sdk.event import v1
 from dapr.ext.grpc import App
-from time import sleep
+from pydantic import ValidationError
 from quart import Quart, request
 from quart.datastructures import FileStorage
 from quart_schema import QuartSchema, DataSource, validate_request
@@ -13,13 +13,10 @@ import asyncio
 from hypercorn.config import Config
 from hypercorn.asyncio import serve
 
-from internal.config import Configuration
 from internal.transport.model import contracts
 from internal.transport.validation import is_string_valid_uuid
 from internal.service.service_collection import ServiceCollection
 
-
-cfg = Configuration()
 dapr_app = App()
 app = Quart(__name__)
 QuartSchema(app)
@@ -42,7 +39,7 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     """
     workflow = services.workflow_service.get_workflow(data.workflow_id)
     if workflow is None:
-        return "Supplied workflow id is not", 400
+        return "Supplied workflow id is not in the DB", 400
 
     uploaded_files: dict[str, FileStorage] = await request.files
     batch_id = services.document_batch_service.create_batch(
@@ -55,13 +52,33 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
         services.fp_service.process_files,
         batch_id,
         workflow.id,
+        data.user_id,
         uploaded_files
     )
     return "Batch created", 201
 
 
+@app.post("/batch/test")
+@validate_request(contracts.CreateBatchModel, source=DataSource.FORM_MULTIPART)
+async def read_documents(data: contracts.CreateBatchModel):
+    """
+    A endpoint for testing if document reading works.
+    """
+    workflow = services.workflow_service.get_workflow(data.workflow_id)
+    if workflow is None:
+        return "Supplied workflow id is not", 400
+
+    uploaded_files: dict[str, FileStorage] = await request.files
+    result = await services.fp_service.test_process_image(uploaded_files)
+    for res in result:
+        print(f"---- {res.name} ----")
+        for row in res.results:
+            print(f"\t- {row}")
+    return "Document were processed", 200
+
+
 @app.get("/batches/<workflow_id>")
-def get_batches(workflow_id: str):
+async def get_batches(workflow_id: str):
     """
     An endpoint for obtaining a list for document batches for a workflow.
     """
@@ -111,38 +128,95 @@ async def delete_batch(batch_id: str):
     return "", 200
 
 
-@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_add")
-def workflow_add(event: v1.Event) -> str:
+@app.post("/template")
+@validate_request(contracts.CreateTemplateModel, source=DataSource.FORM_MULTIPART)
+async def create_template(data: contracts.CreateTemplateModel):
+    """
+    An endpoint for creating a new document template.
+    """
+    uploaded_files: dict[str, FileStorage] = await request.files
+    if len(uploaded_files) > 1:
+        return "You can only upload one file.", 400
+    services.template_service.create_new_template(data, next(uploaded_files.values()))
+    return "Ok", 201
+
+
+@app.get("/workflow/<workflow_id>/templates")
+async def get_templates(workflow_id: str):
+    """
+    An endpoint for obtaining information about a specific template.
+    """
+    parsed_id = is_string_valid_uuid(workflow_id)
+    if parsed_id is None:
+        return "Supplied batch ID is not a valid UUID.", 400
+    return "", 200
+
+
+@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="new-workflow")
+def workflow_add(event: v1.Event):
     """
     An endpoint for receiving data about a new workflow.
     """
+    data = event.Data()
+    if data is None:
+        return "drop", 400
+    parsed_data = json.loads(str(data))
+
+    workflow_id = is_string_valid_uuid(parsed_data["workflow_id"])
+    if workflow_id is None:
+        return "", 500
+    try:
+        settings = contracts.WorkflowSettings(
+            is_full_page_recognition=parsed_data["is_full_page_recognition"],
+            skip_img_recognition=parsed_data["skip_img_recognition"],
+            expect_diff_images=parsed_data["skip_img_recognition"]
+        )
+    except ValidationError as err:
+        return err.errors(), 400
+
+    services.workflow_service.add_workflow(workflow_id, settings)
     return "success"
 
 
-@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_update")
-def workflow_update(event: v1.Event) -> str:
+@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="workflow_update")
+def workflow_update(event: v1.Event):
     """
     An endpoint for receiving updates about a specific workflow.
     """
-    should_retry = cfg.dapr_settings.should_retry
-    if should_retry:
-        should_retry = False
-        sleep(0.5)
-        return "retry"
-    return "success"
+    data = event.Data()
+    if data is None:
+        return "drop", 400
+    parsed_data = json.loads(str(data))
+    workflow_id = is_string_valid_uuid(parsed_data["workflow_id"])
+    if workflow_id is None:
+        return "drop", 400
+
+    try:
+        settings = contracts.WorkflowSettings(
+            is_full_page_recognition=parsed_data["is_full_page_recognition"],
+            skip_img_recognition=parsed_data["skip_img_recognition"],
+            expect_diff_images=parsed_data["skip_img_recognition"]
+        )
+    except ValidationError as err:
+        return err.errors(), 400
+    result = services.workflow_service.update_workflow(
+        workflow_id,
+        settings
+    )
+    return "success", 200
 
 
-@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="workflow_delete")
-def workflow_delete(event: v1.Event) -> str:
+@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="workflow_delete")
+def workflow_delete(event: v1.Event):
     """
     An endpoint for receiving a delete event of a specific workflow.
     """
     data = event.Data()
     if data is None:
-        return "drop"
+        return "drop", 400
     parsed_data = json.loads(str(data))
-    services.workflow_service.delete_workflow(parsed_data["workflow_id"])
-    return "success"
+    services.workflow_service.delete_workflow(parsed_data)
+    return "success", 200
 
 
 @dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="user_delete")
@@ -154,12 +228,13 @@ async def user_delete(event: v1.Event):
     if data is None:
         return "drop"
     parsed_data = json.loads(str(data))
-    print(f'Received: id={parsed_data["id"]}, message="{parsed_data["message"]}"', flush=True)
-    services.user_service.delete_users_data(parsed_data["user_id"])
+    print(f'Received: id={event.id}, source="{event.source}"', flush=True)
+    services.user_service.delete_users_data(parsed_data)
     return "success"
 
 
 if __name__ == "__main__":
+    print("Hello from recognition service!  ʕ•ᴥ•ʔ")
     server_cfg = Config()
     server_cfg.bind = ["0.0.0.0:8000"]
     asyncio.run(serve(app, server_cfg))

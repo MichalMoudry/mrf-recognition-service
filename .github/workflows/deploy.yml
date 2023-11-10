@@ -1,5 +1,7 @@
 name: Deploy to Azure
 on:
+  push:
+    branches: [ "main" ]
   release:
     types: [published]
   workflow_dispatch:
@@ -27,15 +29,59 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ./src
           push: true
           tags: michalmoudry/recognition-service:latest
           labels: ${{ steps.meta.outputs.labels }}
 
+  push_sidecars:
+    name: Push sidecar Docker images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: michalmoudry/recognition-service-runner
+
+      - name: Build and push Runner service Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./sidecars/runner
+          push: true
+          tags: michalmoudry/recognition-service-runner:latest
+          labels: ${{ steps.meta.outputs.labels }}
+
+  migrate_db:
+    name: Migrate database schema
+    runs-on: ubuntu-latest
+    env:
+      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
+      DB_ADMIN_NAME: ${{ secrets.DB_ADMIN_NAME }}
+      DB_ADMIN_PASSWORD: ${{ secrets.DB_ADMIN_PASSWORD }}
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Pull go-migrate
+        run: |
+          docker pull migrate/migrate
+          docker run -v ./src/internal/database/migrations:/migrations --network host migrate/migrate -path=/migrations/ \
+          -database postgres://$DB_ADMIN_NAME:$DB_ADMIN_PASSWORD@$DB_SERVER_NAME:5432/mrf?search_path=recognition up
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    needs: [push_to_registery]
+    needs: [push_to_registery, push_sidecars, migrate_db]
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4

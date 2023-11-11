@@ -59,8 +59,7 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
 
 
 @app.post("/batch/test")
-@validate_request(contracts.CreateBatchModel, source=DataSource.FORM_MULTIPART)
-async def read_documents(data: contracts.CreateBatchModel):
+async def read_documents():
     """
     A endpoint for testing if document reading works.
     """
@@ -70,7 +69,8 @@ async def read_documents(data: contracts.CreateBatchModel):
         print(f"---- {res.name} ----")
         for row in res.results:
             print(f"\t- {row}")
-    return "Document were processed", 200
+    test = "-".join(result[0].results)
+    return test, 200
 
 
 @app.get("/batches/<workflow_id>")

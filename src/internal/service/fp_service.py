@@ -50,37 +50,41 @@ class FileProcessingService:
         return image
     
     async def test_process_image(self, files: dict[str, FileStorage]) -> list[ProcessedDocumentInfo]:
-        futures = []
         results: list[ProcessedDocumentInfo] = []
-        status = BatchState.COMPLETED
-        with ThreadPoolExecutor() as tp:
+        try:
+            status = BatchState.COMPLETED
+            """with ThreadPoolExecutor() as tp:
+                async for image in pillow_images_generator(files):
+                    futures.append(
+                        tp.submit(self.__process_image, image)
+                    )
+                for future in as_completed(futures):
+                    res: ProcessedDocumentInfo = future.result()
+                    if res.was_successful is False: status = BatchState.FAILED
+                    results.append(res)"""
             async for image in pillow_images_generator(files):
-                futures.append(
-                    tp.submit(self.__process_image, image)
+                results.append(self.__process_image(image))
+            DaprService.publish_event(
+                "batch-finish-stat",
+                BatchStatistic(
+                    uuid4(),
+                    datetime.now(),
+                    datetime.utcnow(),
+                    len(files),
+                    status.value,
+                    uuid4()
                 )
-            for future in as_completed(futures):
-                res: ProcessedDocumentInfo = future.result()
-                if res.was_successful is False: status = BatchState.FAILED
-                results.append(res)
-        DaprService.publish_event(
-            "batch-finish-stat",
-            BatchStatistic(
-                uuid4(),
-                datetime.now(),
-                datetime.utcnow(),
-                len(files),
-                status.value,
-                uuid4()
             )
-        )
-        DaprService.publish_event(
-            "batch-finish",
-            BatchFinishEvent(
-                uuid4(),
-                "test_user",
-                status
+            DaprService.publish_event(
+                "batch-finish",
+                BatchFinishEvent(
+                    uuid4(),
+                    "test_user",
+                    status
+                )
             )
-        )
+        except:
+            print("recognition failed")
         return results
 
     async def process_files(self, batch_id: UUID, workflow_id: UUID, user_id: str, files: dict[str, FileStorage]):

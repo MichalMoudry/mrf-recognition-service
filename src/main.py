@@ -70,7 +70,8 @@ async def read_documents(data: contracts.CreateBatchModel):
         print(f"---- {res.name} ----")
         for row in res.results:
             print(f"\t- {row}")
-    return "Document were processed", 200
+    test = "-".join(result[0].results)
+    return test, 200
 
 
 @app.get("/batches/<workflow_id>")

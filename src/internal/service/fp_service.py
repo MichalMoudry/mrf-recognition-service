@@ -49,7 +49,7 @@ class FileProcessingService:
             image.was_successful = False
         return image
     
-    async def test_process_image(self, files: dict[str, FileStorage]):
+    async def test_process_image(self, files: dict[str, FileStorage]) -> list[ProcessedDocumentInfo]:
         futures = []
         results: list[ProcessedDocumentInfo] = []
         status = BatchState.COMPLETED
@@ -71,6 +71,14 @@ class FileProcessingService:
                 len(files),
                 status.value,
                 uuid4()
+            )
+        )
+        DaprService.publish_event(
+            "batch-finish",
+            BatchFinishEvent(
+                uuid4(),
+                "test_user",
+                status
             )
         )
         return results

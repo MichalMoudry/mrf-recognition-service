@@ -58,7 +58,7 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     return "Batch created", 201
 
 
-@app.post("/batch/test")
+@app.post("/batch-test")
 async def read_documents():
     """
     A endpoint for testing if document reading works.

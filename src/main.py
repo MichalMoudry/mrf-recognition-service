@@ -58,19 +58,14 @@ async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
     return "Batch created", 201
 
 
-@app.post("/batch/test")
+@app.post("/batch-test")
 async def read_documents():
     """
     A endpoint for testing if document reading works.
     """
     uploaded_files: dict[str, FileStorage] = await request.files
-    result = await services.fp_service.test_process_image(uploaded_files)
-    for res in result:
-        print(f"---- {res.name} ----")
-        for row in res.results:
-            print(f"\t- {row}")
-    test = "-".join(result[0].results)
-    return test, 200
+    app.add_background_task(services.fp_service.test_process_image, uploaded_files)
+    return "test", 200
 
 
 @app.get("/batches/<workflow_id>")

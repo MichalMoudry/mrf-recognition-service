@@ -5,7 +5,7 @@ from internal.service.template_service import TemplateService
 from internal.service.doc_batch_service import DocumentBatchService
 from internal.service.workflow_service import WorkflowService
 from internal.service.user_service import UserService
-from internal.service.fp_service import FileProcessingService
+from internal.service.processing_service import ProcessingService
 
 
 class ServiceCollection:
@@ -17,7 +17,7 @@ class ServiceCollection:
         self._doc_batch_service = DocumentBatchService
         self._workflow_service = WorkflowService()
         self._user_service = UserService()
-        self._file_processing_service = FileProcessingService()
+        self._file_processing_service = ProcessingService()
         self._template_service = TemplateService
 
     @property
@@ -36,7 +36,7 @@ class ServiceCollection:
         return self._user_service
 
     @property
-    def fp_service(self) -> FileProcessingService:
+    def fp_service(self) -> ProcessingService:
         """
         Property containing an instance of FileProcessingService.
         """

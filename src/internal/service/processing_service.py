@@ -3,7 +3,7 @@ Module containg code for file processing logic.
 """
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
-from uuid import UUID, uuid4
+from uuid import UUID
 from PIL import ImageFile
 from quart.datastructures import FileStorage
 
@@ -31,7 +31,7 @@ async def pillow_images_generator(files: dict[str, FileStorage]):
         )
 
 
-class FileProcessingService:
+class ProcessingService:
     """
     A service class containing logic for file processing.
     """
@@ -52,39 +52,10 @@ class FileProcessingService:
     async def test_process_image(self, files: dict[str, FileStorage]) -> list[ProcessedDocumentInfo]:
         results: list[ProcessedDocumentInfo] = []
         try:
-            status = BatchState.COMPLETED
-            """with ThreadPoolExecutor() as tp:
-                async for image in pillow_images_generator(files):
-                    futures.append(
-                        tp.submit(self.__process_image, image)
-                    )
-                for future in as_completed(futures):
-                    res: ProcessedDocumentInfo = future.result()
-                    if res.was_successful is False: status = BatchState.FAILED
-                    results.append(res)"""
             async for image in pillow_images_generator(files):
                 results.append(self.__process_image(image))
-            DaprService.publish_event(
-                "batch-finish-stat",
-                BatchStatistic(
-                    uuid4(),
-                    datetime.now(),
-                    datetime.utcnow(),
-                    len(files),
-                    status.value,
-                    uuid4()
-                )
-            )
-            DaprService.publish_event(
-                "batch-finish",
-                BatchFinishEvent(
-                    uuid4(),
-                    "test_user",
-                    status
-                )
-            )
-        except:
-            print("recognition failed")
+        except Exception as err:
+            print("recognition failed:", err)
         return results
 
     async def process_files(self, batch_id: UUID, workflow_id: UUID, user_id: str, files: dict[str, FileStorage]):

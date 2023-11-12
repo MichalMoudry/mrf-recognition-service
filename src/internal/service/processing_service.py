@@ -51,11 +51,13 @@ class ProcessingService:
     
     async def test_process_image(self, files: dict[str, FileStorage]) -> list[ProcessedDocumentInfo]:
         results: list[ProcessedDocumentInfo] = []
+        print("Starting processing...")
         try:
             async for image in pillow_images_generator(files):
                 results.append(self.__process_image(image))
         except Exception as err:
             print("recognition failed:", err)
+        print("Finished processing:", results)
         return results
 
     async def process_files(self, batch_id: UUID, workflow_id: UUID, user_id: str, files: dict[str, FileStorage]):

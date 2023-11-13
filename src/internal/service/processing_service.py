@@ -57,7 +57,12 @@ class ProcessingService:
                 results.append(self.__process_image(image))
         except Exception as err:
             print("recognition failed:", err)
-        print("Finished processing:", results)
+        print("Finished processing:")
+        for res in results:
+            print(res.name)
+            print(res.was_successful)
+            for line in res.results:
+                print("\t", line)
         return results
 
     async def process_files(self, batch_id: UUID, workflow_id: UUID, user_id: str, files: dict[str, FileStorage]):

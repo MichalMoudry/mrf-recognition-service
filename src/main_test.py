@@ -62,7 +62,7 @@ async def test_basic_file_upload():
     """
     A test scenario covering a basic file upload.
     """
-    workflow_id = setup_workflow()
+    #workflow_id = setup_workflow()
     folder = Path(__file__).parent.parent / "tests/test_images"
     client = app.test_client()
     file1 = (folder / "repo_screenshot_2.jpg").open("rb")
@@ -72,7 +72,7 @@ async def test_basic_file_upload():
         "/batch",
         form={
             "batch_name": "test_batch_1",
-            "workflow_id": f"{workflow_id}",
+            "workflow_id": f"{uuid4()}",
             "user_id": "test_user_1"
         },
         files={

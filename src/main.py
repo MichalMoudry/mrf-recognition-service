@@ -32,22 +32,31 @@ async def health() -> str:
 
 
 @app.post("/batch")
-@validate_request(contracts.CreateBatchModel, source=DataSource.FORM_MULTIPART)
-async def create_batch(data: contracts.CreateBatchModel) -> tuple[str, int]:
+async def create_batch():
     """
     An endpoint for creating a new batch of documents for processing.
     """
+    form_data = await request.form
+    uploaded_files: dict[str, FileStorage] = await request.files
+    if len(uploaded_files) == 0:
+        return "You need to upload more than one file", 400
+    try:
+        data = contracts.CreateBatchModel(
+            batch_name=form_data["batch_name"],
+            workflow_id=form_data["workflow_id"],
+            user_id=form_data["user_id"]
+        )
+    except ValidationError as err:
+        return err.json(), 400
     workflow = services.workflow_service.get_workflow(data.workflow_id)
     if workflow is None:
         return "Supplied workflow id is not in the DB", 400
-
-    uploaded_files: dict[str, FileStorage] = await request.files
+    
     batch_id = services.document_batch_service.create_batch(
         data.batch_name,
         data.user_id,
         data.workflow_id
     )
-
     app.add_background_task(
         services.fp_service.process_files,
         batch_id,
@@ -75,7 +84,7 @@ async def get_batches(workflow_id: str):
     """
     parsed_id = is_string_valid_uuid(workflow_id)
     if parsed_id is None:
-        return "Supplied workflow ID is not a valid UUID.", 422
+        return "Supplied workflow ID is not a valid UUID.", 400
 
     return services.document_batch_service.get_batches(parsed_id), 200
 

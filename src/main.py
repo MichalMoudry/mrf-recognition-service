@@ -1,10 +1,9 @@
 """
 Module that contains endpoint methods for the recognition service.
 """
-from cloudevents.sdk.event import v1
-from dapr.ext.grpc import App
+from cloudevents.http import from_http
 from pydantic import ValidationError
-from quart import Quart, request
+from quart import Quart, request, jsonify
 from quart.datastructures import FileStorage
 from quart_schema import QuartSchema, DataSource, validate_request
 import json
@@ -13,11 +12,11 @@ import asyncio
 from hypercorn.config import Config
 from hypercorn.asyncio import serve
 
+from internal.service.dapr_service import PUBSUB_NAME
 from internal.transport.model import contracts
 from internal.transport.validation import is_string_valid_uuid
 from internal.service.service_collection import ServiceCollection
 
-dapr_app = App()
 app = Quart(__name__)
 QuartSchema(app)
 services = ServiceCollection()
@@ -152,84 +151,99 @@ async def get_templates(workflow_id: str):
     return "", 200
 
 
-@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="new-workflow")
-def workflow_add(event: v1.Event):
+@app.get("/dapr/subscribe")
+async def subscribe():
+    """
+    An endpoint for Dapr pub/sub subscriptions.
+    """
+    subscriptions = [
+        {
+            "pubsubname": PUBSUB_NAME,
+            "topic": "new-workflow",
+            "route": "workflows/add"
+        },
+        {
+            "pubsubname": PUBSUB_NAME,
+            "topic": "workflow_update",
+            "route": "workflows/update"
+        },
+        {
+            "pubsubname": PUBSUB_NAME,
+            "topic": "workflow_delete",
+            "route": "workflows/delete"
+        },
+        {
+            "pubsubname": PUBSUB_NAME,
+            "topic": "user_delete",
+            "route": "users/delete"
+        }
+    ]
+    print("Dapr pub/sub is subscribed to: " + json.dumps(subscriptions))
+    return jsonify(subscriptions)
+
+
+@app.post("/workflows/add")
+async def workflow_add():
     """
     An endpoint for receiving data about a new workflow.
     """
-    data = event.Data()
-    if data is None:
-        return "drop", 400
-    parsed_data = json.loads(str(data))
-
-    workflow_id = is_string_valid_uuid(parsed_data["workflow_id"])
+    event = from_http(request.headers, await request.get_data())
+    workflow_id = is_string_valid_uuid(event.data["workflow_id"])
     if workflow_id is None:
-        return "", 500
+        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
     try:
         settings = contracts.WorkflowSettings(
-            is_full_page_recognition=parsed_data["is_full_page_recognition"],
-            skip_img_recognition=parsed_data["skip_img_recognition"],
-            expect_diff_images=parsed_data["skip_img_recognition"]
+            is_full_page_recognition=event.data["is_full_page_recognition"],
+            skip_img_recognition=event.data["skip_img_recognition"],
+            expect_diff_images=event.data["skip_img_recognition"]
         )
-    except ValidationError as err:
-        return err.errors(), 400
-
+    except:
+        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
     services.workflow_service.add_workflow(workflow_id, settings)
     return "success"
 
 
-@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="workflow_update")
-def workflow_update(event: v1.Event):
+@app.post("/workflows/add")
+async def workflow_update():
     """
     An endpoint for receiving updates about a specific workflow.
     """
-    data = event.Data()
-    if data is None:
-        return "drop", 400
-    parsed_data = json.loads(str(data))
-    workflow_id = is_string_valid_uuid(parsed_data["workflow_id"])
+    event = from_http(request.headers, await request.get_data())
+    workflow_id = is_string_valid_uuid(event.data["workflow_id"])
     if workflow_id is None:
-        return "drop", 400
-
+        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
     try:
         settings = contracts.WorkflowSettings(
-            is_full_page_recognition=parsed_data["is_full_page_recognition"],
-            skip_img_recognition=parsed_data["skip_img_recognition"],
-            expect_diff_images=parsed_data["skip_img_recognition"]
+            is_full_page_recognition=event.data["is_full_page_recognition"],
+            skip_img_recognition=event.data["skip_img_recognition"],
+            expect_diff_images=event.data["skip_img_recognition"]
         )
-    except ValidationError as err:
-        return err.errors(), 400
-    result = services.workflow_service.update_workflow(
+    except:
+        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
+    services.workflow_service.update_workflow(
         workflow_id,
         settings
     )
-    return "success", 200
+    return json.dumps({ "success": True }), 400, { "ContentType": "application/json" }
 
 
-@dapr_app.subscribe(pubsub_name="mrf-pub-sub", topic="workflow_delete")
-def workflow_delete(event: v1.Event):
+@app.post("/workflows/update")
+async def workflow_delete():
     """
     An endpoint for receiving a delete event of a specific workflow.
     """
-    data = event.Data()
-    if data is None:
-        return "drop", 400
-    parsed_data = json.loads(str(data))
-    services.workflow_service.delete_workflow(parsed_data)
+    event = from_http(request.headers, await request.get_data())
+    services.workflow_service.delete_workflow(event.data)
     return "success", 200
 
 
-@dapr_app.subscribe(pubsub_name="mrf_pub_sub", topic="user_delete")
-async def user_delete(event: v1.Event):
+@app.post("/users/delete")
+async def user_delete():
     """
     An endpoint for receiving a delete event for user's data.
     """
-    data = event.Data()
-    if data is None:
-        return "drop"
-    parsed_data = json.loads(str(data))
-    print(f'Received: id={event.id}, source="{event.source}"', flush=True)
-    services.user_service.delete_users_data(parsed_data)
+    event = from_http(request.headers, await request.get_data())
+    services.user_service.delete_users_data(event.data)
     return "success"
 
 

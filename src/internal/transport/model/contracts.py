@@ -11,7 +11,7 @@ class CreateBatchModel(BaseModel):
     """
     batch_name: str = Field(..., min_length=3, max_length=180)
     workflow_id: UUID
-    user_id: str = Field(..., min_length=3, max_length=120)
+    user_id: str = Field(..., min_length=3, max_length=1200)
 
 
 class WorkflowSettings(BaseModel):

@@ -174,7 +174,7 @@ async def subscribe():
         },
         {
             "pubsubname": PUBSUB_NAME,
-            "topic": "user_delete",
+            "topic": "user-delete",
             "route": "users/delete"
         }
     ]

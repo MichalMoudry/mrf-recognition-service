@@ -25,3 +25,4 @@ class DaprService:
                 data=json.dumps(data.serialize()),
                 data_content_type="application/json"
             )
+        print("Published data: " + json.dumps(data.serialize()))

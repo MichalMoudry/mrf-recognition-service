@@ -101,3 +101,5 @@ This environment has Dapr as a serverless service.
 - [Pydantic](https://github.com/pydantic/pydantic "A link to Pydantic GitHub repository") - A Python library for data validation.
 
 More information can be found in the [pyproject.toml](./pyproject.toml "Link to pyproject.toml file") file.
+
+https://github.com/Azure-Samples/pubsub-dapr-python-servicebus/blob/main/order-processor/requirements.txt

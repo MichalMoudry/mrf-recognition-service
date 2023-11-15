@@ -15,8 +15,8 @@ python-dotenv = "^1.0.0"
 pytesseract = "^0.3.10"
 psycopg2-binary = "^2.9.7"
 dapr = "^1.11.0"
-dapr-ext-grpc = "^1.11.0"
 hypercorn = "^0.14.4"
+cloudevents = "^1.10.1"
 
 
 [tool.poetry.group.test.dependencies]

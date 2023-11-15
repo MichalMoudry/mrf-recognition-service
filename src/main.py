@@ -174,7 +174,7 @@ async def subscribe():
         },
         {
             "pubsubname": PUBSUB_NAME,
-            "topic": "user_delete",
+            "topic": "user-delete",
             "route": "users/delete"
         }
     ]
@@ -195,12 +195,12 @@ async def workflow_add():
         settings = contracts.WorkflowSettings(
             is_full_page_recognition=event.data["is_full_page_recognition"],
             skip_img_recognition=event.data["skip_img_recognition"],
-            expect_diff_images=event.data["skip_img_recognition"]
+            expect_diff_images=event.data["expect_diff_images"]
         )
     except:
         return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
     services.workflow_service.add_workflow(workflow_id, settings)
-    return "success"
+    return json.dumps({ "success": True }), 200, { "ContentType": "application/json" }
 
 
 @app.post("/workflows/add")
@@ -224,7 +224,7 @@ async def workflow_update():
         workflow_id,
         settings
     )
-    return json.dumps({ "success": True }), 400, { "ContentType": "application/json" }
+    return json.dumps({ "success": True }), 200, { "ContentType": "application/json" }
 
 
 @app.post("/workflows/update")
@@ -234,7 +234,7 @@ async def workflow_delete():
     """
     event = from_http(request.headers, await request.get_data())
     services.workflow_service.delete_workflow(event.data)
-    return "success", 200
+    return json.dumps({ "success": True }), 200, { "ContentType": "application/json" }
 
 
 @app.post("/users/delete")
@@ -244,7 +244,7 @@ async def user_delete():
     """
     event = from_http(request.headers, await request.get_data())
     services.user_service.delete_users_data(event.data)
-    return "success"
+    return json.dumps({ "success": True }), 200, { "ContentType": "application/json" }
 
 
 if __name__ == "__main__":

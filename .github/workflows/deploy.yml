@@ -120,5 +120,5 @@ jobs:
               -n recognition-service \
               -g ${{ secrets.AZURE_RESOURCE_GROUP }} \
               --dapr-app-id recognition-service \
-              --dapr-app-protocol grpc \
+              --dapr-app-protocol http \
               --dapr-app-port 8000

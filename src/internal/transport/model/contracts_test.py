@@ -1,10 +1,13 @@
 """
 Module with tests for Data Transfer Object validation.
 """
+from cgi import test
 import json
-from operator import le
+from cloudevents.http import CloudEvent
 from uuid import uuid4
 from pydantic import ValidationError
+
+from internal.service.model.dto import WorkflowDto
 from . import contracts
 
 
@@ -90,3 +93,46 @@ def test_default_create_template_model():
         assert len(json_str) > 0
     except ValidationError as err:
         assert err is None
+
+
+def test_simple_cloudevent():
+    """
+    A test scenario covering unmarshalling of a cloud event with a simple payload.
+    """
+    event_attributes = {
+        "type": "com.testservice.test",
+        "source": "test-service"
+    }
+    data = f"{uuid4()}"
+    test_event = CloudEvent(event_attributes, data)
+    assert test_event.data == data
+
+
+def test_complex_cloudevent_object():
+    """
+    A test scenario covering unmarshalling of a cloud event with complex payload.
+    """
+    event_attributes = {
+        "type": "com.testservice.test",
+        "source": "test-service"
+    }
+    data = {
+        "workflow_id": f"{uuid4()}",
+        "is_full_page_recognition": True,
+        "skip_img_enchancement": False,
+        "expect_diff_images": True
+    }
+
+    test_event = CloudEvent(event_attributes, data)
+    dto = WorkflowDto(
+        id=test_event.data["workflow_id"],
+        is_full_page_recognition=test_event.data["is_full_page_recognition"],
+        expect_diff_images=test_event.data["expect_diff_images"],
+        skip_enhancement=test_event.data["skip_img_enchancement"]
+    )
+
+    assert test_event["source"] == event_attributes["source"]
+    assert dto.id == data["workflow_id"]
+    assert dto.is_full_page_recognition == data["is_full_page_recognition"]
+    assert dto.expect_diff_images == data["expect_diff_images"]
+    assert dto.skip_enhancement == data["skip_img_enchancement"]

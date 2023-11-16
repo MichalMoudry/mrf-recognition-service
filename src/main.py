@@ -3,7 +3,7 @@ Module that contains endpoint methods for the recognition service.
 """
 from cloudevents.http import from_http
 from pydantic import ValidationError
-from quart import Quart, request, jsonify
+from quart import Quart, Response, request, jsonify
 from quart.datastructures import FileStorage
 from quart_schema import QuartSchema, DataSource, validate_request
 import json
@@ -23,11 +23,11 @@ services = ServiceCollection()
 
 
 @app.get("/health")
-async def health() -> str:
+async def health() -> Response:
     """
     Service health endpoint method.
     """
-    return "healthy"
+    return jsonify("healthy")
 
 
 @app.post("/batch")
@@ -73,7 +73,7 @@ async def read_documents():
     """
     uploaded_files: dict[str, FileStorage] = await request.files
     app.add_background_task(services.fp_service.test_process_image, uploaded_files)
-    return "test", 200
+    return "test started", 200
 
 
 @app.get("/batches/<workflow_id>")
@@ -124,7 +124,7 @@ async def delete_batch(batch_id: str):
     if parsed_id is None:
         return "Supplied batch ID is not a valid UUID.", 422
     services.document_batch_service.delete_batch(parsed_id)
-    return "", 200
+    return "success", 200
 
 
 @app.post("/template")

@@ -54,7 +54,7 @@ async def test_health_method():
     client = app.test_client()
     res = await client.get("/health")
     assert res.status_code == 200
-    assert (await res.data) == b'healthy'
+    assert (await res.data) == b'"healthy"'
 
 
 @mark.skip(reason="Only runnable with a database running.")

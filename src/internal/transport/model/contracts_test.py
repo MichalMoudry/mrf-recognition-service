@@ -40,7 +40,7 @@ def test_workflow_settings_init():
     try:
         contracts.WorkflowSettings(
             is_full_page_recognition=True,
-            skip_img_recognition=True,
+            skip_img_enchancement=True,
             expect_diff_images=False
         )
     except ValidationError as err:
@@ -54,7 +54,7 @@ def test_workflow_settings_wrong_init():
     try:
         contracts.WorkflowSettings(
             is_full_page_recognition="tr-ue",
-            skip_img_recognition="True",
+            skip_img_enchancement="True",
             expect_diff_images="False"
         )
     except ValidationError as err:

@@ -24,3 +24,10 @@ create_local_db:
 
 migrate_local_db:
 	migrate -path './src/internal/database/migrations' -database 'postgres://root:root@localhost:5432/data-persistence?sslmode=disable&search_path=recognition' up
+
+# Dapr tasks
+run_with_dapr:
+	dapr run --app-id recognition-service --app-port 8000  --resources-path ./.dapr python ./src/main.py
+
+publish_add_workflow:
+	dapr publish --publish-app-id recognition-service --pubsub 'mrf-pub-sub' --topic 'new-workflow' --data-file ./tests/messages/new_workflow.json

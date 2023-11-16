@@ -1,0 +1,6 @@
+{
+    "expect_diff_images": true,
+    "is_full_page_recognition": true,
+    "skip_img_enchancement": true,
+    "workflow_id": "d0890d70-366c-448b-be21-1afbc44cb638"
+}

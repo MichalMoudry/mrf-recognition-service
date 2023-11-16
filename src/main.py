@@ -194,11 +194,11 @@ async def workflow_add():
     try:
         settings = contracts.WorkflowSettings(
             is_full_page_recognition=event.data["is_full_page_recognition"],
-            skip_img_recognition=event.data["skip_img_recognition"],
+            skip_img_enchancement=event.data["skip_img_enchancement"],
             expect_diff_images=event.data["expect_diff_images"]
         )
-    except Exception as err:
-        return json.dumps({ "success": False, "err": err }), 400, { "ContentType": "application/json" }
+    except ValidationError as err:
+        return json.dumps({ "success": False, "err": err.json() }), 400, { "ContentType": "application/json" }
     services.workflow_service.add_workflow(workflow_id, settings)
     return json.dumps({ "success": True }), 200, { "ContentType": "application/json" }
 
@@ -215,7 +215,7 @@ async def workflow_update():
     try:
         settings = contracts.WorkflowSettings(
             is_full_page_recognition=event.data["is_full_page_recognition"],
-            skip_img_recognition=event.data["skip_img_recognition"],
+            skip_img_enchancement=event.data["skip_img_recognition"],
             expect_diff_images=event.data["skip_img_recognition"]
         )
     except Exception as err:
@@ -248,7 +248,7 @@ async def user_delete():
 
 
 if __name__ == "__main__":
-    print("Hello from recognition service!  ʕ•ᴥ•ʔ")
+    #print("Hello from recognition service!  ʕ•ᴥ•ʔ")
     server_cfg = Config()
     server_cfg.bind = ["0.0.0.0:8000"]
     asyncio.run(serve(app, server_cfg))

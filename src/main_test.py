@@ -54,7 +54,7 @@ async def test_health_method():
     client = app.test_client()
     res = await client.get("/health")
     assert res.status_code == 200
-    assert (await res.data) == b'healthy'
+    assert (await res.data) == b'"healthy"'
 
 
 @mark.skip(reason="Only runnable with a database running.")
@@ -129,11 +129,11 @@ def test_complex_cloud_event_handling():
     settings = WorkflowSettings(
         is_full_page_recognition=True,
         expect_diff_images=False,
-        skip_img_recognition=True
+        skip_img_enchancement=True
     )
     settings_str = json.dumps({
         "is_full_page_recognition": settings.is_full_page_recognition,
-        "skip_img_enchancement": settings.skip_img_recognition,
+        "skip_img_enchancement": settings.skip_img_enchancement,
         "expecte_diff_images": settings.expect_diff_images
     })
 

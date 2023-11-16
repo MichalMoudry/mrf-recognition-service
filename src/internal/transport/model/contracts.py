@@ -19,7 +19,7 @@ class WorkflowSettings(BaseModel):
     A model class for carrying workflow settings.
     """
     is_full_page_recognition: bool
-    skip_img_recognition: bool
+    skip_img_enchancement: bool
     expect_diff_images: bool
 
 

@@ -1,13 +1,14 @@
 """
 Module with tests for Data Transfer Object validation.
 """
-from cgi import test
 import json
 from cloudevents.http import CloudEvent
 from uuid import uuid4
 from pydantic import ValidationError
+from quart import jsonify
 
 from internal.service.model.dto import WorkflowDto
+from main import app
 from . import contracts
 
 
@@ -39,7 +40,7 @@ def test_workflow_settings_init():
     try:
         contracts.WorkflowSettings(
             is_full_page_recognition=True,
-            skip_img_recognition=True,
+            skip_img_enchancement=True,
             expect_diff_images=False
         )
     except ValidationError as err:
@@ -53,7 +54,7 @@ def test_workflow_settings_wrong_init():
     try:
         contracts.WorkflowSettings(
             is_full_page_recognition="tr-ue",
-            skip_img_recognition="True",
+            skip_img_enchancement="True",
             expect_diff_images="False"
         )
     except ValidationError as err:
@@ -130,9 +131,16 @@ def test_complex_cloudevent_object():
         expect_diff_images=test_event.data["expect_diff_images"],
         skip_enhancement=test_event.data["skip_img_enchancement"]
     )
-
     assert test_event["source"] == event_attributes["source"]
     assert dto.id == data["workflow_id"]
     assert dto.is_full_page_recognition == data["is_full_page_recognition"]
     assert dto.expect_diff_images == data["expect_diff_images"]
     assert dto.skip_enhancement == data["skip_img_enchancement"]
+
+
+async def test_jsonify():
+    async with app.app_context():
+        test_message = "success"
+        result = await jsonify(test_message).json
+        assert len(result) > 0
+        assert result is not None

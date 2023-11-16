@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-sqlalchemy = "^2.0.21"
+sqlalchemy = "^2.0.23"
 quart = "^0.18.4"
 quart-schema = "^0.17.1"
 python-dotenv = "^1.0.0"

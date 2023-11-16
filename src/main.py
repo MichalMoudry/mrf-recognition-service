@@ -3,7 +3,7 @@ Module that contains endpoint methods for the recognition service.
 """
 from cloudevents.http import from_http
 from pydantic import ValidationError
-from quart import Quart, request, jsonify
+from quart import Quart, Response, request, jsonify
 from quart.datastructures import FileStorage
 from quart_schema import QuartSchema, DataSource, validate_request
 import json
@@ -23,11 +23,11 @@ services = ServiceCollection()
 
 
 @app.get("/health")
-async def health() -> str:
+async def health() -> Response:
     """
     Service health endpoint method.
     """
-    return "healthy"
+    return jsonify("healthy")
 
 
 @app.post("/batch")
@@ -73,7 +73,7 @@ async def read_documents():
     """
     uploaded_files: dict[str, FileStorage] = await request.files
     app.add_background_task(services.fp_service.test_process_image, uploaded_files)
-    return "test", 200
+    return "test started", 200
 
 
 @app.get("/batches/<workflow_id>")
@@ -124,7 +124,7 @@ async def delete_batch(batch_id: str):
     if parsed_id is None:
         return "Supplied batch ID is not a valid UUID.", 422
     services.document_batch_service.delete_batch(parsed_id)
-    return "", 200
+    return "success", 200
 
 
 @app.post("/template")
@@ -151,7 +151,7 @@ async def get_templates(workflow_id: str):
     return "", 200
 
 
-@app.get("/dapr/subscribe")
+@app.route('/dapr/subscribe', methods=['GET'])
 async def subscribe():
     """
     An endpoint for Dapr pub/sub subscriptions.
@@ -190,20 +190,20 @@ async def workflow_add():
     event = from_http(request.headers, await request.get_data())
     workflow_id = is_string_valid_uuid(event.data["workflow_id"])
     if workflow_id is None:
-        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
+        return json.dumps({ "success": False, "err": "Empty workflow id" }), 400, { "ContentType": "application/json" }
     try:
         settings = contracts.WorkflowSettings(
             is_full_page_recognition=event.data["is_full_page_recognition"],
-            skip_img_recognition=event.data["skip_img_recognition"],
+            skip_img_enchancement=event.data["skip_img_enchancement"],
             expect_diff_images=event.data["expect_diff_images"]
         )
-    except:
-        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
+    except ValidationError as err:
+        return json.dumps({ "success": False, "err": err.json() }), 400, { "ContentType": "application/json" }
     services.workflow_service.add_workflow(workflow_id, settings)
     return json.dumps({ "success": True }), 200, { "ContentType": "application/json" }
 
 
-@app.post("/workflows/add")
+@app.post("/workflows/update")
 async def workflow_update():
     """
     An endpoint for receiving updates about a specific workflow.
@@ -211,15 +211,15 @@ async def workflow_update():
     event = from_http(request.headers, await request.get_data())
     workflow_id = is_string_valid_uuid(event.data["workflow_id"])
     if workflow_id is None:
-        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
+        return json.dumps({ "success": False, "err": "Empty workflow id" }), 400, { "ContentType": "application/json" }
     try:
         settings = contracts.WorkflowSettings(
             is_full_page_recognition=event.data["is_full_page_recognition"],
-            skip_img_recognition=event.data["skip_img_recognition"],
+            skip_img_enchancement=event.data["skip_img_recognition"],
             expect_diff_images=event.data["skip_img_recognition"]
         )
-    except:
-        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
+    except Exception as err:
+        return json.dumps({ "success": False, "err": err }), 400, { "ContentType": "application/json" }
     services.workflow_service.update_workflow(
         workflow_id,
         settings
@@ -248,7 +248,7 @@ async def user_delete():
 
 
 if __name__ == "__main__":
-    print("Hello from recognition service!  ʕ•ᴥ•ʔ")
+    #print("Hello from recognition service!  ʕ•ᴥ•ʔ")
     server_cfg = Config()
     server_cfg.bind = ["0.0.0.0:8000"]
     asyncio.run(serve(app, server_cfg))

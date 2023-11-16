@@ -23,7 +23,7 @@ class WorkflowService:
         session.add(new_workflow(
             id,
             settings.is_full_page_recognition,
-            settings.skip_img_recognition,
+            settings.skip_img_enchancement,
             settings.expect_diff_images
         ))
         session.commit()
@@ -56,7 +56,7 @@ class WorkflowService:
                 id,
                 settings.is_full_page_recognition,
                 settings.expect_diff_images,
-                settings.skip_img_recognition)
+                settings.skip_img_enchancement)
             )
         )
         session.commit()

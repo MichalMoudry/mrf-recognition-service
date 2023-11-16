@@ -131,7 +131,6 @@ def test_complex_cloudevent_object():
         expect_diff_images=test_event.data["expect_diff_images"],
         skip_enhancement=test_event.data["skip_img_enchancement"]
     )
-
     assert test_event["source"] == event_attributes["source"]
     assert dto.id == data["workflow_id"]
     assert dto.is_full_page_recognition == data["is_full_page_recognition"]

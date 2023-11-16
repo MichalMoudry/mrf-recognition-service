@@ -151,7 +151,7 @@ async def get_templates(workflow_id: str):
     return "", 200
 
 
-@app.get("/dapr/subscribe")
+@app.route('/dapr/subscribe', methods=['GET'])
 async def subscribe():
     """
     An endpoint for Dapr pub/sub subscriptions.
@@ -190,20 +190,20 @@ async def workflow_add():
     event = from_http(request.headers, await request.get_data())
     workflow_id = is_string_valid_uuid(event.data["workflow_id"])
     if workflow_id is None:
-        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
+        return json.dumps({ "success": False, "err": "Empty workflow id" }), 400, { "ContentType": "application/json" }
     try:
         settings = contracts.WorkflowSettings(
             is_full_page_recognition=event.data["is_full_page_recognition"],
             skip_img_recognition=event.data["skip_img_recognition"],
             expect_diff_images=event.data["expect_diff_images"]
         )
-    except:
-        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
+    except Exception as err:
+        return json.dumps({ "success": False, "err": err }), 400, { "ContentType": "application/json" }
     services.workflow_service.add_workflow(workflow_id, settings)
     return json.dumps({ "success": True }), 200, { "ContentType": "application/json" }
 
 
-@app.post("/workflows/add")
+@app.post("/workflows/update")
 async def workflow_update():
     """
     An endpoint for receiving updates about a specific workflow.
@@ -211,15 +211,15 @@ async def workflow_update():
     event = from_http(request.headers, await request.get_data())
     workflow_id = is_string_valid_uuid(event.data["workflow_id"])
     if workflow_id is None:
-        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
+        return json.dumps({ "success": False, "err": "Empty workflow id" }), 400, { "ContentType": "application/json" }
     try:
         settings = contracts.WorkflowSettings(
             is_full_page_recognition=event.data["is_full_page_recognition"],
             skip_img_recognition=event.data["skip_img_recognition"],
             expect_diff_images=event.data["skip_img_recognition"]
         )
-    except:
-        return json.dumps({ "success": False }), 400, { "ContentType": "application/json" }
+    except Exception as err:
+        return json.dumps({ "success": False, "err": err }), 400, { "ContentType": "application/json" }
     services.workflow_service.update_workflow(
         workflow_id,
         settings

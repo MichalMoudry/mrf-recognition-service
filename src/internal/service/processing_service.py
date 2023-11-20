@@ -69,6 +69,7 @@ class ProcessingService:
         """
         A method for processing multiple files from a client.
         """
+        start_time = datetime.utcnow()
         futures = []
         results: list[ProcessedDocumentInfo] = []
         status = BatchState.COMPLETED
@@ -111,13 +112,14 @@ class ProcessingService:
             )
         )
         session.commit()
+        finished_time = datetime.utcnow()
 
         DaprService.publish_event(
             "batch-finish-stat",
             BatchStatistic(
                 batch_id,
-                datetime.now(),
-                datetime.utcnow(),
+                start_time,
+                finished_time,
                 len(processed_documents),
                 status.value,
                 workflow_id

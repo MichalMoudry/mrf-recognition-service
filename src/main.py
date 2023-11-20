@@ -12,9 +12,9 @@ import asyncio
 from hypercorn.config import Config
 from hypercorn.asyncio import serve
 
-from internal.service.dapr_service import PUBSUB_NAME
 from internal.transport.model import contracts
 from internal.transport.validation import is_string_valid_uuid
+from internal.service.dapr_service import PUBSUB_NAME
 from internal.service.service_collection import ServiceCollection
 
 app = Quart(__name__)
@@ -66,8 +66,8 @@ async def create_batch():
     return "Batch created", 201
 
 
-@app.post("/batch-test")
-async def read_documents():
+@app.post("/test/batch")
+async def test_read_documents():
     """
     A endpoint for testing if document reading works.
     """

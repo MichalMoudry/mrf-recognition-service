@@ -2,4 +2,4 @@
 @port=8000
 @batch_id=97367ffc-61bd-4cd2-b8ab-319268f45955
 
-GET http://{{hostname}}:{{port}}/batch/{{batch_id}}/images HTTP/1.1
+GET http://{{hostname}}:{{port}}/batch/{{batch_id}}/results HTTP/1.1

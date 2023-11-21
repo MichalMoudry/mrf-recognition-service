@@ -194,6 +194,28 @@ class ProcessedDocumentDto(JsonSerializable):
 
 
 @dataclass
+class DocumentResultDto(JsonSerializable):
+    """
+    A DTO for a processed document result.
+    """
+    id: UUID
+    name: str
+    value: str
+    document_id: UUID
+
+    def serialize(self):
+        """
+        Method for assisting in JSON serialization.
+        """
+        return {
+            "id": f"{self.id}",
+            "name": self.name,
+            "value": self.value,
+            "document_id": f"{self.document_id}"
+        }
+
+
+@dataclass
 class WorkflowDto:
     """
     A DTO for a recognition workflow.

@@ -4,7 +4,7 @@ Module containing all the database queries.
 from datetime import datetime
 from uuid import UUID
 from sqlalchemy import select, insert, update, delete
-from internal.database.model import DocumentBatch, Workflow, ProcessedDocument, DocumentTemplate, BatchState
+from internal.database.model import DocumentBatch, TemplateFieldValue, Workflow, ProcessedDocument, DocumentTemplate, BatchState
 from internal.service.model.dto import WorkflowDto
 
 
@@ -32,6 +32,18 @@ def select_batches(workflow_id: UUID):
         DocumentBatch.completed_date,
         DocumentBatch.state
     ).where(DocumentBatch.workflow_id == workflow_id).order_by(DocumentBatch.start_date)
+
+
+def select_batch_results(document_ids: list[UUID]):
+    """
+    Query for selecting all results from a document batch.
+    """
+    return select(
+        TemplateFieldValue.id,
+        TemplateFieldValue.name,
+        TemplateFieldValue.value,
+        TemplateFieldValue.document_id
+    ).where(TemplateFieldValue.document_id.in_(document_ids))
 
 
 def update_batch(batch_id: UUID, status: BatchState, finish_date: datetime):
@@ -73,6 +85,15 @@ def select_processed_documents(batch_id: UUID):
         ProcessedDocument.content_type,
         ProcessedDocument.archive_key,
         ProcessedDocument.is_archived
+    ).where(ProcessedDocument.batch_id == batch_id)
+
+
+def select_processed_documents_ids(batch_id: UUID):
+    """
+    Query for selecting IDs of processed documents for a specific batch.
+    """
+    return select(
+        ProcessedDocument.id
     ).where(ProcessedDocument.batch_id == batch_id)
 
 

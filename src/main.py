@@ -95,7 +95,7 @@ async def get_batch(batch_id: str):
     """
     parsed_id = is_string_valid_uuid(batch_id)
     if parsed_id is None:
-        return "Supplied batch ID is not a valid UUID.", 422
+        return "Supplied batch ID is not a valid UUID.", 400
 
     data = services.document_batch_service.get_batch(parsed_id)
     if data is None:
@@ -110,9 +110,20 @@ async def get_batch_images(batch_id: str):
     """
     parsed_id = is_string_valid_uuid(batch_id)
     if parsed_id is None:
-        return "Supplied batch ID is not a valid UUID.", 422
+        return "Supplied batch ID is not a valid UUID.", 400
 
     return services.document_batch_service.get_batch_images(parsed_id), 200
+
+
+@app.get("/batch/<batch_id>/results")
+async def get_batch_results(batch_id: str):
+    """
+    An endpoint for obtaining a list of results for a document batch.
+    """
+    parsed_id = is_string_valid_uuid(batch_id)
+    if parsed_id is None:
+        return "Supplied batch ID is not a valid UUID.", 400
+    return services.document_batch_service.get_batch_results(parsed_id), 200
 
 
 @app.delete("/batch/<batch_id>")
@@ -122,7 +133,7 @@ async def delete_batch(batch_id: str):
     """
     parsed_id = is_string_valid_uuid(batch_id)
     if parsed_id is None:
-        return "Supplied batch ID is not a valid UUID.", 422
+        return "Supplied batch ID is not a valid UUID.", 400
     services.document_batch_service.delete_batch(parsed_id)
     return "success", 200
 

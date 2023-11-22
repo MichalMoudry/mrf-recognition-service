@@ -22,7 +22,7 @@ func NewJobService(txManager ioc.ITransactionManager, docRepo ioc.IProcessedDocu
 
 // A simple job that prints a string.
 func (srvc JobService) PrintJob() {
-	log.Println("Executed print job.")
+	log.Println("Executed 'print' job.")
 }
 
 func (srvc JobService) ArchiveJob(cfg config.Config, job gocron.Job) {
@@ -32,12 +32,13 @@ func (srvc JobService) ArchiveJob(cfg config.Config, job gocron.Job) {
 		err = srvc.transactionManager.EndTransaction(tx, err)
 	}()
 	if err != nil {
+		log.Println(err)
 		return
 	}
 
 	docs, err := srvc.docRepository.GetUnprocessedDocuments(tx)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatal(err)
 		return
 	}
 

@@ -21,7 +21,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	database.OpenDb(cfg.ConnectionString)
+	err = database.OpenDb(cfg.ConnectionString)
+	if err != nil {
+		log.Fatal(err)
+	}
 	services := service.NewServiceCollection()
 
 	scheduler := gocron.NewScheduler(time.UTC)

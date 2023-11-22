@@ -13,11 +13,11 @@ type TransactionManager struct{}
 
 // This function starts a database transaction.
 func (TransactionManager) BeginTransaction(ctx context.Context) (*sqlx.Tx, error) {
-	dbCtx, err := GetDbContext()
+	db, err := GetDbContext()
 	if err != nil {
 		return nil, err
 	}
-	return dbCtx.BeginTxx(ctx, nil)
+	return db.BeginTxx(ctx, nil)
 }
 
 // This function ends a specific database transaction.

@@ -25,8 +25,8 @@ func main() {
 	services := service.NewServiceCollection()
 
 	scheduler := gocron.NewScheduler(time.UTC)
-	//scheduler.Every(1).Minute().Do(services.JobService.PrintJob)
-	//scheduler.Every(7).Seconds().DoWithJobDetails(services.JobService.ArchiveJob, cfg)
+	scheduler.Every(1).Minute().Do(services.JobService.PrintJob)
+	scheduler.Every(7).Seconds().DoWithJobDetails(services.JobService.ArchiveJob, cfg)
 	scheduler.Cron("0 3 * * *").DoWithJobDetails(services.JobService.ArchiveJob, cfg)
 	scheduler.StartAsync()
 

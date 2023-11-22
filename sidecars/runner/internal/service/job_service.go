@@ -1,15 +1,11 @@
 package service
 
 import (
-	"bytes"
-	"fmt"
 	"job-runner/internal/config"
 	"job-runner/internal/service/model/ioc"
 	"log"
-	"net/http"
 
 	"github.com/go-co-op/gocron"
-	"github.com/google/uuid"
 )
 
 type JobService struct {
@@ -30,6 +26,7 @@ func (srvc JobService) PrintJob() {
 }
 
 func (srvc JobService) ArchiveJob(cfg config.Config, job gocron.Job) {
+	log.Println("Started archive job")
 	tx, err := srvc.transactionManager.BeginTransaction(job.Context())
 	defer func() {
 		err = srvc.transactionManager.EndTransaction(tx, err)
@@ -38,21 +35,21 @@ func (srvc JobService) ArchiveJob(cfg config.Config, job gocron.Job) {
 		return
 	}
 
-	docs, err := srvc.docRepository.GetUnprocessedDocuments()
+	docs, err := srvc.docRepository.GetUnprocessedDocuments(tx)
 	if err != nil {
 		log.Fatalln(err)
 		return
 	}
 
 	for _, doc := range docs {
-		_, err = http.NewRequest(
+		/*_, err = http.NewRequest(
 			http.MethodPut,
 			fmt.Sprintf("%s/%s", cfg.BlobStorageUrl, uuid.NewString()),
 			bytes.NewReader(doc.Content),
 		)
 		if err != nil {
 			continue
-		}
+		}*/
 		doc.IsArchived = true
 	}
 	log.Printf("Executed '%v' job.\n", job.GetName())

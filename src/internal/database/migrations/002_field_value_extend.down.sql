@@ -1,5 +1,6 @@
 BEGIN;
 
-ALTER TABLE recognition.field_values ALTER COLUMN value VARCHAR(255) NOT NULL;
+ALTER TABLE recognition.field_values
+    ALTER COLUMN value TYPE varchar(255);
 
 COMMIT;

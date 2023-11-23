@@ -1,0 +1,5 @@
+BEGIN;
+
+ALTER TABLE recognition.field_values ALTER COLUMN value VARCHAR(255) NOT NULL;
+
+COMMIT;

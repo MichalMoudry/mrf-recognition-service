@@ -86,7 +86,18 @@ class TesseractService(RecognitionService):
 
     def process_image_full(self, image: Image.Image, lang: Optional[str] = None) -> list[str]:
         language = lang if lang is not None else self._default_language
-        return str(pytesseract.image_to_string(image, language)).split("\n\n")
+        res = str(pytesseract.image_to_string(image, language))
+        if len(res) >= 1024:
+            resulting_list: list[str] = []
+            blocks = res.split("\n\n")
+            for block in blocks:
+                if len(block) >= 1024:
+                    resulting_list.extend(block.splitlines())
+                else:
+                    resulting_list.append(block)
+            return resulting_list
+        else:
+            return res.split("\n\n")
 
     def process_image_with_bounding_boxes(self, image: Image.Image, lang: Optional[str] = None) -> list[BoundingBox]:
         results = pytesseract.image_to_data(image, output_type="dict")

@@ -100,7 +100,7 @@ class ProcessingService:
                     result_fields.append(
                         new_field_value("field_", row, val.id)
                     )
-        
+
         session = Session()
         session.bulk_save_objects(processed_documents)
         session.bulk_save_objects(result_fields)

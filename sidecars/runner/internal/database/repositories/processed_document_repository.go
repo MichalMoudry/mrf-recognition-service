@@ -3,7 +3,9 @@ package repositories
 import (
 	"job-runner/internal/database/model"
 	"job-runner/internal/database/query"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -16,4 +18,12 @@ func (ProcessedDocumentRepository) GetUnprocessedDocuments(ctx *sqlx.Tx) ([]mode
 		return nil, err
 	}
 	return data, nil
+}
+
+// Method for updating a unprocessed document.
+func (ProcessedDocumentRepository) UpdateUnprocessedDocument(ctx *sqlx.Tx, docId uuid.UUID) error {
+	if _, err := ctx.Exec(query.UpdateProcessedFile, docId, time.Now()); err != nil {
+		return err
+	}
+	return nil
 }

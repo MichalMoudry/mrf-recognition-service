@@ -28,9 +28,6 @@ func (srvc JobService) PrintJob() {
 func (srvc JobService) ArchiveJob(cfg config.Config, job gocron.Job) {
 	log.Println("Started archive job")
 	tx, err := srvc.transactionManager.BeginTransaction(job.Context())
-	defer func() {
-		err = srvc.transactionManager.EndTransaction(tx, err)
-	}()
 	if err != nil {
 		log.Println(err)
 		return
@@ -51,7 +48,17 @@ func (srvc JobService) ArchiveJob(cfg config.Config, job gocron.Job) {
 		if err != nil {
 			continue
 		}*/
+		/*err = srvc.docRepository.UpdateUnprocessedDocument(tx, doc.Id)
+		if err != nil {
+			log.Printf("Failed to update '%v' document.\n", doc.Id)
+			continue
+		}*/
 		doc.IsArchived = true
 	}
 	log.Printf("Executed '%v' job.\n", job.GetName())
+
+	err = srvc.transactionManager.EndTransaction(tx, err)
+	if err != nil {
+		log.Printf("An error occured when ending a transaction\n")
+	}
 }

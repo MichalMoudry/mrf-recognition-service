@@ -1,4 +1,3 @@
 environment = "[dev]"
-# connection_string = "postgres://root:root@localhost:5432/data-persistence?sslmode=disable&search_path=recognition"
-connection_string = "postgres://mrf_admin:8rM5nw:3ngZetQf@mrf-db-server.postgres.database.azure.com:5432/mrf?sslmode=require&search_path=recognition"
+connection_string = "postgres://root:root@localhost:5432/data-persistence?sslmode=disable&search_path=recognition"
 blob_storage_url = ""

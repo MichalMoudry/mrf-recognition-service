@@ -21,7 +21,8 @@ def test_batch_stat_serialization():
         1,
         uuid4()
     )
-    json_str = json.dumps(dto.serialize())
+    serialized_dto = dto.serialize()
+    json_str = json.dumps(serialized_dto)
     assert len(json_str) > 0
 
 

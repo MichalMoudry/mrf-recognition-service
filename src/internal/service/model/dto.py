@@ -115,8 +115,8 @@ class BatchStatistic(JsonSerializable):
         """
         return {
             "batch_id": f"{self.batch_id}",
-            "start_date": f"{self.start_date}",
-            "end_date": f"{self.end_date}",
+            "start_date": self.start_date.isoformat(),
+            "end_date": self.end_date.isoformat(),
             "number_of_documents": self.number_of_documents,
             "status": self.status,
             "workflow_id": f"{self.workflow_id}"
@@ -161,7 +161,7 @@ class BatchInfo(JsonSerializable):
         return {
             "id": f"{self.id}",
             "name": f"{self.name}",
-            "start_date": f"{self.start_date}",
+            "start_date": self.start_date.isoformat(),
             "completed_date": self.completed_date,
             "status": self.status
         }

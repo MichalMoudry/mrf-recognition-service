@@ -11,3 +11,4 @@ test_*
 *.pyc
 **/migrations
 **/sidecars
+**/main_fastapi.py

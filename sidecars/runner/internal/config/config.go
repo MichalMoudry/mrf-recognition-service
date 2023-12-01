@@ -9,6 +9,7 @@ import (
 type Config struct {
 	ConnectionString string
 	BlobStorageUrl   string
+	MsEntraId        string
 	Environment
 }
 
@@ -29,9 +30,15 @@ func ReadCfgFromFile(path string) (Config, error) {
 		blobStorageUrl = os.Getenv("BLOB_STORAGE_URL")
 	}
 
+	msEntraId := viper.GetString("ms_entra_id")
+	if msEntraId == "" {
+		msEntraId = os.Getenv("MS_ENTRA_ID")
+	}
+
 	return Config{
 		ConnectionString: connectionString,
 		BlobStorageUrl:   blobStorageUrl,
+		MsEntraId:        msEntraId,
 		Environment:      Environment(viper.GetString("environment")),
 	}, nil
 }

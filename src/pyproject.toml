@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "recognition-service"
+version = "1.0.0"
+description = "A package containing sourcode for a document recognition service"
+authors = ["Michal Moudrý"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.104.1"
+uvicorn = "^0.24.0.post1"
+pytesseract = "^0.3.10"
+dapr = "^1.12.1"
+cloudevents = "^1.10.1"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.23.2"
+httpx = "^0.25.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

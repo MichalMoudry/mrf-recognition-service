@@ -37,6 +37,7 @@ jobs:
   push_sidecars:
     name: Push sidecar Docker images
     runs-on: ubuntu-latest
+    if: false
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4

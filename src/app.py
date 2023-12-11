@@ -1,11 +1,16 @@
 """
 Module containg an entrypoint for the recognition service.
 """
-
+import psycopg2
 from fastapi import FastAPI
 
-app = FastAPI()
 
+app = FastAPI()
+if __name__ == "__main__":
+    conn = psycopg2.connect("dbname=data-persistence host=localhost user=root port=5432 sslmode=allow password=root")
+else:
+    # TODO: Replace with mock connection.
+    conn = psycopg2.connect("dbname=data-persistence host=localhost user=root port=5432 sslmode=allow password=root")
 
 @app.get("/health")
 def health():

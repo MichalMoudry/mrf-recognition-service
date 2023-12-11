@@ -1,7 +1,6 @@
 """
 Module for a service providing recognition functionality in this service.
 """
-
 from abc import ABC, abstractmethod
 from enum import IntEnum
 from PIL import Image

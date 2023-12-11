@@ -1,7 +1,6 @@
 """
 Module with basic API tests of the recognition service.
 """
-
 from fastapi.testclient import TestClient
 from app import app
 

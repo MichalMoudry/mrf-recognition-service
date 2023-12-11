@@ -15,10 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up Python 3.11
+    - name: Set up Python 3.12
       uses: actions/setup-python@v4.7.1
       with:
-        python-version: "3.11"
+        python-version: "3.12"
 
     - name: Install dependencies
       working-directory: src
@@ -29,7 +29,6 @@ jobs:
         python -m poetry install
 
     - name: Lint with flake8
-      if: false
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics

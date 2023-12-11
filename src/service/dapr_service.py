@@ -1,7 +1,6 @@
 """
 Module containing code related to a Dapr integration.
 """
-
 import json
 from dapr.clients import DaprClient
 from service.model.dtos import JsonSerializable

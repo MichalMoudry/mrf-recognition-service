@@ -1,7 +1,6 @@
 """
 Module for testing recognition service.
 """
-
 import json
 from os import environ, getcwd, path
 from PIL import Image

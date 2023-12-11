@@ -1,7 +1,6 @@
 """
 Module containing DTOs related to the service layer.
 """
-
 from abc import ABC
 from dataclasses import dataclass
 from typing import Any

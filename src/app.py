@@ -1,16 +1,27 @@
 """
 Module containg an entrypoint for the recognition service.
 """
-import psycopg2
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
+from config import load_configuration, Environment
+from database.connect import get_db_connection
+from service.service_collection import ServiceCollection
 
-
+cfg = load_configuration()
 app = FastAPI()
-if __name__ == "__main__":
-    conn = psycopg2.connect("dbname=data-persistence host=localhost user=root port=5432 sslmode=allow password=root")
-else:
-    # TODO: Replace with mock connection.
-    conn = psycopg2.connect("dbname=data-persistence host=localhost user=root port=5432 sslmode=allow password=root")
+db_conn = get_db_connection(cfg)
+services = ServiceCollection(db_conn)
+
+
+@app.middleware("http")
+async def process_jwt(request: Request, call_next):
+    """
+    Middleware for parsing JWTs in a HTTP request.
+    """
+    auth_header = request.headers.get("Authorization")
+    if auth_header == None and cfg.env != Environment.DEV:
+        return Response("missing JWT", status_code=400, media_type="text/plain")
+    return await call_next(request)
+
 
 @app.get("/health")
 def health():
@@ -25,7 +36,7 @@ def topic_subscription():
     """
     An endpoint for Dapr pub/sub subscriptions.
     """
-    subscriptions = [
+    return [
         {
             "pubsubname": "pub-sub",
             "topic": "new-workflow",
@@ -47,4 +58,8 @@ def topic_subscription():
             "route": "users/delete"
         }
     ]
-    return subscriptions
+
+
+if __name__ == "__main__":
+    print("Hello from recognition service! ʕ•ᴥ•ʔ")
+    print(f"Service is running in '{cfg.env}' mode.")

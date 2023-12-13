@@ -2,7 +2,7 @@
 Module containg an entrypoint for the recognition service.
 """
 from fastapi import FastAPI, Request, Response
-from config import load_configuration, Environment
+from config import load_configuration
 from database.connect import get_db_connection
 from service.service_collection import ServiceCollection
 
@@ -18,8 +18,8 @@ async def process_jwt(request: Request, call_next):
     Middleware for parsing JWTs in a HTTP request.
     """
     auth_header = request.headers.get("Authorization")
-    if auth_header == None and cfg.env != Environment.DEV:
-        return Response("missing JWT", status_code=400, media_type="text/plain")
+    if auth_header == None:
+        return Response("missing JWT", status_code=401, media_type="text/plain")
     return await call_next(request)
 
 
@@ -37,21 +37,6 @@ def topic_subscription():
     An endpoint for Dapr pub/sub subscriptions.
     """
     return [
-        {
-            "pubsubname": "pub-sub",
-            "topic": "new-workflow",
-            "route": "workflows/add"
-        },
-        {
-            "pubsubname": "pub-sub",
-            "topic": "workflow_update",
-            "route": "workflows/update"
-        },
-        {
-            "pubsubname": "pub-sub",
-            "topic": "workflow_delete",
-            "route": "workflows/delete"
-        },
         {
             "pubsubname": "pub-sub",
             "topic": "user-delete",

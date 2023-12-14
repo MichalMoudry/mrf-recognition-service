@@ -11,7 +11,7 @@ def get_db_connection(cfg: Config) -> Optional[psycopg.Connection[Tuple[Any, ...
     Function for creating a new DB connection.
     """
     if cfg.env == Environment.DEV:
-        return None
+        return psycopg.connect(cfg.db_conn)
     elif cfg.env == Environment.PROD:
         return psycopg.connect(cfg.db_conn)
     else:

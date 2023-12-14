@@ -10,6 +10,7 @@ from service.service_collection import ServiceCollection
 
 cfg = load_configuration()
 app = FastAPI()
+print(__name__, "|", cfg)
 db_conn = get_db_connection(cfg)
 services = ServiceCollection(db_conn)
 
@@ -57,6 +58,6 @@ async def user_delete(request: Request):
     return Response("success")
 
 
-if __name__ == "__main__":
+if __name__ == "app":
     print("Hello from recognition service! ʕ•ᴥ•ʔ")
     print(f"Service is running in '{cfg.env}' mode.")

@@ -13,6 +13,7 @@ class Environment(StrEnum):
     """
     DEV = "dev"
     PROD = "prod"
+    DEBUG = "debug"
 
 
 @dataclass
@@ -37,15 +38,17 @@ def parse_db_conn_string(conn: str) -> str:
 
 def parse_env_setting(env: Optional[str]) -> Environment:
     """
-    
+    Function for matching a string to an appropriate environment.
     """
     match env:
         case 'dev':
             return Environment.DEV
         case 'prod':
             return Environment.PROD
+        case 'debug':
+            return Environment.DEBUG
         case _:
-            return Environment.DEV
+            return Environment.DEBUG
 
 
 def load_configuration() -> Config:

@@ -1,6 +1,8 @@
 """
 Module containg an entrypoint for the recognition service.
 """
+from cloudevents.http import from_http
+from typing import Callable
 from fastapi import FastAPI, Request, Response
 from config import load_configuration
 from database.connect import get_db_connection
@@ -13,7 +15,7 @@ services = ServiceCollection(db_conn)
 
 
 @app.middleware("http")
-async def process_jwt(request: Request, call_next):
+async def process_jwt(request: Request, call_next: Callable):
     """
     Middleware for parsing JWTs in a HTTP request.
     """
@@ -43,6 +45,16 @@ def topic_subscription():
             "route": "users/delete"
         }
     ]
+
+
+@app.post("/users/delete")
+async def user_delete(request: Request):
+    """
+    An endpoint for getting requests to delete user's data.
+    """
+    event = from_http(dict(request.headers), await request.body())
+    services.user_service.delete_users_data(event.data)
+    return Response("success")
 
 
 if __name__ == "__main__":

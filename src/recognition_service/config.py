@@ -23,6 +23,7 @@ class Config:
     """
     db_conn: str
     env: Environment
+    pub_sub_name: str
 
 
 def parse_db_conn_string(conn: str) -> str:
@@ -56,7 +57,9 @@ def load_configuration() -> Config:
     Function for loading service's configuration.
     """
     db_conn = environ.get("DB_CONN")
+    pub_sub_name = environ.get("PUB_SUB")
     return Config(
         db_conn if db_conn != None else "",
-        parse_env_setting(environ.get("ENV"))
+        parse_env_setting(environ.get("ENV")),
+        pub_sub_name if pub_sub_name != None else "pub-sub"
     )

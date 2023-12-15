@@ -42,6 +42,21 @@ def topic_subscription():
     return [
         {
             "pubsubname": "pub-sub",
+            "topic": "new-workflow",
+            "route": "workflows/add"
+        },
+        {
+            "pubsubname": cfg.pub_sub_name,
+            "topic": "workflow_update",
+            "route": "workflows/update"
+        },
+        {
+            "pubsubname": cfg.pub_sub_name,
+            "topic": "workflow_delete",
+            "route": "workflows/delete"
+        },
+        {
+            "pubsubname": cfg.pub_sub_name,
             "topic": "user-delete",
             "route": "users/delete"
         }

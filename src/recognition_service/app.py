@@ -10,9 +10,8 @@ from service.service_collection import ServiceCollection
 
 cfg = load_configuration()
 app = FastAPI()
-print(__name__, "|", cfg)
 db_conn = get_db_connection(cfg)
-services = ServiceCollection(db_conn)
+services = ServiceCollection()
 
 
 @app.middleware("http")

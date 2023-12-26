@@ -1,3 +1,0 @@
-environment = "[dev]"
-connection_string = "postgres://root:root@localhost:5432/data-persistence?sslmode=disable&search_path=recognition"
-blob_storage_url = ""

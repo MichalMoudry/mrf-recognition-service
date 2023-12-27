@@ -1,0 +1,4 @@
+@hostname=localhost
+@port=8000
+
+POST http://{{hostname}}:{{port}}/test-image-recognition HTTP/1.1

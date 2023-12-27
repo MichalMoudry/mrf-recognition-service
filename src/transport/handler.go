@@ -21,6 +21,7 @@ func Initialize(port int) *Handler {
 	handler.Mux.Use(middleware.Logger)
 
 	// Protected routes
+	handler.Mux.Post("/test-image-recognition", handler.TestImageRecognition)
 
 	// Public routes
 	handler.Mux.Get("/health", health)

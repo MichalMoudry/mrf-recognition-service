@@ -1,16 +1,15 @@
 package service
 
 import (
-	"bytes"
-	"io"
-	"mime/multipart"
+	"log"
+	"recognition-service/service/model/dto"
 
 	"github.com/otiai10/gosseract/v2"
 )
 
 type RecognitionService struct{}
 
-func (RecognitionService) RecognizeEntireImages(files []multipart.File) error {
+/*func (RecognitionService) RecognizeEntireImages(files []multipart.File) error {
 	tesseract := gosseract.NewClient()
 	defer tesseract.Close()
 	result := make([]string, len(files))
@@ -35,4 +34,22 @@ func (RecognitionService) RecognizeEntireImages(files []multipart.File) error {
 		}
 	}
 	return nil
+}*/
+
+func (RecognitionService) RecognizeEntireImages(docs []dto.ProcessedDocumentInfo) {
+	tesseract := gosseract.NewClient()
+	defer tesseract.Close()
+
+	for _, doc := range docs {
+		if err := tesseract.SetImageFromBytes(doc.ContentBuffer.Bytes()); err != nil {
+			return
+		}
+
+		res, err := tesseract.Text()
+		if err != nil {
+			return
+		}
+		log.Println(res)
+		doc.WasSuccess = true
+	}
 }

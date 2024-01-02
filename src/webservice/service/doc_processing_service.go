@@ -3,7 +3,6 @@ package service
 import (
 	"bytes"
 	"io"
-	"log"
 	"mime/multipart"
 	"recognition-service/service/model/ioc"
 )
@@ -22,23 +21,15 @@ func (srvc DocProcessingService) ProcessMultipleCompleteImgs(files []multipart.F
 
 // A corutine for running OCR on multiple images.
 func (srvc DocProcessingService) processImages(files []multipart.File) {
-	images := make([][]byte, len(files))
+	imgBuffers := make([]*bytes.Buffer, len(files))
 
 	var buf *bytes.Buffer
 	for i, file := range files {
 		buf = bytes.NewBuffer(nil)
 		if _, err := io.Copy(buf, file); err != nil {
-			file.Close()
+			//file.Close()
 			continue
 		}
-		images[i] = buf.Bytes()
-	}
-	res, err := srvc.RecogService.RecognizeEntireImages(images)
-	if err != nil {
-		log.Printf("Recognition failed because: %v\n", err)
-		return
-	}
-	for _, v := range res {
-		log.Println(v.Name, v.Results, v.WasSuccess)
+		imgBuffers[i] = buf
 	}
 }

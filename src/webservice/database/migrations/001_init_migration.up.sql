@@ -5,8 +5,7 @@ CREATE TABLE workflows (
     is_full_page_recognition BOOLEAN NOT NULL,
     skip_enhancement BOOLEAN NOT NULL,
     expect_diff_images BOOLEAN NOT NULL,
-    date_added TIMESTAMP NOT NULL,
-    date_updated TIMESTAMP NOT NULL
+    date_added TIMESTAMP NOT NULL
 );
 
 CREATE TABLE document_batches (

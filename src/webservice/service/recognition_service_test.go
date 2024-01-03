@@ -2,7 +2,7 @@ package service
 
 import (
 	"bytes"
-	"log"
+	"fmt"
 	"os"
 	"recognition-service/service/model/dto"
 	"testing"
@@ -43,11 +43,17 @@ func Test_RecognizeEntireImages(t *testing.T) {
 			for i, path := range test.args.imagePaths {
 				data, err := os.ReadFile(path)
 				assert.Equal(t, test.wantErr, err != nil, err)
+				docs[i].Name = path
 				docs[i].ContentBuffer = bytes.NewBuffer(data)
 			}
-			recogService.RecognizeEntireImages(docs)
+
+			err := recogService.RecognizeEntireImages(docs)
+			assert.Equal(t, test.wantErr, err != nil, err)
 			for _, v := range docs {
-				log.Println(v.Name, v.Results, v.WasSuccess)
+				fmt.Println(v.Name)
+				for _, res := range v.Results {
+					fmt.Printf("\t%s\n", res)
+				}
 			}
 		})
 	}

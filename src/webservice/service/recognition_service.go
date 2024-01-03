@@ -1,55 +1,31 @@
 package service
 
 import (
-	"log"
 	"recognition-service/service/model/dto"
+	"strings"
 
 	"github.com/otiai10/gosseract/v2"
 )
 
+// A service for running OCR on images.
 type RecognitionService struct{}
 
-/*func (RecognitionService) RecognizeEntireImages(files []multipart.File) error {
-	tesseract := gosseract.NewClient()
-	defer tesseract.Close()
-	result := make([]string, len(files))
-
-	var buf *bytes.Buffer
-	for i, file := range files {
-		buf = bytes.NewBuffer(nil)
-		if _, err := io.Copy(buf, file); err != nil {
-			file.Close()
-			return err
-		}
-		if err := tesseract.SetImageFromBytes(buf.Bytes()); err != nil {
-			file.Close()
-			return err
-		}
-
-		if text, err := tesseract.Text(); err != nil {
-			file.Close()
-			return err
-		} else {
-			result[i] = text
-		}
-	}
-	return nil
-}*/
-
-func (RecognitionService) RecognizeEntireImages(docs []dto.ProcessedDocumentInfo) {
+// Method for a full-page recognition of multiple images.
+func (RecognitionService) RecognizeEntireImages(docs []dto.ProcessedDocumentInfo) error {
 	tesseract := gosseract.NewClient()
 	defer tesseract.Close()
 
-	for _, doc := range docs {
+	for i, doc := range docs {
 		if err := tesseract.SetImageFromBytes(doc.ContentBuffer.Bytes()); err != nil {
-			return
+			return err
 		}
 
 		res, err := tesseract.Text()
 		if err != nil {
-			return
+			return err
 		}
-		log.Println(res)
-		doc.WasSuccess = true
+		docs[i].Results = strings.Split(res, "\n")
+		docs[i].WasSuccess = true
 	}
+	return nil
 }

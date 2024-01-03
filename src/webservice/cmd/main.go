@@ -25,8 +25,7 @@ func main() {
 	}
 	defer dbPool.Close()
 
-	handler := transport.Initialize(cfg.Port)
-
+	handler := transport.Initialize(cfg.Port, dbPool)
 	// Start the web server.
 	fmt.Printf("Trying to start a server on %d port.\n", handler.Port)
 	if err = http.ListenAndServe(fmt.Sprintf(":%d", handler.Port), handler.Mux); err != nil {

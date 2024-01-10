@@ -10,8 +10,13 @@ import (
 type BatchState int
 
 const (
-	PROCESSING BatchState = iota
+	// Batch is waiting to be processed.
+	WAITING BatchState = iota
+	// Batch is currently being processed.
+	PROCESSING
+	// Processing of the batch has successfully completed.
 	COMPLETED
+	// Processing of the batch has failed.
 	FAILED
 )
 
@@ -28,6 +33,22 @@ type DocumentBatch struct {
 	DateUpdated   time.Time  `db:"date_updated"`
 }
 
+// Constructor function for the DocumentBatch business object.
+func NewDocumentBatch(name, author string, startDate, endDate time.Time, workflowId uuid.UUID) *DocumentBatch {
+	now := time.Now()
+	return &DocumentBatch{
+		Id:            uuid.New(),
+		Name:          name,
+		State:         WAITING,
+		StartDate:     startDate,
+		CompletedDate: endDate,
+		WorkflowId:    workflowId,
+		AuthorId:      author,
+		DateAdded:     now,
+		DateUpdated:   now,
+	}
+}
+
 // A business object representing a processed document.
 type ProcessedDocument struct {
 	Id           uuid.UUID `db:"id"`
@@ -40,6 +61,23 @@ type ProcessedDocument struct {
 	BatchId      uuid.UUID `db:"batch_id"`
 	DateAdded    time.Time `db:"date_added"`
 	DateUpdated  time.Time `db:"date_updated"`
+}
+
+// Constructor function for the ProcessedDocument structure.
+func NewProcessedDocument(name, contentType, archiveKey string, dateArchived time.Time, data []byte, batchId uuid.UUID) *ProcessedDocument {
+	now := time.Now()
+	return &ProcessedDocument{
+		Id:           uuid.New(),
+		Name:         name,
+		ContentType:  contentType,
+		IsArchived:   archiveKey != "",
+		ArchiveKey:   archiveKey,
+		DateArchived: dateArchived,
+		Data:         data,
+		BatchId:      batchId,
+		DateAdded:    now,
+		DateUpdated:  now,
+	}
 }
 
 // A business object that represents a document template.
@@ -127,4 +165,13 @@ func NewFieldValue(name, value string, docId uuid.UUID) *FieldValue {
 		DateAdded:   now,
 		DateUpdated: now,
 	}
+}
+
+// A duplicate of a business object representing a workflow in the system.
+type Workflow struct {
+	Id                    uuid.UUID `db:"id"`
+	IsFullPageRecognition bool      `db:"is_full_page_recognition"`
+	SkipEnhancement       bool      `db:"skip_enhancement"`
+	ExpectDiffImages      bool      `db:"expect_diff_images"`
+	DateAdded             time.Time `db:"date_added"`
 }

@@ -22,7 +22,13 @@ func Initialize(port int, dbPool *pgxpool.Pool) *Handler {
 	handler.Mux.Use(middleware.Logger)
 
 	// Protected routes
-	handler.Mux.Post("/test-image-recognition", handler.TestImageRecognition)
+	handler.Mux.Group(func(r chi.Router) {
+		//handler.Mux.Post("/test-image-recognition", handler.TestImageRecognition)
+		r.Post("/test-image-recognition", handler.TestImageRecognition)
+		r.Route("/workflows", func(r chi.Router) {
+			r.Post("/", handler.CreateWorkflow)
+		})
+	})
 
 	// Public routes
 	handler.Mux.Get("/health", health)

@@ -25,6 +25,7 @@ func Initialize(port int, dbPool *pgxpool.Pool) *Handler {
 	handler.Mux.Group(func(r chi.Router) {
 		//handler.Mux.Post("/test-image-recognition", handler.TestImageRecognition)
 		r.Post("/test-image-recognition", handler.TestImageRecognition)
+
 		r.Route("/workflows", func(r chi.Router) {
 			r.Post("/", handler.CreateWorkflow)
 			r.Post("/update", handler.UpdateWorkflow)
@@ -32,11 +33,13 @@ func Initialize(port int, dbPool *pgxpool.Pool) *Handler {
 			r.Get("/batches", nil) // GET workflow's batches
 			r.Get("/templates", nil)
 		})
+
 		r.Route("/batch", func(r chi.Router) {
 			r.Get("/{uuid}", nil)        // GET batch info
 			r.Get("/{uuid}/images", nil) // GET batch's images
 			r.Delete("/{uuid}", nil)     // DELETE batch
 		})
+
 		r.Route("/template", func(r chi.Router) {
 			r.Post("/", nil) // CREATE template
 		})

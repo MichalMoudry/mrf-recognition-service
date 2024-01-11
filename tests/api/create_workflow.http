@@ -2,10 +2,9 @@
 @port=8080
 
 POST http://{{hostname}}:{{port}}/workflows HTTP/1.1
-Content-Type: application/json
 
 {
     "is_full_page_recognition": "true",
-    "skip_img_enchancement": "false",
+    "skip_img_enhancement": "false",
     "expect_diff_images": "false"
 }

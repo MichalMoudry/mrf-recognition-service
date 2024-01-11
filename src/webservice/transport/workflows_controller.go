@@ -6,12 +6,50 @@ import (
 	"recognition-service/transport/util"
 )
 
-// A function for handling create workflow requests.
+// A function for handling create events/workflow requests.
 func (handler *Handler) CreateWorkflow(w http.ResponseWriter, r *http.Request) {
-	var requestData *contracts.CreateWorkflowRequest
+	w.Header().Set("Content-Type", "application/json")
+	var requestData contracts.CreateWorkflowRequest
 	if err := util.UnmarshallRequest(r, &requestData); err != nil {
-		util.WriteErrResponse(w, http.StatusBadRequest, err)
+		util.WriteResponse(
+			w,
+			http.StatusBadRequest,
+			contracts.EventResponse{IsSuccess: false, Err: err},
+		)
 		return
 	}
-	util.WriteResponse(w, http.StatusCreated, requestData)
+
+	util.WriteResponse(w, http.StatusOK, contracts.EventResponse{IsSuccess: true})
+}
+
+// A function for handling update events/workflow requests.
+func (handler *Handler) UpdateWorkflow(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var requestData contracts.CreateWorkflowRequest
+	if err := util.UnmarshallRequest(r, &requestData); err != nil {
+		util.WriteResponse(
+			w,
+			http.StatusBadRequest,
+			contracts.EventResponse{IsSuccess: false, Err: err},
+		)
+		return
+	}
+
+	util.WriteResponse(w, http.StatusOK, contracts.EventResponse{IsSuccess: true})
+}
+
+// A function for handling delete workflow events/requests.
+func (handler *Handler) DeleteWorkflow(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var requestData contracts.CloudEventV1[string]
+	if err := util.UnmarshallRequest(r, &requestData); err != nil {
+		util.WriteResponse(
+			w,
+			http.StatusBadRequest,
+			contracts.EventResponse{IsSuccess: false, Err: err},
+		)
+		return
+	}
+
+	util.WriteResponse(w, http.StatusOK, contracts.EventResponse{IsSuccess: true})
 }

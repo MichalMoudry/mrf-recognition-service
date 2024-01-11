@@ -9,7 +9,7 @@ type CreateBatchRequest struct {
 // A structure representing data of a HTTP request for creating a new workflow.
 type CreateWorkflowRequest struct {
 	IsFullPageRecognition string `json:"is_full_page_recognition" validate:"boolean,required"`
-	SkipImgEnhancement    string `json:"skip_img_enchancement" validate:"boolean,required"`
+	SkipImgEnhancement    string `json:"skip_img_enhancement" validate:"boolean,required"`
 	ExpectDiffImages      string `json:"expect_diff_images" validate:"boolean,required"`
 }
 
@@ -27,4 +27,11 @@ type CreateTemplateField struct {
 // A structure representing data of a HTTP request for creating a new template.
 type CreateTemplateRequest struct {
 	Fields []CreateTemplateField
+}
+
+// A structure representing cloud events (v1) from MQ.
+type CloudEventV1[T interface{}] struct {
+	Id     string `json:"id"`
+	Data   T      `json:"data"`
+	Source string `json:"source"`
 }

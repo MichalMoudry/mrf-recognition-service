@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"recognition-service/transport/model/contracts"
 	"testing"
 
@@ -27,11 +28,33 @@ func Test_ContractValidation(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "Test incorrect CreateWorkflowRequest with capital letters",
+			args: args{
+				payload: contracts.CreateWorkflowRequest{
+					IsFullPageRecognition: "True",
+					SkipImgEnhancement:    "True",
+					ExpectDiffImages:      "False",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Test empty CreateWorkflowRequest",
+			args: args{
+				payload: contracts.CreateWorkflowRequest{},
+			},
+			wantErr: true,
+		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			isError := validate.Struct(test.args.payload) != nil
+			err := validate.Struct(test.args.payload)
+			isError := err != nil
+			if isError != test.wantErr {
+				fmt.Println(test.name)
+			}
 			assert.Equal(t, isError, test.wantErr)
 		})
 	}

@@ -8,8 +8,8 @@ var (
 
 	//go:embed scripts/commands/InsertBatch.sql
 	InsertBatch string
-	//go:embed scripts/commands/InsertWorkflow.sql
-	InsertWorkflow string
+	//go:embed scripts/commands/InsertExistingWorkflow.sql
+	InsertExistingWorkflow string
 	//go:embed scripts/commands/InsertProcessedDocument.sql
 	InsertProcessedDocument string
 )

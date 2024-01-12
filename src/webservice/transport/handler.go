@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jmoiron/sqlx"
 )
 
 type Handler struct {
@@ -14,7 +14,7 @@ type Handler struct {
 }
 
 // Function for initializing HTTP handler.
-func Initialize(port int, dbPool *pgxpool.Pool) *Handler {
+func Initialize(port int, db *sqlx.DB) *Handler {
 	handler := &Handler{
 		Port: port,
 		Mux:  chi.NewRouter(),

@@ -17,7 +17,7 @@ const (
 )
 
 // A constructor function for DaprService structure.
-func New(client dapr.Client) *DaprService {
+func NewDaprService(client dapr.Client) *DaprService {
 	return &DaprService{
 		DaprClient: client,
 	}

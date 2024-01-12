@@ -1,14 +1,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"recognition-service/config"
 	"recognition-service/transport"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/jmoiron/sqlx"
 )
 
 func main() {
@@ -19,13 +19,12 @@ func main() {
 	}
 
 	// Connect to a database.
-	dbPool, err := pgxpool.New(context.Background(), cfg.DbConnectionStr)
+	db, err := sqlx.Open("pgx", cfg.DbConnectionStr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer dbPool.Close()
 
-	handler := transport.Initialize(cfg.Port, dbPool)
+	handler := transport.Initialize(cfg.Port, db)
 	// Start the web server.
 	fmt.Printf("Trying to start a server on %d port.\n", handler.Port)
 	if err = http.ListenAndServe(fmt.Sprintf(":%d", handler.Port), handler.Mux); err != nil {

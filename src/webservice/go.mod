@@ -8,6 +8,7 @@ require (
 	github.com/go-playground/validator/v10 v10.16.0
 	github.com/google/uuid v1.5.0
 	github.com/jackc/pgx/v5 v5.5.1
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/otiai10/gosseract/v2 v2.4.1
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4

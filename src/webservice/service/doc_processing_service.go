@@ -1,11 +1,12 @@
 package service
 
 import (
-	"bytes"
 	"context"
-	"io"
 	"mime/multipart"
 	"recognition-service/service/model/ioc"
+	"recognition-service/service/pipelines/consumers"
+	"recognition-service/service/pipelines/producers"
+	"recognition-service/service/pipelines/transformers"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -36,15 +37,11 @@ func (srvc DocProcessingService) ProcessMultipleCompleteImgs(ctx context.Context
 
 // A corutine for running OCR on multiple images.
 func (srvc DocProcessingService) processImages(files []multipart.File) {
-	imgBuffers := make([]*bytes.Buffer, len(files))
-
-	var buf *bytes.Buffer
-	for i, file := range files {
-		buf = bytes.NewBuffer(nil)
-		if _, err := io.Copy(buf, file); err != nil {
-			//file.Close()
-			continue
-		}
-		imgBuffers[i] = buf
-	}
+	results := consumers.RecognitionConsumer(
+		transformers.Recognizer(
+			transformers.MultipartFileTransformer(
+				producers.ImageBufferProducer(files...),
+			),
+		),
+	)
 }

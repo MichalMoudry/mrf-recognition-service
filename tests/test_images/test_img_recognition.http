@@ -1,0 +1,20 @@
+@hostname=localhost
+@port=8080
+
+POST http://{{hostname}}:{{port}}/test-image-recognition HTTP/1.1
+Content-Type: multipart/form-data; boundary=WebKitFormBoundary
+
+--WebKitFormBoundary
+Content-Disposition: form-data; name="text"
+
+invoice_text
+--WebKitFormBoundary
+Content-Disposition: form-data; name="title"
+
+invoice_title
+--WebKitFormBoundary
+Content-Disposition: form-data; name="invoice"; filename="repo_screenshot_2.jpg"
+Content-Type: image/jpg
+
+< ./repo_screenshot_2.jpg
+--WebKitFormBoundary--

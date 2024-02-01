@@ -22,8 +22,8 @@ func Test_ContractValidation(t *testing.T) {
 			args: args{
 				payload: contracts.CreateWorkflowRequest{
 					IsFullPageRecognition: "true",
-					SkipImgEnhancement:    "true",
-					ExpectDiffImages:      "false",
+					SkipImageEnhancement:  "true",
+					ExpectDifferentImages: "false",
 				},
 			},
 			wantErr: false,
@@ -33,8 +33,8 @@ func Test_ContractValidation(t *testing.T) {
 			args: args{
 				payload: contracts.CreateWorkflowRequest{
 					IsFullPageRecognition: "True",
-					SkipImgEnhancement:    "True",
-					ExpectDiffImages:      "False",
+					SkipImageEnhancement:  "True",
+					ExpectDifferentImages: "False",
 				},
 			},
 			wantErr: false,

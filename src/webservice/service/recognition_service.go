@@ -25,7 +25,6 @@ func (RecognitionService) RecognizeEntireImages(docs []dto.ProcessedDocumentInfo
 			return err
 		}
 		docs[i].Results = strings.Split(res, "\n")
-		docs[i].WasSuccess = true
 	}
 	return nil
 }

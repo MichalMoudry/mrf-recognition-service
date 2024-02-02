@@ -1,10 +1,12 @@
 package producers
 
-import "mime/multipart"
+import (
+	"recognition-service/transport/model"
+)
 
 // Image channel generator
-func ImageBufferProducer(files ...multipart.File) <-chan multipart.File {
-	out := make(chan multipart.File)
+func ImageBufferProducer(files []model.IncomingFile) <-chan model.IncomingFile {
+	out := make(chan model.IncomingFile)
 	go func() {
 		for _, file := range files {
 			out <- file

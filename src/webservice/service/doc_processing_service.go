@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"mime/multipart"
 	"recognition-service/service/model/ioc"
 	"recognition-service/service/pipelines/consumers"
 	"recognition-service/service/pipelines/producers"
@@ -32,16 +31,16 @@ func (srvc DocProcessingService) ProcessMultipleCompleteImgs(ctx context.Context
 	}
 	//TODO: Save batch without images
 	//TODO: Spawn a corutine that runs OCR on the images
-	//go srvc.processImages(files)
+	go srvc.processImages(files)
 	return nil
 }
 
 // A corutine for running OCR on multiple images.
-func (srvc DocProcessingService) processImages(files []multipart.File) {
+func (srvc DocProcessingService) processImages(files []model.IncomingFile) {
 	consumers.RecognitionConsumer(
 		transformers.Recognizer(
 			transformers.MultipartFileTransformer(
-				producers.ImageBufferProducer(files...),
+				producers.ImageBufferProducer(files),
 			),
 		),
 	)

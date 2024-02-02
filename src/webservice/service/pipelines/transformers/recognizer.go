@@ -15,18 +15,18 @@ func Recognizer(producer <-chan dto.ProcessedDocumentInfo) <-chan dto.ProcessedD
 		defer tesseract.Close()
 
 		for dto := range producer {
-			if !dto.WasSuccess {
+			if !dto.WasSuccess() {
 				continue
 			}
 			err := tesseract.SetImageFromBytes(dto.ContentBuffer.Bytes())
 			if err != nil {
-				dto.WasSuccess = false
+				dto.Error = err
 				continue
 			}
 
 			res, err := tesseract.Text()
 			if err != nil {
-				dto.WasSuccess = false
+				dto.Error = err
 				continue
 			}
 			dto.Results = strings.Split(res, "\n")

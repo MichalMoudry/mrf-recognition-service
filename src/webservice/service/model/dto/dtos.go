@@ -7,5 +7,10 @@ type ProcessedDocumentInfo struct {
 	Name          string
 	ContentBuffer *bytes.Buffer
 	Results       []string
-	WasSuccess    bool
+	Error         error
+}
+
+// Function for checking if document was processed correctly or not.
+func (doc *ProcessedDocumentInfo) WasSuccess() bool {
+	return doc.Error == nil
 }

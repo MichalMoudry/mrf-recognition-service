@@ -2,6 +2,7 @@ package transport
 
 import (
 	"net/http"
+	"recognition-service/transport/model/ioc"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -9,15 +10,17 @@ import (
 )
 
 type Handler struct {
-	Port int
-	Mux  *chi.Mux
+	Port     int
+	Mux      *chi.Mux
+	Services *ioc.ServiceCollection
 }
 
 // Function for initializing HTTP handler.
-func Initialize(port int, db *sqlx.DB) *Handler {
+func Initialize(port int, db *sqlx.DB, services *ioc.ServiceCollection) *Handler {
 	handler := &Handler{
-		Port: port,
-		Mux:  chi.NewRouter(),
+		Port:     port,
+		Mux:      chi.NewRouter(),
+		Services: services,
 	}
 	handler.Mux.Use(middleware.Logger)
 

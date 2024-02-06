@@ -15,6 +15,7 @@ func (handler *Handler) TestImageRecognition(w http.ResponseWriter, r *http.Requ
 	err := r.ParseMultipartForm(maxRequestSize)
 	if err != nil {
 		util.WriteErrResponse(w, http.StatusBadRequest, err)
+		return
 	}
 	for i, values := range r.MultipartForm.Value {
 		log.Println("Key:", i)
@@ -31,6 +32,15 @@ func (handler *Handler) TestImageRecognition(w http.ResponseWriter, r *http.Requ
 			Header: file[1],
 		}
 		i += 1
+	}
+
+	err = handler.Services.DocumentProcessingService.ProcessMultipleImgs(
+		r.Context(),
+		incomingFiles,
+	)
+	if err != nil {
+		util.WriteErrResponse(w, http.StatusInternalServerError, err)
+		return
 	}
 	util.WriteResponse(w, http.StatusOK, nil)
 }

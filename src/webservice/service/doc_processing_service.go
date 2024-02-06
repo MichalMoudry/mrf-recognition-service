@@ -8,24 +8,24 @@ import (
 	"recognition-service/service/pipelines/transformers"
 	"recognition-service/transport/model"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jmoiron/sqlx"
 )
 
 // A service for handling of imported documents.
 type DocProcessingService struct {
 	RecogService ioc.IRecognitionService
-	db           *pgxpool.Pool
+	db           *sqlx.DB
 }
 
-func NewDocProcessingSrvc(dbPool *pgxpool.Pool) DocProcessingService {
+func NewDocProcessingSrvc(dbPool *sqlx.DB) DocProcessingService {
 	return DocProcessingService{
 		db: dbPool,
 	}
 }
 
-// Method for full-page processing multiple images.
-func (srvc DocProcessingService) ProcessMultipleCompleteImgs(ctx context.Context, files []model.IncomingFile) error {
-	_, err := srvc.db.Begin(ctx)
+// Method for processing multiple images.
+func (srvc DocProcessingService) ProcessMultipleImgs(ctx context.Context, files []model.IncomingFile) error {
+	_, err := srvc.db.BeginTxx(ctx, nil)
 	if err != nil {
 		return err
 	}

@@ -1,0 +1,3 @@
+port = 8080
+environment = "[dev]"
+db_connection_string = "postgres://root:root@localhost:5432/recognition-db?sslmode=disable"

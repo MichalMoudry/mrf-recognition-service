@@ -16,11 +16,11 @@ type Handler struct {
 }
 
 // Function for initializing HTTP handler.
-func Initialize(port int, db *sqlx.DB, services *ioc.ServiceCollection) *Handler {
+func Initialize(port int, db *sqlx.DB) *Handler {
 	handler := &Handler{
 		Port:     port,
 		Mux:      chi.NewRouter(),
-		Services: services,
+		Services: ioc.NewServiceCollection(db),
 	}
 	handler.Mux.Use(middleware.Logger)
 

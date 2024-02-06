@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"recognition-service/config"
 	"recognition-service/transport"
-	"recognition-service/transport/model/ioc"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
@@ -25,7 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	handler := transport.Initialize(cfg.Port, db, ioc.NewServiceCollection(db))
+	handler := transport.Initialize(cfg.Port, db)
 	// Start the web server.
 	fmt.Printf("Trying to start a server on %d port.\n", handler.Port)
 	if err = http.ListenAndServe(fmt.Sprintf(":%d", handler.Port), handler.Mux); err != nil {

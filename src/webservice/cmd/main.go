@@ -26,7 +26,7 @@ func main() {
 
 	handler := transport.Initialize(cfg.Port, db)
 	// Start the web server.
-	fmt.Printf("Trying to start a server on %d port.\n", handler.Port)
+	fmt.Printf("Starting a server on %d port\n", handler.Port)
 	if err = http.ListenAndServe(fmt.Sprintf(":%d", handler.Port), handler.Mux); err != nil {
 		log.Fatal(err)
 	}

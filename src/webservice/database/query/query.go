@@ -2,7 +2,7 @@ package query
 
 import _ "embed"
 
-var (
+/*var (
 	//go:embed scripts/queries/SelectBatch.sql
 	SelectBatch string
 
@@ -12,4 +12,4 @@ var (
 	InsertExistingWorkflow string
 	//go:embed scripts/commands/InsertProcessedDocument.sql
 	InsertProcessedDocument string
-)
+)*/

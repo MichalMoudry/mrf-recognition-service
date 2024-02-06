@@ -2,16 +2,13 @@ package transformers
 
 import (
 	"recognition-service/service/model/dto"
-	"strings"
-
-	"github.com/otiai10/gosseract/v2"
 )
 
 // A filter for recognizing incoming documents.
 func Recognizer(producer <-chan dto.ProcessedDocumentInfo) <-chan dto.ProcessedDocumentInfo {
 	out := make(chan dto.ProcessedDocumentInfo)
 	go func() {
-		tesseract := gosseract.NewClient()
+		/*tesseract := gosseract.Cli
 		defer tesseract.Close()
 
 		for dto := range producer {
@@ -31,6 +28,10 @@ func Recognizer(producer <-chan dto.ProcessedDocumentInfo) <-chan dto.ProcessedD
 			}
 			dto.Results = strings.Split(res, "\n")
 			out <- dto
+		}*/
+		out <- dto.ProcessedDocumentInfo{
+			Name:    "Test doc",
+			Results: []string{"Test val 1", "Test val 2"},
 		}
 		close(out)
 	}()

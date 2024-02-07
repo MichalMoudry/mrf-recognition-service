@@ -45,6 +45,7 @@ type Task struct {
 	Name             string    `db:"task_name"`
 	Content          []byte    `db:"content"`
 	Description      string    `db:"description"`
+	GroupId          uuid.UUID `db:"group_id"`
 	ConcurrencyStamp uuid.UUID `db:"concurrency_stamp"`
 	DateAdded        time.Time `db:"date_added"`
 	DateUpdated      time.Time `db:"date_updated"`
@@ -83,7 +84,6 @@ type DocumentBatch struct {
 	WorkflowId    uuid.UUID  `db:"workflow_id"`
 	AuthorId      string     `db:"author_id"`
 	DateAdded     time.Time  `db:"date_added"`
-	DateUpdated   time.Time  `db:"date_updated"`
 }
 
 // A business object representing a processed document.
@@ -97,6 +97,7 @@ type ProcessedDocument struct {
 	BatchId          uuid.UUID `db:"batch_id"`
 	ConcurrencyStamp uuid.UUID `db:"concurrency_stamp"`
 	DateAdded        time.Time `db:"date_added"`
+	DateUpdated      time.Time `db:"date_updated"`
 }
 
 // Function for checking if a processed document is archived or not.
@@ -120,6 +121,7 @@ type DocumentTemplate struct {
 // A business object representing document template's field.
 type TemplateField struct {
 	Id               uuid.UUID `db:"id"`
+	Name             string    `db:"field_name"`
 	Width            float32   `db:"width"`
 	Height           float32   `db:"height"`
 	XPosition        float32   `db:"x_position"`

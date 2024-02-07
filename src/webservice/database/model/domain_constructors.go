@@ -73,12 +73,12 @@ func NewDocumentBatch(name, author string, startDate, endDate time.Time, workflo
 		WorkflowId:    workflowId,
 		AuthorId:      author,
 		DateAdded:     now,
-		DateUpdated:   now,
 	}
 }
 
 // Constructor function for the ProcessedDocument structure.
 func NewProcessedDocument(name, contentType, archiveKey string, dateArchived time.Time, data []byte, batchId uuid.UUID) *ProcessedDocument {
+	now := time.Now()
 	return &ProcessedDocument{
 		Id:           uuid.New(),
 		Name:         name,
@@ -87,7 +87,8 @@ func NewProcessedDocument(name, contentType, archiveKey string, dateArchived tim
 		DateArchived: dateArchived,
 		Data:         data,
 		BatchId:      batchId,
-		DateAdded:    time.Now(),
+		DateAdded:    now,
+		DateUpdated:  now,
 	}
 }
 

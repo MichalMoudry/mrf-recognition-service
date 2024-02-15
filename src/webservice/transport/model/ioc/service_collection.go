@@ -9,6 +9,9 @@ import (
 // A container structure for all services inside a service layer.
 type ServiceCollection struct {
 	DocumentProcessingService IDocProcessingService
+	AppService                IApplicationService
+	WorkflowService           IWorkflowService
+	UserService               IUserService
 }
 
 // A constructor function for a ServiceCollection structure.

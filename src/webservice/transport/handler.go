@@ -31,8 +31,8 @@ func Initialize(port int, db *sqlx.DB) *Handler {
 
 		r.Route("/workflows", func(r chi.Router) {
 			r.Post("/", handler.CreateWorkflow)
-			r.Post("/update", handler.UpdateWorkflow)
-			r.Post("/delete", nil)
+			r.Put("/{uuid}", handler.UpdateWorkflow)
+			r.Delete("/{}", handler.DeleteWorkflow)
 			r.Get("/batches", nil) // GET workflow's batches
 			r.Get("/templates", nil)
 		})

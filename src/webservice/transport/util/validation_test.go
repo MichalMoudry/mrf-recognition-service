@@ -1,10 +1,10 @@
 package util
 
 import (
-	"fmt"
 	"recognition-service/transport/model/contracts"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,6 +21,8 @@ func Test_ContractValidation(t *testing.T) {
 			name: "Test correct CreateWorkflowRequest",
 			args: args{
 				payload: contracts.CreateWorkflowRequest{
+					Name:                  "test_workflow_1",
+					AppId:                 uuid.NewString(),
 					IsFullPageRecognition: "true",
 					SkipImageEnhancement:  "true",
 					ExpectDifferentImages: "false",
@@ -32,6 +34,8 @@ func Test_ContractValidation(t *testing.T) {
 			name: "Test incorrect CreateWorkflowRequest with capital letters",
 			args: args{
 				payload: contracts.CreateWorkflowRequest{
+					Name:                  "test_workflow_1",
+					AppId:                 uuid.NewString(),
 					IsFullPageRecognition: "True",
 					SkipImageEnhancement:  "True",
 					ExpectDifferentImages: "False",
@@ -52,8 +56,8 @@ func Test_ContractValidation(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			err := validate.Struct(test.args.payload)
 			isError := err != nil
-			if isError != test.wantErr {
-				fmt.Println(test.name)
+			if isError && !test.wantErr {
+				t.Logf("Validated structure:\n\t %v\nError: %v\n", test.args.payload, err)
 			}
 			assert.Equal(t, isError, test.wantErr)
 		})

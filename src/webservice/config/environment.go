@@ -3,9 +3,9 @@ package config
 type Environment string
 
 const (
-	DEV  Environment = "dev"
-	TEST Environment = "test"
-	PROD Environment = "prod"
+	DEV  Environment = "[dev]"
+	TEST Environment = "[test]"
+	PROD Environment = "[prod]"
 )
 
 // Function for checking if environment is set as development.

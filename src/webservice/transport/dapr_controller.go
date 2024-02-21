@@ -38,45 +38,6 @@ func ConfigureSubscribeHandler(w http.ResponseWriter, _ *http.Request) {
 				Default: "/users/delete",
 			},
 		},
-		{
-			PubsubName: pubSubName,
-			Topic:      "new-workflow",
-			Route: route{
-				Rules: []rule{
-					{
-						Match: `event.type == "new-workflow"`,
-						Path:  "/workflows/delete",
-					},
-				},
-				Default: "/workflows/delete",
-			},
-		},
-		{
-			PubsubName: pubSubName,
-			Topic:      "workflow_update",
-			Route: route{
-				Rules: []rule{
-					{
-						Match: `event.type == "workflow_update"`,
-						Path:  "/workflows/update",
-					},
-				},
-				Default: "/workflows/update",
-			},
-		},
-		{
-			PubsubName: pubSubName,
-			Topic:      "workflow_delete",
-			Route: route{
-				Rules: []rule{
-					{
-						Match: `event.type == "workflow_delete"`,
-						Path:  "/workflows/delete",
-					},
-				},
-				Default: "/workflows/delete",
-			},
-		},
 	}
 
 	util.WriteResponse(w, http.StatusOK, v)

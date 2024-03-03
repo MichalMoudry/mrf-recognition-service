@@ -31,6 +31,10 @@ func (WorkflowRepository) GetWorkflow(tx *sqlx.Tx, workflowId uuid.UUID) (domain
 	return workflow, nil
 }
 
+func (WorkflowRepository) GetWorkflows() error {
+	return nil
+}
+
 // Method for updating a specific workflow in the database.
 func (WorkflowRepository) UpdateWorkflow(tx *sqlx.Tx, workflowId uuid.UUID, name string, settings domain.WorkflowSetting) error {
 	_, err := tx.Exec(

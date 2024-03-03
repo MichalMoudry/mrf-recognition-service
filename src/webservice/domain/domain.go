@@ -14,6 +14,8 @@ type Application struct {
 	ConcurrencyStamp uuid.UUID `db:"concurrency_stamp"`
 	DateAdded        time.Time `db:"date_added"`
 	DateUpdated      time.Time `db:"date_updated"`
+	Users            []ApplicationUsers
+	Workflows        []Workflow
 }
 
 type UserRole string

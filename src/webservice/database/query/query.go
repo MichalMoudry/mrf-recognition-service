@@ -21,6 +21,8 @@ var (
 	CreateField string
 	//go:embed scripts/commands/CreateBatch.sql
 	CreateBatch string
+	//go:embed scripts/commands/UpdateBatch.sql
+	UpdateBatch string
 
 	//go:embed scripts/queries/GetApp.sql
 	GetApp string
